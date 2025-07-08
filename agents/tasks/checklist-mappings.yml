@@ -1,0 +1,86 @@
+architect-checklist:
+  checklist_file: ../agents/checklists/architect-checklist.md
+  required_docs:
+    - architecture.md
+  default_locations:
+    - $PROJECT_DOCS/base/architecture.md
+
+frontend-architecture-checklist:
+  checklist_file: ../agents/checklists/frontend-architecture-checklist.md
+  required_docs:
+    - frontend-architecture.md
+  default_locations:
+    - $PROJECT_DOCS/base/frontend-architecture.md
+    - $PROJECT_DOCS/base/fe-architecture.md
+
+pm-checklist:
+  checklist_file: ../agents/checklists/pm-checklist.md
+  required_docs:
+    - prd.md
+  default_locations:
+    - $PROJECT_DOCS/base/prd.md
+
+po-master-checklist:
+  checklist_file: ../agents/checklists/po-master-checklist.md
+  required_docs:
+    - prd.md
+    - architecture.md
+  optional_docs:
+    - frontend-architecture.md
+  default_locations:
+    - $PROJECT_DOCS/base/prd.md
+    - $PROJECT_DOCS/base/frontend-architecture.md
+    - $PROJECT_DOCS/base/architecture.md
+
+story-draft-checklist:
+  checklist_file: ../agents/checklists/story-draft-checklist.md
+  required_docs:
+    - story.md
+  default_locations:
+    - $PROJECT_DOCS/stories/*.md
+
+story-dod-checklist:
+  checklist_file: ../agents/checklists/story-dod-checklist.md
+  required_docs:
+    - story.md
+  default_locations:
+    - $PROJECT_DOCS/stories/*.md
+
+qa-test-strategy-checklist:
+  checklist_file: ../agents/checklists/qa-test-strategy-checklist.md
+  required_docs:
+    - test-strategy.md
+  default_locations:
+    - $PROJECT_DOCS/qa/test-strategy.md
+
+qa-requirements-validation-checklist:
+  checklist_file: ../agents/checklists/qa-requirements-validation-checklist.md
+  required_docs:
+    - prd.md
+  default_locations:
+    - $PROJECT_DOCS/base/prd.md
+
+qa-test-execution-readiness-checklist:
+  checklist_file: ../agents/checklists/qa-test-execution-readiness-checklist.md
+  required_docs:
+    - test-plan.md
+  default_locations:
+    - $PROJECT_DOCS/qa/test-plan.md
+    - $PROJECT_DOCS/qa/test-plans/*.md
+
+qa-deployment-readiness-checklist:
+  checklist_file: ../agents/checklists/qa-deployment-readiness-checklist.md
+  required_docs:
+    - test-report.md
+    - deployment-plan.md
+  default_locations:
+    - $PROJECT_DOCS/qa/test-report.md
+    - $PROJECT_DOCS/qa/deployment-plan.md
+
+qa-automation-quality-checklist:
+  checklist_file: ../agents/checklists/qa-automation-quality-checklist.md
+  required_docs:
+    - automation-plan.md
+  default_locations:
+    - $PROJECT_DOCS/qa/automation-plan.md
+    - $PROJECT_DOCS/qa/automation/*.md

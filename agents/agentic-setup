@@ -1,0 +1,602 @@
+#!/bin/bash
+
+# AP Method Setup Script
+# This script initializes the AP (Agent Persona) method for any project
+
+set -e
+
+echo "========================================"
+echo "AP Method Agentic Setup"
+echo "========================================"
+echo ""
+
+# Get the directory where this script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+AP_ROOT="$SCRIPT_DIR"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+# Function to get user input with default
+get_input() {
+    local prompt="$1"
+    local default="$2"
+    local response
+
+    read -p "$prompt [$default]: " response
+    echo "${response:-$default}"
+}
+
+# Function to create directory if it doesn't exist
+ensure_dir() {
+    local dir="$1"
+    if [ ! -d "$dir" ]; then
+        echo "Creating directory: $dir"
+        mkdir -p "$dir"
+    fi
+}
+
+echo "Step 1: Project Configuration"
+echo "-----------------------------"
+
+# Get project name
+PROJECT_NAME=$(get_input "Enter project name" "$(basename "$PROJECT_ROOT")")
+
+# Get project documentation path
+DEFAULT_PROJECT_DOCS="$PROJECT_ROOT/project_documentation"
+PROJECT_DOCS=$(get_input "Enter project documentation path" "$DEFAULT_PROJECT_DOCS")
+
+# Get .claude commands directory
+DEFAULT_CLAUDE_DIR="$PROJECT_ROOT/.claude/commands"
+CLAUDE_COMMANDS_DIR=$(get_input "Enter .claude commands directory" "$DEFAULT_CLAUDE_DIR")
+
+echo ""
+echo "Step 2: Session Notes Configuration"
+echo "-----------------------------------"
+echo "Choose your session notes system:"
+echo "1) Obsidian MCP (recommended if you use Obsidian)"
+echo "2) Markdown files (standalone markdown files)"
+echo ""
+
+NOTES_SYSTEM=$(get_input "Enter choice (1 or 2)" "1")
+
+if [ "$NOTES_SYSTEM" = "1" ]; then
+    NOTES_TYPE="obsidian"
+    SESSION_NOTES_PATH=$(get_input "Enter Obsidian vault path for sessions (e.g., GemMMA/Sessions)" "GemMMA/Sessions")
+    RULES_PATH=$(get_input "Enter Obsidian vault path for rules (e.g., GemMMA/Rules)" "GemMMA/Rules")
+    ARCHIVE_PATH="$SESSION_NOTES_PATH/archive"
+else
+    NOTES_TYPE="markdown"
+    SESSION_NOTES_PATH=$(get_input "Enter markdown session notes path" "$PROJECT_ROOT/session_notes")
+    RULES_PATH=$(get_input "Enter rules documentation path" "$PROJECT_ROOT/rules")
+    ARCHIVE_PATH="$SESSION_NOTES_PATH/archive"
+    ensure_dir "$SESSION_NOTES_PATH"
+    ensure_dir "$RULES_PATH"
+    ensure_dir "$ARCHIVE_PATH"
+fi
+
+echo ""
+echo "Step 3: Creating Project Documentation Structure"
+echo "-----------------------------------------------"
+
+# Create project documentation directories
+ensure_dir "$PROJECT_DOCS"
+ensure_dir "$PROJECT_DOCS/base"
+ensure_dir "$PROJECT_DOCS/epics"
+ensure_dir "$PROJECT_DOCS/stories"
+ensure_dir "$PROJECT_DOCS/qa"
+
+# Create README for project documentation
+cat > "$PROJECT_DOCS/README.md" << 'DOCEOF'
+# Project Documentation Structure
+
+This directory contains all project-specific documentation generated and used by the AP Method agents.
+
+## Directory Structure
+
+### base/
+Core project documents that serve as the foundation for all development work:
+- `prd.md` - Product Requirements Document (created by PM agent)
+- `architecture.md` - System Architecture Document (created by Architect agent)
+- `frontend-architecture.md` - Frontend Architecture Document (created by Design Architect)
+- `project_structure.md` - Project file/folder organization
+- `development_workflow.md` - Development process and workflows
+- `tech_stack.md` - Technology stack and dependencies
+- `data-models.md` - Data structures and models
+- `environment-vars.md` - Environment variable documentation
+
+### epics/
+Contains epic-level documentation:
+- `epic-{n}.md` - Individual epic documents
+- `epic-orchestration-guide.md` - Guide for managing epics
+
+### stories/
+User story documentation:
+- `{epicNum}.{storyNum}.story.md` - Individual story files
+- Stories are generated from epics by the SM agent
+
+### qa/
+Quality assurance documentation:
+- `test-strategy.md` - Overall testing strategy
+- `test-plan.md` - Detailed test plans
+- `test-report.md` - Test execution reports
+- `automation-plan.md` - Test automation plans
+- `deployment-plan.md` - Deployment procedures
+- `test-plans/` - Individual test plan documents
+- `automation/` - Automation scripts and documentation
+
+### index.md
+Master index linking all documentation for easy navigation.
+
+## Usage by Agents
+
+- **Analyst**: Creates initial project briefs and research documents
+- **PM**: Generates PRD and manages epic documentation
+- **Architect**: Creates and maintains architecture documents
+- **Design Architect**: Produces frontend architecture and UI/UX specs
+- **PO**: Validates and organizes documentation alignment
+- **SM**: Generates stories from epics, maintains story documentation
+- **Developer**: References all documentation during implementation
+- **QA**: Creates and maintains test documentation
+
+## Important Notes
+
+1. All paths in agent configurations use the $PROJECT_DOCS environment variable
+2. Documents follow specific templates found in $AP_ROOT/agents/templates/
+3. The structure supports both new projects and incremental feature development
+4. Documentation is meant to be version controlled alongside code
+DOCEOF
+
+echo "Created project documentation structure at: $PROJECT_DOCS"
+echo "  - Created base/, epics/, stories/, qa/ directories"
+echo "  - Added README.md with usage instructions"
+
+echo ""
+echo "Step 4: Creating Environment Configuration"
+echo "-----------------------------------------"
+
+# Create fallback session notes path for Obsidian users
+if [ "$NOTES_TYPE" = "obsidian" ]; then
+    FALLBACK_SESSION_NOTES_PATH="$PROJECT_DOCS/session_notes"
+    FALLBACK_RULES_PATH="$PROJECT_DOCS/rules"
+    FALLBACK_ARCHIVE_PATH="$FALLBACK_SESSION_NOTES_PATH/archive"
+    
+    # Create fallback directories
+    ensure_dir "$FALLBACK_SESSION_NOTES_PATH"
+    ensure_dir "$FALLBACK_RULES_PATH"
+    ensure_dir "$FALLBACK_ARCHIVE_PATH"
+    
+    echo "Created fallback session directories in case Obsidian is unavailable:"
+    echo "  - Session notes: $FALLBACK_SESSION_NOTES_PATH"
+    echo "  - Rules: $FALLBACK_RULES_PATH"
+    echo "  - Archive: $FALLBACK_ARCHIVE_PATH"
+else
+    FALLBACK_SESSION_NOTES_PATH=""
+    FALLBACK_RULES_PATH=""
+    FALLBACK_ARCHIVE_PATH=""
+fi
+
+# Create .env.ap file
+ENV_FILE="$PROJECT_ROOT/.env.ap"
+cat > "$ENV_FILE" << EOF
+# AP Method Environment Configuration
+# Generated by agentic-setup on $(date)
+
+# Core paths
+export AP_ROOT="$AP_ROOT"
+export PROJECT_ROOT="$PROJECT_ROOT"
+export PROJECT_DOCS="$PROJECT_DOCS"
+export PROJECT_NAME="$PROJECT_NAME"
+
+# Claude configuration
+export CLAUDE_COMMANDS_DIR="$CLAUDE_COMMANDS_DIR"
+
+# Session notes configuration
+export NOTES_TYPE="$NOTES_TYPE"
+export SESSION_NOTES_PATH="$SESSION_NOTES_PATH"
+export RULES_PATH="$RULES_PATH"
+export ARCHIVE_PATH="$ARCHIVE_PATH"
+
+# Fallback paths for Obsidian users (when MCP is unavailable)
+export FALLBACK_SESSION_NOTES_PATH="$FALLBACK_SESSION_NOTES_PATH"
+export FALLBACK_RULES_PATH="$FALLBACK_RULES_PATH"
+export FALLBACK_ARCHIVE_PATH="$FALLBACK_ARCHIVE_PATH"
+
+# Voice scripts (using persona-based names)
+export SPEAK_ORCHESTRATOR="\$AP_ROOT/agents/voice/speakOrchestrator.sh"
+export SPEAK_DEVELOPER="\$AP_ROOT/agents/voice/speakDeveloper.sh"
+export SPEAK_ARCHITECT="\$AP_ROOT/agents/voice/speakArchitect.sh"
+export SPEAK_ANALYST="\$AP_ROOT/agents/voice/speakAnalyst.sh"
+export SPEAK_QA="\$AP_ROOT/agents/voice/speakQA.sh"
+export SPEAK_PM="\$AP_ROOT/agents/voice/speakPM.sh"
+export SPEAK_PO="\$AP_ROOT/agents/voice/speakPO.sh"
+export SPEAK_SM="\$AP_ROOT/agents/voice/speakSM.sh"
+export SPEAK_DESIGN_ARCHITECT="\$AP_ROOT/agents/voice/speakDesignArchitect.sh"
+EOF
+
+echo "Created environment configuration: $ENV_FILE"
+
+echo ""
+echo "Step 5: Creating .claude Commands"
+echo "---------------------------------"
+
+ensure_dir "$CLAUDE_COMMANDS_DIR"
+
+# Create ap.md command
+cat > "$CLAUDE_COMMANDS_DIR/ap.md" << 'EOF'
+---
+name: ap
+description: Launch AP Orchestrator
+---
+
+Launch the AP Orchestrator following instructions in @agents/ide-ap-orchestrator.md
+EOF
+
+# Create wrap command
+if [ "$NOTES_TYPE" = "obsidian" ]; then
+    cat > "$CLAUDE_COMMANDS_DIR/wrap.md" << EOF
+---
+name: wrap
+description: Wrap up the current session
+---
+
+# Session Wrap-up Protocol
+
+1. Create a comprehensive session summary
+2. Move the current session note to archive in Obsidian
+3. Update any relevant documentation
+
+## Steps:
+1. Use Obsidian MCP to find the current session note in $SESSION_NOTES_PATH
+   - If Obsidian is unavailable, check fallback: $FALLBACK_SESSION_NOTES_PATH
+2. Create a summary of what was accomplished
+3. Move the note to $ARCHIVE_PATH with a descriptive name
+   - If using fallback, move to: $FALLBACK_ARCHIVE_PATH
+4. Update any relevant rules or documentation if needed
+
+## Fallback Handling:
+If Obsidian MCP is unavailable:
+- Check for session notes in: $FALLBACK_SESSION_NOTES_PATH
+- Archive to: $FALLBACK_ARCHIVE_PATH
+- Sync to Obsidian when available
+
+Remember to include:
+- What was completed
+- Any issues encountered
+- Decisions made
+- Next steps for future sessions
+EOF
+else
+    cat > "$CLAUDE_COMMANDS_DIR/wrap.md" << EOF
+---
+name: wrap
+description: Wrap up the current session
+---
+
+# Session Wrap-up Protocol
+
+1. Create a comprehensive session summary
+2. Move the current session note to archive
+3. Update any relevant documentation
+
+## Steps:
+1. Find the current session note in $SESSION_NOTES_PATH
+2. Create a summary of what was accomplished
+3. Move the note to $ARCHIVE_PATH with a descriptive name
+4. Update any relevant rules or documentation if needed
+
+Remember to include:
+- What was completed
+- Any issues encountered
+- Decisions made
+- Next steps for future sessions
+EOF
+fi
+
+# Create session-note-setup command
+if [ "$NOTES_TYPE" = "obsidian" ]; then
+    cat > "$CLAUDE_COMMANDS_DIR/session-note-setup.md" << EOF
+---
+name: session-note-setup
+description: Set up session notes structure
+---
+
+# Session Notes Setup
+
+Create the session notes folder structure:
+
+## Primary (Obsidian):
+- Main folder: $SESSION_NOTES_PATH
+- Archive folder: $ARCHIVE_PATH
+- Rules folder: $RULES_PATH
+
+## Fallback (Local):
+- Main folder: $FALLBACK_SESSION_NOTES_PATH
+- Archive folder: $FALLBACK_ARCHIVE_PATH
+- Rules folder: $FALLBACK_RULES_PATH
+
+Session note format: YYYY-MM-DD-HH-mm-ss-Description.md
+
+Note: Fallback folders are automatically created for redundancy when Obsidian is unavailable.
+EOF
+else
+    cat > "$CLAUDE_COMMANDS_DIR/session-note-setup.md" << EOF
+---
+name: session-note-setup
+description: Set up session notes structure
+---
+
+# Session Notes Setup
+
+Create the session notes folder structure:
+- Main folder: $SESSION_NOTES_PATH
+- Archive folder: $ARCHIVE_PATH
+- Rules folder: $RULES_PATH
+
+Session note format: YYYY-MM-DD-HH-mm-ss-Description.md
+EOF
+fi
+
+# Create harmonize-epics command
+cat > "$CLAUDE_COMMANDS_DIR/harmonize-epics.md" << 'EOF'
+---
+name: harmonize-epics
+description: Harmonize epic files
+---
+
+Run the harmonize script for epics:
+```bash
+source $PROJECT_ROOT/.env.ap && node $AP_ROOT/scripts/harmonize-epics-stories.js epics
+```
+EOF
+
+# Create harmonize-stories command
+cat > "$CLAUDE_COMMANDS_DIR/harmonize-stories.md" << 'EOF'
+---
+name: harmonize-stories
+description: Harmonize story files
+---
+
+Run the harmonize script for stories:
+```bash
+source $PROJECT_ROOT/.env.ap && node $AP_ROOT/scripts/harmonize-epics-stories.js stories
+```
+EOF
+
+echo "Created .claude commands in: $CLAUDE_COMMANDS_DIR"
+
+echo ""
+echo "Step 6: Updating CLAUDE.md"
+echo "--------------------------"
+
+# Check if CLAUDE.md exists
+CLAUDE_MD="$PROJECT_ROOT/CLAUDE.md"
+if [ -f "$CLAUDE_MD" ]; then
+    echo "CLAUDE.md already exists. Creating CLAUDE.md.ap-setup instead."
+    CLAUDE_MD="$PROJECT_ROOT/CLAUDE.md.ap-setup"
+fi
+
+# Create CLAUDE.md with appropriate session notes configuration
+if [ "$NOTES_TYPE" = "obsidian" ]; then
+    cat > "$CLAUDE_MD" << EOF
+# AP Method Instructions
+
+This file provides guidance to AI CLI when working with code in this repository using the AP (Agent Persona) method.
+
+## Environment Configuration
+
+This project uses the AP method with the following configuration:
+- AP Root: \$AP_ROOT
+- Project Documentation: \$PROJECT_DOCS
+- Session Notes: Obsidian MCP at $SESSION_NOTES_PATH
+- Rules: Obsidian MCP at $RULES_PATH
+
+## Session Management with Obsidian MCP
+
+### 🔴 FIRST ACTION: CHECK OBSIDIAN MCP
+
+Before reading further, if this is a new session:
+
+1. Check \`$SESSION_NOTES_PATH/\` for recent session notes
+2. Check \`$RULES_PATH/\` for any behavioral updates
+3. Check relevant documentation folders
+4. Create your session note: \`$SESSION_NOTES_PATH/YYYY-MM-DD-HH-mm-ss-Description.md\`
+5. When /wrap command is called, move the current session note to \`$ARCHIVE_PATH/YYYY-MM-DD-HH-mm-ss-SessionTitle.md\`
+
+### Path Formatting Rules:
+
+- Folder paths MUST have trailing slash: \`"Sessions/"\` not \`"Sessions"\`
+- Root level: \`"."\` not \`""\`
+- Use proper linking: \`[[Other-Document]]\`
+
+### 🟡 IMPORTANT: Fallback Session Notes
+
+If Obsidian MCP is unavailable (connection issues, not installed, etc.):
+- **Fallback location**: \`$FALLBACK_SESSION_NOTES_PATH\`
+- **Fallback rules**: \`$FALLBACK_RULES_PATH\`
+- **Fallback archive**: \`$FALLBACK_ARCHIVE_PATH\`
+
+When Obsidian is unavailable:
+1. Write session notes to \`$FALLBACK_SESSION_NOTES_PATH/YYYY-MM-DD-HH-mm-ss-Description.md\`
+2. Check both Obsidian and fallback locations when starting sessions
+3. Sync fallback notes to Obsidian when connection is restored
+
+## Audio Notifications
+
+All agents use voice scripts from \$AP_ROOT/agents/voice/:
+- AP Orchestrator: \$SPEAK_ORCHESTRATOR
+- AP Developer: \$SPEAK_DEVELOPER
+- AP Architect: \$SPEAK_ARCHITECT
+- AP Analyst: \$SPEAK_ANALYST
+- AP QA: \$SPEAK_QA
+- AP PM: \$SPEAK_PM
+- AP PO: \$SPEAK_PO
+- AP SM: \$SPEAK_SM
+
+## AP Commands
+
+- \`/ap\` - Launch AP Orchestrator
+- \`/wrap\` - Wrap up current session
+- \`/harmonize-epics\` - Harmonize epic files
+- \`/harmonize-stories\` - Harmonize story files
+- \`/session-note-setup\` - Set up session notes structure
+EOF
+else
+    cat > "$CLAUDE_MD" << EOF
+# AP Method Instructions
+
+This file provides guidance to AI CLI when working with code in this repository using the AP (Agent Persona) method.
+
+## Environment Configuration
+
+This project uses the AP method with the following configuration:
+- AP Root: \$AP_ROOT
+- Project Documentation: \$PROJECT_DOCS
+- Session Notes: Markdown files at $SESSION_NOTES_PATH
+- Rules: Markdown files at $RULES_PATH
+
+## Session Management with Markdown
+
+### 🔴 FIRST ACTION: CHECK SESSION NOTES
+
+Before reading further, if this is a new session:
+
+1. Check \`$SESSION_NOTES_PATH/\` for recent session notes
+2. Check \`$RULES_PATH/\` for any behavioral updates
+3. Check relevant documentation folders
+4. Create your session note: \`$SESSION_NOTES_PATH/YYYY-MM-DD-HH-mm-ss-Description.md\`
+5. When /wrap command is called, move the current session note to \`$ARCHIVE_PATH/YYYY-MM-DD-HH-mm-ss-SessionTitle.md\`
+
+### Session Note Format:
+
+\`\`\`markdown
+# Session: [Title]
+Date: YYYY-MM-DD HH:MM:SS
+
+## Objectives
+- [ ] Task 1
+- [ ] Task 2
+
+## Progress
+[Document work as it happens]
+
+## Decisions Made
+[Important decisions and rationale]
+
+## Issues Encountered
+[Problems and solutions]
+
+## Next Steps
+[What needs to be done next session]
+\`\`\`
+
+## Audio Notifications
+
+All agents use voice scripts from \$AP_ROOT/agents/voice/:
+- AP Orchestrator: \$SPEAK_ORCHESTRATOR
+- AP Developer: \$SPEAK_DEVELOPER
+- AP Architect: \$SPEAK_ARCHITECT
+- AP Analyst: \$SPEAK_ANALYST
+- AP QA: \$SPEAK_QA
+- AP PM: \$SPEAK_PM
+- AP PO: \$SPEAK_PO
+- AP SM: \$SPEAK_SM
+
+## AP Commands
+
+- \`/ap\` - Launch AP Orchestrator
+- \`/wrap\` - Wrap up current session
+- \`/harmonize-epics\` - Harmonize epic files
+- \`/harmonize-stories\` - Harmonize story files
+- \`/session-note-setup\` - Set up session notes structure
+EOF
+fi
+
+echo "Created: $CLAUDE_MD"
+
+echo ""
+echo "Step 7: Configuring .gitignore"
+echo "-------------------------------"
+
+# Configure .gitignore
+GITIGNORE_FILE="$PROJECT_ROOT/.gitignore"
+if [ -f "$GITIGNORE_FILE" ]; then
+    echo "Updating existing .gitignore file..."
+    
+    # Check if session notes entries already exist
+    if ! grep -q "# Session notes" "$GITIGNORE_FILE"; then
+        echo "" >> "$GITIGNORE_FILE"
+        echo "# Session notes (both Obsidian fallback and markdown)" >> "$GITIGNORE_FILE"
+        echo "project_documentation/session_notes/" >> "$GITIGNORE_FILE"
+        echo "session_notes/" >> "$GITIGNORE_FILE"
+        echo "" >> "$GITIGNORE_FILE"
+        echo "# AP Method environment configuration" >> "$GITIGNORE_FILE"
+        echo ".env.ap" >> "$GITIGNORE_FILE"
+        echo "" >> "$GITIGNORE_FILE"
+        echo "# AP Method generated files" >> "$GITIGNORE_FILE"
+        echo "CLAUDE.md.ap-setup" >> "$GITIGNORE_FILE"
+        echo "harmonization.log" >> "$GITIGNORE_FILE"
+        
+        echo "Added AP method entries to .gitignore"
+    else
+        echo ".gitignore already contains session notes entries"
+    fi
+else
+    echo "Creating new .gitignore file..."
+    cat > "$GITIGNORE_FILE" << 'EOF'
+# Session notes (both Obsidian fallback and markdown)
+project_documentation/session_notes/
+session_notes/
+
+# AP Method environment configuration
+.env.ap
+
+# AP Method generated files
+CLAUDE.md.ap-setup
+harmonization.log
+
+# Node modules
+node_modules/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+EOF
+    echo "Created .gitignore with AP method entries"
+fi
+
+echo ""
+echo "Step 8: Setup Instructions"
+echo "--------------------------"
+echo ""
+echo "Setup complete! To use the AP method in your project:"
+echo ""
+echo "1. Source the environment file in your shell:"
+echo "   source $ENV_FILE"
+echo ""
+echo "2. Add this to your shell profile (e.g., ~/.bashrc or ~/.zshrc):"
+echo "   [ -f \"$ENV_FILE\" ] && source \"$ENV_FILE\""
+echo ""
+if [ "$CLAUDE_MD" = "$PROJECT_ROOT/CLAUDE.md.ap-setup" ]; then
+    echo "3. Review $CLAUDE_MD and merge with your existing CLAUDE.md"
+else
+    echo "3. Your CLAUDE.md has been created with AP method instructions"
+fi
+echo ""
+echo "4. The following commands are now available in Claude:"
+echo "   - /ap - Launch AP Orchestrator"
+echo "   - /wrap - Wrap up session"
+echo "   - /harmonize-epics - Harmonize epics"
+echo "   - /harmonize-stories - Harmonize stories"
+echo "   - /session-note-setup - Set up session structure"
+echo ""
+echo "========================================"
+echo "AP Method setup completed successfully!"
+echo "========================================"

@@ -1,0 +1,89 @@
+# AP Method - Git Ignore File
+
+# Session notes (both Obsidian fallback and markdown)
+project_documentation/session_notes/
+session_notes/
+
+# AP Method environment configuration
+.env.ap
+
+# AP Method generated files
+CLAUDE.md.ap-setup
+harmonization.log
+
+# Project-specific documentation (created during actual use)
+project_documentation/
+
+# Piper TTS installation (if installed locally)
+piper-chat/
+
+# Node modules
+node_modules/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE files
+.idea/
+.vscode/
+*.sublime-*
+.cursor/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+
+# Build directories
+build/
+dist/
+*.egg-info/
+
+# Temporary files
+*.tmp
+*.temp
+.tmp/
+.temp/
+
+# Archive directories
+archive/
+*.bak
+*.backup
+
+# Generated audio files (from voice scripts)
+*.wav
+*.mp3
+*.ogg
+
+# Agent worktrees (if using parallel development)
+*-agent-*/
+
+# Custom agent configurations
+.ap-agents
+.ap-default-agents
+
+# Debug and core dump files
+.ai/
+core-dump*.md
+TODO-revert.md
