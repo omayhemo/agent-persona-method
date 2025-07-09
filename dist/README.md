@@ -5,8 +5,20 @@ The AP (Agent Persona) Method is a project-agnostic approach to orchestrating AI
 
 ## Quick Start
 
-### Easy Interactive Setup
+### Direct Download from GitHub
 ```bash
+# Download and extract in one command
+curl -L https://github.com/omayhemo/agent-persona-method/raw/main/dist/ap-method-v1.0.0.tar.gz | tar -xz
+
+# Run the installer
+./install.sh
+```
+
+### Alternative: Download then Extract
+```bash
+# Download the package
+curl -LO https://github.com/omayhemo/agent-persona-method/raw/main/dist/ap-method-v1.0.0.tar.gz
+
 # Extract the distribution
 tar -xzf ap-method-v1.0.0.tar.gz
 

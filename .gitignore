@@ -54,8 +54,12 @@ ENV/
 
 # Build directories
 build/
-dist/
 *.egg-info/
+
+# Distribution - exclude folder but allow specific files
+dist/
+!dist/*.tar.gz
+!dist/README.md
 
 # Temporary files
 *.tmp

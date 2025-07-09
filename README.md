@@ -4,12 +4,26 @@ The AP (Agent Persona) method is a project-agnostic approach to orchestrating AI
 
 ## Quick Start
 
-1. **Run the setup script:**
+### Install from GitHub Release (Recommended)
+
+```bash
+# Download and extract in one command
+curl -L https://github.com/omayhemo/agent-persona-method/raw/main/dist/ap-method-v1.0.0.tar.gz | tar -xz
+
+# Run the installer
+./install.sh
+```
+
+### Install from Source
+
+1. **Clone and run setup:**
    ```bash
+   git clone https://github.com/omayhemo/agent-persona-method.git
+   cd agent-persona-method
    ./agents/agentic-setup
    ```
 
-2. **Launch the orchestrator:**
+2. **Launch the orchestrator in Claude:**
    ```
    /ap
    ```
@@ -41,17 +55,32 @@ The AP Method leverages specialized AI agents to handle different aspects of sof
 
 ### Prerequisites
 
-- Git
-- Node.js (for scripts)
+- Bash shell
+- Git (recommended)
+- Node.js (for some utilities)
 - Claude Code CLI or compatible AI interface
 - (Optional) Obsidian for enhanced session management
 
-### Setup
+### Option 1: Install from Release (Easiest)
+
+```bash
+# Download and install in your project directory
+cd /path/to/your/project
+curl -L https://github.com/omayhemo/agent-persona-method/raw/main/dist/ap-method-v1.0.0.tar.gz | tar -xz
+./install.sh
+
+# Or download first, then extract
+curl -LO https://github.com/omayhemo/agent-persona-method/raw/main/dist/ap-method-v1.0.0.tar.gz
+tar -xzf ap-method-v1.0.0.tar.gz
+./install.sh
+```
+
+### Option 2: Install from Source
 
 1. Clone the repository:
    ```bash
-   git clone [repository-url]
-   cd agentic-persona
+   git clone https://github.com/omayhemo/agent-persona-method.git
+   cd agent-persona-method
    ```
 
 2. Run the setup script:
@@ -63,6 +92,16 @@ The AP Method leverages specialized AI agents to handle different aspects of sof
    - Project name and paths
    - Session notes system (Obsidian or markdown)
    - Documentation structure
+
+### Unattended Installation
+
+For automated deployments:
+```bash
+# Install with all defaults - no prompts
+./install.sh --defaults
+# or
+./install.sh -d
+```
 
 ### Voice Setup (Optional)
 
