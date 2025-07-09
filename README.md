@@ -9,12 +9,7 @@ The AP (Agent Persona) method is a project-agnostic approach to orchestrating AI
    ./agents/agentic-setup
    ```
 
-2. **Source the environment:**
-   ```bash
-   source .env.ap
-   ```
-
-3. **Launch the orchestrator:**
+2. **Launch the orchestrator:**
    ```
    /ap
    ```
@@ -96,10 +91,16 @@ This installs the Piper TTS system with 9 different US English voices.
    Task: Create PRD from brief
    ```
 
-3. **Design Architecture**
+3. **Architecture**
    ```
    Select: Architect
-   Task: Create architecture document
+   Task: Create a Architectural Documentation
+   ```
+
+3. **Design Architecture**
+   ```
+   Select: Design Architect
+   Task: Create a Design Document, Generate Prompts for Lovable
    ```
 
 4. **Generate Stories**
@@ -119,9 +120,9 @@ This installs the Piper TTS system with 9 different US English voices.
 After setup, these commands are available in Claude:
 
 - `/ap` - Launch AP Orchestrator
+- `/handoff` - Hand off to another agent persona (direct transition)
+- `/switch` - Compact session and switch to another agent persona
 - `/wrap` - Wrap up current session
-- `/harmonize-epics` - Harmonize epic files
-- `/harmonize-stories` - Harmonize story files
 - `/session-note-setup` - Set up session structure
 
 ## Project Structure

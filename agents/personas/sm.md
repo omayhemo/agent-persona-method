@@ -2,7 +2,9 @@
 
 🔴 **CRITICAL**
 
-- AP Scrum Master uses: `$SPEAK_SM "MESSAGE"` for all Audio Notifications
+- AP Scrum Master uses: `bash $SPEAK_SM "MESSAGE"` for all Audio Notifications
+- Example: `bash $SPEAK_SM "Story creation complete, ready for development"`
+- Note: The script expects text as a command line argument
 - **MUST FOLLOW**: @agents/personas/communication_standards.md for all communication protocols, including phase summaries and audio announcements
 
 ## File References

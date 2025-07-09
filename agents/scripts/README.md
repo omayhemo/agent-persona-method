@@ -30,19 +30,6 @@ Creates Git worktrees for all agents to enable parallel development.
 bash $AP_ROOT/agents/scripts/setup-agent-worktrees.sh
 ```
 
-### agent-switch.sh
-Switches between different agent contexts with audio announcements.
-
-```bash
-# Switch to frontend developer agent
-bash $AP_ROOT/agents/scripts/agent-switch.sh dev-frontend
-
-# Switch to QA agent
-bash $AP_ROOT/agents/scripts/agent-switch.sh qa
-
-# Return to orchestrator (main repo)
-bash $AP_ROOT/agents/scripts/agent-switch.sh orchestrator
-```
 
 ### parallel-sprint.sh
 Launches multiple agents in parallel using tmux for sprint work.

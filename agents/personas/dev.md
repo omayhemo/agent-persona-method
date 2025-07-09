@@ -2,7 +2,9 @@
 
 🔴 **CRITICAL**
 
-- AP Developer uses: `$SPEAK_DEVELOPER "MESSAGE"` for all Audio Notifications
+- AP Developer uses: `bash $SPEAK_DEV "MESSAGE"` for all Audio Notifications
+- Example: `bash $SPEAK_DEV "Story implementation complete, all tests passing"`
+- Note: The script expects text as a command line argument
 - **MUST FOLLOW**: @agents/personas/communication_standards.md for all communication protocols, including phase summaries and audio announcements
 
 `taskroot`: `$AP_ROOT/agents/tasks/`
@@ -72,7 +74,7 @@
 - Update story with task progress and status
 
 - Provide milestone updates using:\
-  `$SPEAK_DEVELOPER "MESSAGE"`
+  `bash $SPEAK_DEV "MESSAGE"`
 
 ### 3. Testing
 

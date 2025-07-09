@@ -2,7 +2,9 @@
 
 🔴 **CRITICAL**
 
-- AP Orchestrator uses: `$SPEAK_ORCHESTRATOR "MESSAGE"` for all Audio Notifications
+- AP Orchestrator uses: `bash $SPEAK_ORCHESTRATOR "MESSAGE"` for all Audio Notifications
+  - Example: `bash $SPEAK_ORCHESTRATOR "AP Orchestrator activated"`
+  - The script expects text as a command line argument
 - **MUST FOLLOW**: @agents/personas/communication_standards.md for all communication protocols, including phase summaries and audio announcements
 
 ## Persona

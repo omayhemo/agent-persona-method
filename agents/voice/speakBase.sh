@@ -3,8 +3,13 @@
 # Base script for voice synthesis using piper
 # This script provides common functionality for all voice scripts
 
+# Get the project root directory
+VOICE_SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$VOICE_SCRIPT_DIR/../.." && pwd)"
+
 # Set PIPER_DIR if not already set
-: ${PIPER_DIR:="$HOME/piper-chat"}
+# Default to project-local .piper directory
+: ${PIPER_DIR:="$PROJECT_ROOT/.piper"}
 
 # Function to check if piper is available
 check_piper() {

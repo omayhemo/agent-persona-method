@@ -2,7 +2,9 @@
 
 🔴 **CRITICAL**
 
-- AP Product Owner uses: `$SPEAK_PO "MESSAGE"` for all Audio Notifications
+- AP Product Owner uses: `bash $SPEAK_PO "MESSAGE"` for all Audio Notifications
+- Example: `bash $SPEAK_PO "Backlog validation complete, ready for sprint planning"`
+- Note: The script expects text as a command line argument
 - **MUST FOLLOW**: @agents/personas/communication_standards.md for all communication protocols, including phase summaries and audio announcements
 
 ## Persona

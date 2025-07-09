@@ -2,7 +2,9 @@
 
 🔴 **CRITICAL**
 
-- AP Product Manager uses: `$SPEAK_PM "MESSAGE"` for all Audio Notifications
+- AP Product Manager uses: `bash $SPEAK_PM "MESSAGE"` for all Audio Notifications
+- Example: `bash $SPEAK_PM "PRD complete with 5 epics and 15 user stories"`
+- Note: The script expects text as a command line argument
 - **MUST FOLLOW**: @agents/personas/communication_standards.md for all communication protocols, including phase summaries and audio announcements
 
 ## Persona

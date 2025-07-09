@@ -21,10 +21,16 @@ handle_error() {
     exit 1
 }
 
+# Get the project root (two levels up from this script)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+
 # Get the directory where we'll set up piper
-SETUP_DIR="${1:-$HOME/piper-chat}"
+# Default to project-local .piper directory
+SETUP_DIR="${1:-$PROJECT_ROOT/.piper}"
 
 echo "Setting up Piper in: $SETUP_DIR"
+echo "Project root: $PROJECT_ROOT"
 echo ""
 
 # Create and enter directory
@@ -58,95 +64,195 @@ if [ -d "/usr/lib/x86_64-linux-gnu/espeak-ng-data" ] && [ ! -L "/usr/share/espea
 fi
 
 echo ""
-echo "Step 2: Cloning Repositories"
-echo "----------------------------"
+echo "Step 2: Piper Installation Choice"
+echo "---------------------------------"
 
-# Clone repositories
-echo "Cloning piper..."
-if [ ! -d "piper" ]; then
-    git clone https://github.com/rhasspy/piper.git || handle_error "Failed to clone piper"
+# Check if running in unattended mode
+if [ "$USE_DEFAULTS" = true ]; then
+    echo "Using default: Download pre-compiled binary"
+    BUILD_CHOICE="1"
 else
-    echo "piper directory already exists, skipping clone"
+    echo ""
+    echo "How would you like to install Piper?"
+    echo "1) Download pre-compiled binary (recommended - fast)"
+    echo "2) Build from source (slower, requires build tools)"
+    echo ""
+    read -p "Enter choice (1 or 2) [1]: " BUILD_CHOICE
+    BUILD_CHOICE="${BUILD_CHOICE:-1}"
 fi
 
-echo "Cloning piper-voices..."
-if [ ! -d "piper-voices" ]; then
-    git clone https://github.com/rhasspy/piper-voices.git || handle_error "Failed to clone piper-voices"
-else
-    echo "piper-voices directory already exists, skipping clone"
+if [ "$BUILD_CHOICE" = "1" ]; then
+    echo ""
+    echo "Step 3: Downloading Pre-compiled Piper Binary"
+    echo "--------------------------------------------"
+    
+    # Detect architecture
+    ARCH=$(uname -m)
+    OS=$(uname -s | tr '[:upper:]' '[:lower:]')
+    
+    # Construct download URL for piper binary
+    PIPER_VERSION="2023.11.14-2"
+    
+    # Map to actual release file names
+    case "$ARCH" in
+        x86_64) 
+            PIPER_FILE="piper_${OS}_x86_64.tar.gz"
+            ;;
+        aarch64) 
+            PIPER_FILE="piper_${OS}_arm64.tar.gz"
+            ;;
+        armv7l) 
+            PIPER_FILE="piper_${OS}_armv7.tar.gz"
+            ;;
+        *)
+            echo "Unsupported architecture: $ARCH"
+            BUILD_CHOICE="2"
+            ;;
+    esac
+    
+    PIPER_URL="https://github.com/rhasspy/piper/releases/download/${PIPER_VERSION}/${PIPER_FILE}"
+    
+    echo "Downloading piper for ${OS}_${ARCH}..."
+    echo "URL: $PIPER_URL"
+    
+    # Download and extract
+    wget -q --show-progress "$PIPER_URL" -O piper.tar.gz || {
+        echo "Error: Failed to download pre-compiled binary"
+        echo "Falling back to building from source..."
+        BUILD_CHOICE="2"
+    }
+    
+    if [ "$BUILD_CHOICE" = "1" ]; then
+        echo "Extracting piper..."
+        
+        # Clean up any existing piper directory first
+        if [ -d "piper" ]; then
+            echo "Removing existing piper directory..."
+            rm -rf piper
+        fi
+        
+        tar -xzf piper.tar.gz || handle_error "Failed to extract piper"
+        rm piper.tar.gz
+        
+        # The archive extracts to a 'piper' directory
+        if [ -d "piper" ] && [ -f "piper/piper" ]; then
+            # Copy the binary first
+            cp piper/piper ./piper-executable
+            
+            # Copy other required files
+            cp -r piper/*.so* ./ 2>/dev/null || true
+            cp -r piper/espeak-ng-data ./ 2>/dev/null || true
+            cp piper/libtashkeel_model.ort ./ 2>/dev/null || true
+            
+            # Clean up the extracted directory
+            rm -rf piper/
+            
+            # Now rename the binary
+            mv ./piper-executable ./piper
+            chmod +x ./piper
+            
+            # Verify it exists
+            if [ -f "./piper" ]; then
+                echo "✓ Piper binary and dependencies ready"
+            else
+                echo "Error: Failed to install piper binary"
+                exit 1
+            fi
+        else
+            echo "Error: Piper binary not found in expected location"
+            echo "Please check the extracted files and run the script again"
+            exit 1
+        fi
+    fi
 fi
 
-echo "Cloning piper-phonemize..."
-if [ ! -d "piper-phonemize" ]; then
-    # Try SSH first, fall back to HTTPS if it fails
-    git clone git@github.com:rhasspy/piper-phonemize.git 2>/dev/null || \
-    git clone https://github.com/rhasspy/piper-phonemize.git || \
-    handle_error "Failed to clone piper-phonemize"
-else
-    echo "piper-phonemize directory already exists, skipping clone"
+if [ "$BUILD_CHOICE" = "2" ]; then
+    echo ""
+    echo "Step 3: Building from Source"
+    echo "---------------------------"
+    
+    # Clone repositories
+    echo "Cloning piper..."
+    if [ ! -d "piper" ]; then
+        git clone https://github.com/rhasspy/piper.git || handle_error "Failed to clone piper"
+    else
+        echo "piper directory already exists, skipping clone"
+    fi
+
+    echo "Cloning piper-phonemize..."
+    if [ ! -d "piper-phonemize" ]; then
+        # Try SSH first, fall back to HTTPS if it fails
+        git clone git@github.com:rhasspy/piper-phonemize.git 2>/dev/null || \
+        git clone https://github.com/rhasspy/piper-phonemize.git || \
+        handle_error "Failed to clone piper-phonemize"
+    else
+        echo "piper-phonemize directory already exists, skipping clone"
+    fi
+
+    echo ""
+    echo "Building piper-phonemize"
+    echo "------------------------"
+    
+    cd piper-phonemize || handle_error "Failed to enter piper-phonemize directory"
+    
+    # Check if we need to install build dependencies
+    if ! command_exists cmake; then
+        echo "Installing build dependencies..."
+        sudo apt-get install -y build-essential cmake || handle_error "Failed to install build dependencies"
+    fi
+    
+    # Build piper-phonemize
+    echo "Building piper-phonemize..."
+    mkdir -p build
+    cd build
+    cmake .. || handle_error "Failed to configure piper-phonemize"
+    make || handle_error "Failed to build piper-phonemize"
+    
+    echo "Installing piper-phonemize..."
+    sudo make install || echo "Warning: Failed to install piper-phonemize system-wide (continuing anyway)"
+    
+    cd "$SETUP_DIR"
+    
+    echo ""
+    echo "Building piper"
+    echo "--------------"
+    
+    cd piper || handle_error "Failed to enter piper directory"
+    
+    # Build piper
+    echo "Building piper..."
+    make || handle_error "Failed to build piper"
+    
+    # Copy piper binary to main directory
+    echo "Copying piper binary..."
+    cp build/piper "$SETUP_DIR/piper" || handle_error "Failed to copy piper binary"
+    chmod +x "$SETUP_DIR/piper"
+    
+    cd "$SETUP_DIR"
 fi
 
 echo ""
-echo "Step 3: Building piper-phonemize"
-echo "--------------------------------"
-
-cd piper-phonemize || handle_error "Failed to enter piper-phonemize directory"
-
-# Check if we need to install build dependencies
-if ! command_exists cmake; then
-    echo "Installing build dependencies..."
-    sudo apt-get install -y build-essential cmake || handle_error "Failed to install build dependencies"
-fi
-
-# Build piper-phonemize
-echo "Building piper-phonemize..."
-mkdir -p build
-cd build
-cmake .. || handle_error "Failed to configure piper-phonemize"
-make || handle_error "Failed to build piper-phonemize"
-
-echo "Installing piper-phonemize..."
-sudo make install || echo "Warning: Failed to install piper-phonemize system-wide (continuing anyway)"
-
-cd "$SETUP_DIR"
-
-echo ""
-echo "Step 4: Building piper"
-echo "---------------------"
-
-cd piper || handle_error "Failed to enter piper directory"
-
-# Build piper
-echo "Building piper..."
-make || handle_error "Failed to build piper"
-
-# Copy piper binary to main directory
-echo "Copying piper binary..."
-cp build/piper "$SETUP_DIR/" || handle_error "Failed to copy piper binary"
-
-cd "$SETUP_DIR"
-
-echo ""
-echo "Step 5: Downloading Voice Models"
+echo "Step 4: Downloading Voice Models"
 echo "--------------------------------"
 
 # Create models directory
 mkdir -p models
 cd models
 
-# Base URL for piper models
-BASE_URL="https://github.com/rhasspy/piper/releases/download/v1.2.0"
+# Base URL for piper models from Hugging Face
+BASE_URL="https://huggingface.co/rhasspy/piper-voices/resolve/v1.0.0"
 
 # Function to download a voice model
 download_voice() {
     local voice_name="$1"
     local voice_desc="$2"
+    local voice_path="$3"
     
     if [ ! -f "${voice_name}.onnx" ]; then
         echo "Downloading ${voice_desc} (${voice_name})..."
-        wget -q --show-progress "${BASE_URL}/${voice_name}.onnx" || \
+        wget -q --show-progress "${BASE_URL}/${voice_path}/${voice_name}.onnx" || \
             echo "Warning: Failed to download ${voice_name}"
-        wget -q "${BASE_URL}/${voice_name}.onnx.json" || \
+        wget -q "${BASE_URL}/${voice_path}/${voice_name}.onnx.json" || \
             echo "Warning: Failed to download ${voice_name} config"
     else
         echo "${voice_desc} already exists, skipping..."
@@ -158,21 +264,21 @@ echo "Downloading 5 women's voices..."
 echo "------------------------------"
 
 # Women's voices
-download_voice "en_US-amy-medium" "Amy (woman, medium quality)"
-download_voice "en_US-kusal-medium" "Kusal (woman, medium quality)"
-download_voice "en_US-kathleen-low" "Kathleen (woman, low quality)"
-download_voice "en_US-lessac-medium" "Lessac (woman, medium quality)"
-download_voice "en_US-libritts_r-medium" "LibriTTS-R (woman, medium quality)"
+download_voice "en_US-amy-medium" "Amy (woman, medium quality)" "en/en_US/amy/medium"
+download_voice "en_US-kusal-medium" "Kusal (woman, medium quality)" "en/en_US/kusal/medium"
+download_voice "en_US-hfc_female-medium" "HFC Female (woman, medium quality)" "en/en_US/hfc_female/medium"
+download_voice "en_US-lessac-medium" "Lessac (woman, medium quality)" "en/en_US/lessac/medium"
+download_voice "en_US-libritts_r-medium" "LibriTTS-R (woman, medium quality)" "en/en_US/libritts_r/medium"
 
 echo ""
 echo "Downloading 4 men's voices..."
 echo "----------------------------"
 
 # Men's voices
-download_voice "en_US-ryan-medium" "Ryan (man, medium quality)"
-download_voice "en_US-joe-medium" "Joe (man, medium quality)"
-download_voice "en_US-danny-low" "Danny (man, low quality)"
-download_voice "en_US-john-medium" "John (man, medium quality)"
+download_voice "en_US-ryan-medium" "Ryan (man, medium quality)" "en/en_US/ryan/medium"
+download_voice "en_US-joe-medium" "Joe (man, medium quality)" "en/en_US/joe/medium"
+download_voice "en_US-arctic-medium" "Arctic (man, medium quality)" "en/en_US/arctic/medium"
+download_voice "en_US-john-medium" "John (man, medium quality)" "en/en_US/john/medium"
 
 cd ..
 
@@ -181,7 +287,7 @@ echo "Voice models downloaded successfully!"
 echo ""
 
 echo ""
-echo "Step 6: Creating Test Script"
+echo "Step 5: Creating Test Script"
 echo "----------------------------"
 
 # Create a test script
@@ -198,14 +304,14 @@ list_voices() {
     echo "Women's voices:"
     echo "  1) amy      - Amy (medium quality)"
     echo "  2) kusal    - Kusal (medium quality)"
-    echo "  3) kathleen - Kathleen (low quality)"
+    echo "  3) hfc      - HFC Female (medium quality)"
     echo "  4) lessac   - Lessac (medium quality)"
     echo "  5) libritts - LibriTTS-R (medium quality)"
     echo ""
     echo "Men's voices:"
     echo "  6) ryan     - Ryan (medium quality)"
     echo "  7) joe      - Joe (medium quality)"
-    echo "  8) danny    - Danny (low quality)"
+    echo "  8) arctic   - Arctic (medium quality)"
     echo "  9) john     - John (medium quality)"
 }
 
@@ -214,12 +320,12 @@ get_model_file() {
     case "$1" in
         amy|1)      echo "en_US-amy-medium.onnx" ;;
         kusal|2)    echo "en_US-kusal-medium.onnx" ;;
-        kathleen|3) echo "en_US-kathleen-low.onnx" ;;
+        hfc|3)      echo "en_US-hfc_female-medium.onnx" ;;
         lessac|4)   echo "en_US-lessac-medium.onnx" ;;
         libritts|5) echo "en_US-libritts_r-medium.onnx" ;;
         ryan|6)     echo "en_US-ryan-medium.onnx" ;;
         joe|7)      echo "en_US-joe-medium.onnx" ;;
-        danny|8)    echo "en_US-danny-low.onnx" ;;
+        arctic|8)   echo "en_US-arctic-medium.onnx" ;;
         john|9)     echo "en_US-john-medium.onnx" ;;
         *)          echo "" ;;
     esac
@@ -294,16 +400,16 @@ echo "========================================"
 echo ""
 echo "Installation directory: $SETUP_DIR"
 echo ""
-echo "9 US English voices installed:"
-echo "  Women: amy, kusal, kathleen, lessac, libritts"
-echo "  Men: ryan, joe, danny, john"
+echo "9 US English voices installed (all medium quality or higher):"
+echo "  Women: amy, kusal, hfc, lessac, libritts"
+echo "  Men: ryan, joe, arctic, john"
 echo ""
 echo "To test piper with different voices:"
 echo "  cd $SETUP_DIR"
 echo "  ./test-piper.sh --list              # List all voices"
 echo "  ./test-piper.sh amy                 # Use Amy's voice"
 echo "  ./test-piper.sh joe \"Hello there\"   # Use Joe's voice with custom text"
-echo "  ./test-piper.sh 3                   # Use voice #3 (Kathleen)"
+echo "  ./test-piper.sh 3                   # Use voice #3 (HFC)"
 echo ""
 echo "Or use piper directly:"
 echo "  echo 'Your text' | ./piper --model models/en_US-amy-medium.onnx --output_file output.wav"

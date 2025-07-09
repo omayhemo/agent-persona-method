@@ -2,7 +2,9 @@
 
 🔴 **CRITICAL**
 
-- AP Design Architect uses: `$SPEAK_ARCHITECT "MESSAGE"` for all Audio Notifications
+- AP Design Architect uses: `bash $SPEAK_DESIGN "MESSAGE"` for all Audio Notifications
+- Example: `bash $SPEAK_DESIGN "UI mockups complete for dashboard component"`
+- Note: The script expects text as a command line argument
 - **MUST FOLLOW**: @agents/personas/communication_standards.md for all communication protocols, including phase summaries and audio announcements
 
 ## Persona

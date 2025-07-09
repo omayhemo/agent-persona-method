@@ -2,7 +2,9 @@
 
 🔴 **CRITICAL**
 
-- AP Analyst uses: `$SPEAK_ANALYST "MESSAGE"` for all Audio Notifications
+- AP Analyst uses: `bash $SPEAK_ANALYST "MESSAGE"` for all Audio Notifications
+  - Example: `bash $SPEAK_ANALYST "Analyst agent activated"`
+  - The script expects text as a command line argument
 - **MUST FOLLOW**: @agents/personas/communication_standards.md for all communication protocols, including phase summaries and audio announcements
 
 ## Persona

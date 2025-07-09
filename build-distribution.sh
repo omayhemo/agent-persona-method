@@ -1,19 +1,229 @@
 #!/bin/bash
 
-# AP Method Setup Script
-# This script initializes the AP (Agent Persona) method for any project
+# Build script for creating AP Method distribution package
+# This creates a versioned zip file with all necessary components
 
 set -e
 
-echo "========================================"
-echo "AP Method Agentic Setup"
-echo "========================================"
+# Configuration
+VERSION="1.0.0"
+DIST_NAME="ap-method-v$VERSION"
+DIST_DIR="dist/$DIST_NAME"
+
+echo "=========================================="
+echo "Building AP Method Distribution v$VERSION"
+echo "=========================================="
 echo ""
 
-# Get the directory where this script is located
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-AP_ROOT="$SCRIPT_DIR"
-PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+# Clean previous builds
+if [ -d "dist" ]; then
+    echo "Cleaning previous builds..."
+    rm -rf dist
+fi
+
+# Create distribution directory
+echo "Creating distribution structure..."
+mkdir -p "$DIST_DIR"
+
+# Copy agents directory
+echo "Copying agents directory..."
+cp -r agents "$DIST_DIR/"
+
+# Create VERSION file
+echo "$VERSION" > "$DIST_DIR/VERSION"
+
+# Create install.sh from agentic-setup
+echo "Creating install.sh..."
+cat > "$DIST_DIR/install.sh" << 'INSTALL_SCRIPT'
+#!/bin/bash
+
+# AP Method Installation Script
+# Based on agentic-setup, modified for distribution installation
+
+set -e
+
+# Check for --defaults flag
+USE_DEFAULTS=false
+if [ "$1" = "--defaults" ] || [ "$1" = "-d" ]; then
+    USE_DEFAULTS=true
+    shift # Remove the flag from arguments
+fi
+
+echo "=========================================="
+echo "AP Method Installation"
+echo "=========================================="
+echo ""
+
+# Get the directory where this script is located (distribution dir)
+DIST_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Get target directory (default to current directory)
+TARGET_DIR="${1:-.}"
+
+# Resolve to absolute path
+TARGET_DIR="$(cd "$TARGET_DIR" 2>/dev/null && pwd)" || {
+    echo "Error: Target directory '$1' does not exist"
+    exit 1
+}
+
+# Special handling when running from distribution directory without arguments
+if [ "$#" -eq 0 ] && [ -f "$DIST_DIR/install.sh" ] && [ -d "$DIST_DIR/agents" ]; then
+    if [ "$USE_DEFAULTS" = true ]; then
+        echo "Running with defaults - using current directory as project"
+        TARGET_DIR="$DIST_DIR"
+        SKIP_COPY="true"
+    else
+        echo "=========================================="
+        echo "AP Method Quick Setup"
+        echo "=========================================="
+        echo ""
+        echo "You're running the installer from the extracted distribution."
+        echo ""
+        echo "Where would you like to install AP Method?"
+        echo ""
+        echo "1) Use this directory as the project (quick start)"
+        echo "2) Create new project in parent directory"
+        echo "3) Install to existing project (specify path)"
+        echo "4) Show manual installation options"
+        echo ""
+        read -p "Enter choice (1-4) [1]: " CHOICE
+        CHOICE="${CHOICE:-1}"
+        
+        case $CHOICE in
+            1)
+                echo ""
+                echo "Using current directory as project directory."
+                echo "This will configure AP Method in-place without copying files."
+                TARGET_DIR="$DIST_DIR"
+                SKIP_COPY="true"
+                echo ""
+                ;;
+            2)
+                echo ""
+                read -p "Enter project name [my-project]: " PROJ_NAME
+                PROJ_NAME="${PROJ_NAME:-my-project}"
+                TARGET_DIR="../$PROJ_NAME"
+                
+                # Create project directory
+                mkdir -p "$TARGET_DIR"
+                TARGET_DIR="$(cd "$TARGET_DIR" && pwd)"
+                echo "Creating new project at: $TARGET_DIR"
+                echo ""
+                ;;
+            3)
+                echo ""
+                read -p "Enter path to existing project: " PROJ_PATH
+                if [ -z "$PROJ_PATH" ]; then
+                    echo "Error: No path specified"
+                    exit 1
+                fi
+                TARGET_DIR="$(cd "$PROJ_PATH" 2>/dev/null && pwd)" || {
+                    echo "Error: Invalid path '$PROJ_PATH'"
+                    exit 1
+                }
+                ;;
+            4)
+                echo ""
+                echo "Manual Installation Options:"
+                echo ""
+                echo "  # Install to specific directory:"
+                echo "  ./install.sh /path/to/your/project"
+                echo ""
+                echo "  # Install to parent directory:"
+                echo "  ./install.sh .."
+                echo ""
+                echo "  # Create and install to new project:"
+                echo "  mkdir ../my-project && ./install.sh ../my-project"
+                echo ""
+                echo "  # Run with all defaults (no prompts):"
+                echo "  ./install.sh --defaults"
+                echo ""
+                exit 0
+                ;;
+            *)
+                echo "Invalid choice"
+                exit 1
+                ;;
+        esac
+    fi
+fi
+
+# Allow installing to distribution directory only if explicitly chosen via SKIP_COPY
+if [ -f "$DIST_DIR/install.sh" ] && [ -d "$DIST_DIR/agents" ] && [ "$DIST_DIR" = "$TARGET_DIR" ] && [ "$SKIP_COPY" != "true" ]; then
+    echo "Error: Cannot install AP Method to its own distribution directory."
+    echo "Please run './install.sh' without arguments for interactive setup,"
+    echo "or specify a different target directory."
+    exit 1
+fi
+
+# Check version
+VERSION=$(cat "$DIST_DIR/VERSION" 2>/dev/null || echo "unknown")
+echo "Installing AP Method version: $VERSION"
+echo "Target directory: $TARGET_DIR"
+echo ""
+
+# Check for existing installation (skip if using same directory)
+if [ "$SKIP_COPY" != "true" ] && [ -d "$TARGET_DIR/agents" ]; then
+    if [ "$USE_DEFAULTS" = true ]; then
+        # With defaults, automatically backup existing installation
+        BACKUP_NAME="agents.backup.$(date +%Y%m%d_%H%M%S)"
+        echo "Existing installation found - creating backup at $TARGET_DIR/$BACKUP_NAME..."
+        mv "$TARGET_DIR/agents" "$TARGET_DIR/$BACKUP_NAME"
+    else
+        echo "Warning: Existing AP Method installation detected at $TARGET_DIR/agents"
+        read -p "Backup existing installation? (Y/n): " -n 1 -r
+        echo
+        if [[ ! $REPLY =~ ^[Nn]$ ]]; then
+            BACKUP_NAME="agents.backup.$(date +%Y%m%d_%H%M%S)"
+            echo "Creating backup at $TARGET_DIR/$BACKUP_NAME..."
+            mv "$TARGET_DIR/agents" "$TARGET_DIR/$BACKUP_NAME"
+        else
+            read -p "Overwrite existing installation? (y/N): " -n 1 -r
+            echo
+            if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+                echo "Installation cancelled"
+                exit 1
+            fi
+            rm -rf "$TARGET_DIR/agents"
+        fi
+    fi
+fi
+
+# Verify distribution integrity
+echo "Verifying distribution integrity..."
+REQUIRED_FILES=(
+    "agents/ide-ap-orchestrator.cfg.md"
+    "agents/ide-ap-orchestrator.md"
+    "agents/personas/ap.md"
+    "agents/scripts/setup-piper-chat.sh"
+    "agents/README.md"
+)
+
+for file in "${REQUIRED_FILES[@]}"; do
+    if [ ! -f "$DIST_DIR/$file" ]; then
+        echo "Error: Missing required file: $file"
+        echo "Distribution may be corrupted. Please re-download."
+        exit 1
+    fi
+done
+echo "✓ Distribution verified"
+
+# Copy agents directory to target (skip if using same directory)
+if [ "$SKIP_COPY" != "true" ]; then
+    echo ""
+    echo "Copying AP Method files..."
+    cp -r "$DIST_DIR/agents" "$TARGET_DIR/"
+    echo "✓ Files copied"
+else
+    echo ""
+    echo "Using existing AP Method files in place..."
+    echo "✓ Files already present"
+fi
+
+# Now run the standard setup process
+# Set up paths for the installed location
+AP_ROOT="$TARGET_DIR/agents"
+PROJECT_ROOT="$TARGET_DIR"
 
 # Function to get user input with default
 get_input() {
@@ -21,8 +231,12 @@ get_input() {
     local default="$2"
     local response
 
-    read -p "$prompt [$default]: " response
-    echo "${response:-$default}"
+    if [ "$USE_DEFAULTS" = true ]; then
+        echo "$default"
+    else
+        read -p "$prompt [$default]: " response
+        echo "${response:-$default}"
+    fi
 }
 
 # Function to create directory if it doesn't exist
@@ -34,6 +248,7 @@ ensure_dir() {
     fi
 }
 
+echo ""
 echo "Step 1: Project Configuration"
 echo "-----------------------------"
 
@@ -52,12 +267,17 @@ CLAUDE_COMMANDS_DIR="$CLAUDE_DIR/commands"
 echo ""
 echo "Step 2: Session Notes Configuration"
 echo "-----------------------------------"
-echo "Choose your session notes system:"
-echo "1) Obsidian MCP (recommended if you use Obsidian)"
-echo "2) Markdown files (standalone markdown files)"
-echo ""
 
-NOTES_SYSTEM=$(get_input "Enter choice (1 or 2)" "1")
+if [ "$USE_DEFAULTS" = true ]; then
+    NOTES_SYSTEM="2"
+    echo "Using default: Markdown files"
+else
+    echo "Choose your session notes system:"
+    echo "1) Obsidian MCP (recommended if you use Obsidian)"
+    echo "2) Markdown files (standalone markdown files)"
+    echo ""
+    NOTES_SYSTEM=$(get_input "Enter choice (1 or 2)" "2")
+fi
 
 if [ "$NOTES_SYSTEM" = "1" ]; then
     NOTES_TYPE="obsidian"
@@ -147,28 +367,21 @@ Master index linking all documentation for easy navigation.
 DOCEOF
 
 echo "Created project documentation structure at: $PROJECT_DOCS"
-echo "  - Created base/, epics/, stories/, qa/ directories"
-echo "  - Added README.md with usage instructions"
 
 echo ""
-echo "Step 4: Creating Claude Settings Configuration"
-echo "----------------------------------------------"
+echo "Step 4: Creating Environment Configuration"
+echo "-----------------------------------------"
 
 # Create fallback session notes path for Obsidian users
 if [ "$NOTES_TYPE" = "obsidian" ]; then
-    FALLBACK_SESSION_NOTES_PATH="\${PROJECT_DOCS}/session_notes"
-    FALLBACK_RULES_PATH="\${PROJECT_DOCS}/rules"
-    FALLBACK_ARCHIVE_PATH="\${PROJECT_DOCS}/session_notes/archive"
+    FALLBACK_SESSION_NOTES_PATH="$PROJECT_DOCS/session_notes"
+    FALLBACK_RULES_PATH="$PROJECT_DOCS/rules"
+    FALLBACK_ARCHIVE_PATH="$FALLBACK_SESSION_NOTES_PATH/archive"
     
     # Create fallback directories
-    ensure_dir "$PROJECT_DOCS/session_notes"
-    ensure_dir "$PROJECT_DOCS/rules"
-    ensure_dir "$PROJECT_DOCS/session_notes/archive"
-    
-    echo "Created fallback session directories in case Obsidian is unavailable:"
-    echo "  - Session notes: $PROJECT_DOCS/session_notes"
-    echo "  - Rules: $PROJECT_DOCS/rules"
-    echo "  - Archive: $PROJECT_DOCS/session_notes/archive"
+    ensure_dir "$FALLBACK_SESSION_NOTES_PATH"
+    ensure_dir "$FALLBACK_RULES_PATH"
+    ensure_dir "$FALLBACK_ARCHIVE_PATH"
 else
     FALLBACK_SESSION_NOTES_PATH=""
     FALLBACK_RULES_PATH=""
@@ -239,6 +452,52 @@ Launch the AP Orchestrator by:
 5. Ask user which persona to activate
 
 DO NOT attempt to run this as a bash command. These are instructions for you to execute.
+EOF
+
+# Create handoff command
+cat > "$CLAUDE_COMMANDS_DIR/handoff.md" << 'EOF'
+---
+name: handoff
+description: Hand off to another Agent Persona
+---
+
+Hand off to a specific AP agent persona with optional instructions or story/epic designation.
+
+## Usage:
+`/handoff <persona> [instructions/story]`
+
+## Available Personas:
+- `ap` or `orchestrator` - AP Orchestrator (default)
+- `dev` or `developer` - Developer agent
+- `architect` - System architect
+- `design` or `design-architect` - Design/UI architect
+- `analyst` - Business/Requirements analyst
+- `qa` - Quality assurance
+- `pm` - Product manager
+- `po` - Product owner
+- `sm` - Scrum master
+
+## Examples:
+
+**Hand off to developer:**
+`/handoff dev`
+
+**Hand off to developer with story:**
+`/handoff dev "Work on story 1.2"`
+
+**Hand off to architect with instructions:**
+`/handoff architect "Review the current system architecture and suggest improvements"`
+
+**Hand off to QA with epic:**
+`/handoff qa "Test epic 3"`
+
+## Instructions:
+1. Load the requested persona from @agents/personas/{persona}.md
+2. If instructions/story provided, begin work immediately
+3. Follow all persona-specific protocols and voice scripts
+4. Maintain persona until explicitly handed off
+
+Remember: Each persona has specific expertise and communication style. The switch is immediate and complete.
 EOF
 
 # Create wrap command
@@ -346,53 +605,6 @@ Session note format: YYYY-MM-DD-HH-mm-ss-Description.md
 EOF
 fi
 
-
-# Create handoff command
-cat > "$CLAUDE_COMMANDS_DIR/handoff.md" << 'EOF'
----
-name: handoff
-description: Hand off to another Agent Persona
----
-
-Hand off to a specific AP agent persona with optional instructions or story/epic designation.
-
-## Usage:
-`/handoff <persona> [instructions/story]`
-
-## Available Personas:
-- `ap` or `orchestrator` - AP Orchestrator (default)
-- `dev` or `developer` - Developer agent
-- `architect` - System architect
-- `design` or `design-architect` - Design/UI architect
-- `analyst` - Business/Requirements analyst
-- `qa` - Quality assurance
-- `pm` - Product manager
-- `po` - Product owner
-- `sm` - Scrum master
-
-## Examples:
-
-**Hand off to developer:**
-`/handoff dev`
-
-**Hand off to developer with story:**
-`/handoff dev "Work on story 1.2"`
-
-**Hand off to architect with instructions:**
-`/handoff architect "Review the current system architecture and suggest improvements"`
-
-**Hand off to QA with epic:**
-`/handoff qa "Test epic 3"`
-
-## Instructions:
-1. Load the requested persona from @agents/personas/{persona}.md
-2. If instructions/story provided, begin work immediately
-3. Follow all persona-specific protocols and voice scripts
-4. Maintain persona until explicitly handed off
-
-Remember: Each persona has specific expertise and communication style. The switch is immediate and complete.
-EOF
-
 # Create switch command (with session compaction)
 cat > "$CLAUDE_COMMANDS_DIR/switch.md" << 'EOF'
 ---
@@ -455,9 +667,20 @@ echo "Step 6: Installing Piper Voice System (Optional)"
 echo "-----------------------------------------------"
 
 # Ask if user wants to install piper
-read -p "Would you like to install the Piper text-to-speech system for voice notifications? (Y/n): " -n 1 -r
-echo
-if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then
+if [ "$USE_DEFAULTS" = true ]; then
+    echo "Installing Piper text-to-speech system (default behavior)"
+    INSTALL_PIPER=true
+else
+    read -p "Would you like to install the Piper text-to-speech system for voice notifications? (Y/n): " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then
+        INSTALL_PIPER=true
+    else
+        INSTALL_PIPER=false
+    fi
+fi
+
+if [ "$INSTALL_PIPER" = true ]; then
     echo "Installing Piper voice system..."
     echo ""
     
@@ -465,7 +688,12 @@ if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then
     PIPER_SETUP_SCRIPT="$AP_ROOT/scripts/setup-piper-chat.sh"
     if [ -f "$PIPER_SETUP_SCRIPT" ]; then
         # Run the piper setup script
-        bash "$PIPER_SETUP_SCRIPT" "$PROJECT_ROOT/.piper"
+        if [ "$USE_DEFAULTS" = true ]; then
+            # Pass USE_DEFAULTS to piper setup
+            USE_DEFAULTS=true bash "$PIPER_SETUP_SCRIPT" "$PROJECT_ROOT/.piper"
+        else
+            bash "$PIPER_SETUP_SCRIPT" "$PROJECT_ROOT/.piper"
+        fi
         
         if [ $? -eq 0 ]; then
             echo ""
@@ -845,10 +1073,16 @@ EOF
 fi
 
 echo ""
-echo "Step 9: Setup Instructions"
-echo "--------------------------"
+echo "=========================================="
+echo "AP Method installation completed!"
+echo "=========================================="
 echo ""
-echo "Setup complete! To use the AP method in your project:"
+echo "Installation Summary:"
+echo "- Version: $VERSION"
+echo "- Location: $PROJECT_ROOT"
+echo "- Project: $PROJECT_NAME"
+echo ""
+echo "Next steps:"
 echo ""
 echo "1. The AP Method settings have been saved to:"
 echo "   $SETTINGS_FILE"
@@ -861,16 +1095,63 @@ else
     echo "3. Your CLAUDE.md has been created with AP method instructions"
 fi
 echo ""
-echo "4. The following commands are now available in Claude:"
+echo "4. Available commands in Claude:"
 echo "   - /ap - Launch AP Orchestrator"
 echo "   - /handoff - Hand off to another agent persona (direct transition)"
 echo "   - /switch - Compact session and switch to another agent persona"
 echo "   - /wrap - Wrap up session"
 echo "   - /session-note-setup - Set up session structure"
 echo ""
-echo "========================================"
-echo "AP Method setup completed successfully!"
-echo "========================================"
+
+# Cleanup option
+if [ "$USE_DEFAULTS" = true ]; then
+    echo "Removing installation files (default behavior)..."
+    CLEANUP=true
+else
+    read -p "Remove installation files? (y/N): " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        CLEANUP=true
+    else
+        CLEANUP=false
+    fi
+fi
+
+if [ "$CLEANUP" = true ]; then
+    echo "Cleaning up installation files..."
+    
+    # Remove the installer script
+    if [ -f "$DIST_DIR/install.sh" ]; then
+        rm -f "$DIST_DIR/install.sh"
+        echo "Removed install.sh"
+    fi
+    
+    # Remove agentic-setup if it exists
+    if [ -f "$DIST_DIR/agentic-setup" ]; then
+        rm -f "$DIST_DIR/agentic-setup"
+        echo "Removed agentic-setup"
+    fi
+    
+    # Remove any .tar.gz files in the distribution directory
+    for tarfile in "$DIST_DIR"/*.tar.gz; do
+        if [ -f "$tarfile" ]; then
+            rm -f "$tarfile"
+            echo "Removed $(basename "$tarfile")"
+        fi
+    done
+    
+    # Remove VERSION and README.md if they exist
+    if [ -f "$DIST_DIR/VERSION" ]; then
+        rm -f "$DIST_DIR/VERSION"
+    fi
+    if [ -f "$DIST_DIR/README.md" ]; then
+        rm -f "$DIST_DIR/README.md"
+    fi
+    
+    echo "Installation files cleaned up."
+    echo "Note: AP Method files in 'agents/' directory are preserved."
+fi
+
 echo ""
 echo "🔥 IMPORTANT: Learn how to use the AP Method effectively!"
 echo ""
@@ -888,3 +1169,165 @@ echo -e "  \033[1;32mclaude ap\033[0m"
 echo ""
 echo -e "\033[3mI highly recommend running Claude Code with Permissions Bypass for maximum effectiveness:\033[0m"
 echo -e "  \033[1;32mclaude --dangerously-skip-permissions ap\033[0m"
+echo ""
+echo "Enjoy using the AP Method!"
+INSTALL_SCRIPT
+
+chmod +x "$DIST_DIR/install.sh"
+
+# Create distribution README in dist directory
+echo "Creating README..."
+cat > "dist/README.md" << 'READMEEOF'
+# AP Method Installation Package
+
+## Overview
+The AP (Agent Persona) Method is a project-agnostic approach to orchestrating AI agents for software development. This package contains everything needed to set up the AP Method in your project.
+
+## Quick Start
+
+### Easy Interactive Setup
+```bash
+# Extract the distribution
+tar -xzf ap-method-v1.0.0.tar.gz
+
+# Run the installer (interactive mode)
+./install.sh
+
+# Options:
+# 1) Use this directory as the project (quickest start)
+# 2) Create new project in parent directory
+# 3) Install to existing project
+# 4) Show manual options
+```
+
+### Unattended Installation (No Prompts)
+```bash
+# Extract and install with all defaults - no questions asked
+tar -xzf ap-method-v1.0.0.tar.gz
+./install.sh --defaults
+
+# Or use -d for short
+./install.sh -d
+```
+
+### Manual Installation Options
+
+#### Option 1: Install to Existing Project
+```bash
+# Extract anywhere and install to your project
+tar -xzf ap-method-v1.0.0.tar.gz
+./install.sh /path/to/your/project
+```
+
+#### Option 2: Create New Project
+```bash
+# Extract and create new project
+tar -xzf ap-method-v1.0.0.tar.gz
+mkdir ../my-new-project
+./install.sh ../my-new-project
+```
+
+### 4. Launch AP in Claude
+```bash
+# Use the /ap command in Claude to get started
+/ap
+```
+
+## Package Contents
+
+- `agents/` - Complete AP Method framework including:
+  - `personas/` - AI agent personality definitions
+  - `tasks/` - Reusable task definitions
+  - `templates/` - Document templates
+  - `checklists/` - Quality checklists
+  - `scripts/` - Utility scripts
+  - `voice/` - Text-to-speech scripts
+  - `data/` - Reference data
+- `install.sh` - Interactive installation script
+- `VERSION` - Version information
+- `README.md` - Installation guide
+
+## Installation Process
+
+The installer will:
+1. Check for existing installations (with backup option)
+2. Copy the AP Method framework to your project
+3. Configure your project settings interactively
+4. Create project documentation structure
+5. Set up Claude AI commands
+6. Optionally install Piper text-to-speech system
+7. Configure git ignore rules
+
+## Post-Installation
+
+After installation, you'll have access to these Claude commands:
+- `/ap` - Launch AP Orchestrator
+- `/handoff <agent>` - Hand off to another agent persona (direct transition)
+- `/switch <agent>` - Compact session and switch to another agent persona
+- `/wrap` - Wrap up current session
+- `/session-note-setup` - Set up session notes structure
+
+## Available Agents
+
+- **Orchestrator** - Central coordinator
+- **Developer** - Code implementation
+- **Architect** - System design
+- **Design Architect** - UI/UX and frontend
+- **Analyst** - Requirements and research
+- **QA** - Quality assurance
+- **PM** - Product management
+- **PO** - Product ownership
+- **SM** - Scrum master
+
+## Requirements
+
+- Bash shell
+- Git (recommended)
+- Node.js (for some utilities)
+- Claude AI (claude.ai)
+
+## Support
+
+For issues, updates, or contributions, visit:
+https://github.com/omayhemo/agent-persona-method
+
+## Version
+This package version: VERSION_PLACEHOLDER
+READMEEOF
+
+# Replace the version placeholder with actual version
+sed -i "s/VERSION_PLACEHOLDER/$VERSION/g" "dist/README.md"
+
+# Create compressed package
+echo ""
+echo "Creating distribution package..."
+cd dist
+# Create tar without parent directory
+cd "$DIST_NAME"
+tar -czf "../$DIST_NAME.tar.gz" .
+cd ../..
+
+# Calculate sizes
+ZIP_SIZE=$(ls -lh "dist/$DIST_NAME.tar.gz" | awk '{print $5}')
+DIR_SIZE=$(du -sh "$DIST_DIR" | awk '{print $1}')
+
+echo ""
+echo "=========================================="
+echo "Build Complete!"
+echo "=========================================="
+echo ""
+echo "Distribution created:"
+echo "  File: dist/$DIST_NAME.tar.gz"
+echo "  Size: $ZIP_SIZE (compressed)"
+echo "  Uncompressed: $DIR_SIZE"
+echo ""
+echo "To test the distribution:"
+echo "  1. mkdir test-ap && cd test-ap"
+echo "  2. tar -xzf ../dist/$DIST_NAME.tar.gz"
+echo "  3. ./install.sh (choose option 1 for quick start)"
+echo ""
+echo "To publish:"
+echo "  1. Create GitHub release for v$VERSION"
+echo "  2. Upload dist/$DIST_NAME.tar.gz"
+echo "  3. Users can download and extract"
+echo ""

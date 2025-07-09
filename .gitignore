@@ -4,9 +4,6 @@
 project_documentation/session_notes/
 session_notes/
 
-# AP Method environment configuration
-.env.ap
-
 # AP Method generated files
 CLAUDE.md.ap-setup
 harmonization.log

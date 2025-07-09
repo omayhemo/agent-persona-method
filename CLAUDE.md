@@ -14,23 +14,17 @@ This is the AP (Agent Persona) Method repository - a project-agnostic approach t
 ```bash
 # Initial setup for new projects
 ./agents/agentic-setup
-
-# Source the environment after setup
-source .env.ap
 ```
 
 ### Core AP Commands
 - `/ap` - Launch AP Orchestrator
+- `/handoff` - Hand off to another agent persona (direct transition)
+- `/switch` - Compact session and switch to another agent persona
 - `/wrap` - Wrap up current session
-- `/harmonize-epics` - Harmonize epic files
-- `/harmonize-stories` - Harmonize story files  
 - `/session-note-setup` - Set up session notes structure
 
 ### Script Execution
 ```bash
-# Switch between agents
-bash $AP_ROOT/agents/scripts/agent-switch.sh [agent-name]
-
 # Launch parallel agents for sprint work
 bash $AP_ROOT/agents/scripts/parallel-sprint.sh
 
@@ -65,13 +59,15 @@ The AP Method uses specialized AI agents, each embodying specific roles:
 - **Templates**: Document templates in `agents/templates/`
 
 ### Environment Configuration
-After running `agentic-setup`, the system creates `.env.ap` with:
-- `$AP_ROOT` - Path to agents directory
-- `$PROJECT_DOCS` - Path to project documentation (default: `project_documentation/`)
-- `$PROJECT_ROOT` - Your project's root directory
-- `$PROJECT_NAME` - Your project name
+After running `agentic-setup`, the system creates `.claude/settings.json` with:
+- `AP_ROOT` - Path to agents directory
+- `PROJECT_DOCS` - Path to project documentation (default: `project_documentation/`)
+- `PROJECT_ROOT` - Your project's root directory
+- `PROJECT_NAME` - Your project name
 - Session notes configuration (Obsidian MCP or local markdown)
 - Voice script paths for audio notifications
+
+Claude automatically reads these settings when working in the project.
 
 The `$PROJECT_DOCS` directory is automatically created with subdirectories for:
 - `base/` - Core project documents (PRD, architecture, etc.)
@@ -105,7 +101,7 @@ This is a methodology framework, not a traditional codebase. There are no standa
 
 ## Important Notes
 
-- Always source `.env.ap` before using AP commands
+- Settings are automatically loaded from `.claude/settings.json`
 - Session notes are excluded from git (check `.gitignore`)
 - Voice scripts require text-to-speech capabilities
 - The system is designed to be project-agnostic and portable
