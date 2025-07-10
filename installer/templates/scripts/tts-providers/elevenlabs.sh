@@ -1,5 +1,5 @@
 #!/bin/bash
-# ElevenLabs TTS Provider - High-quality cloud text-to-speech
+# ElevenLabs TTS Provider - High-quality text-to-speech only
 
 set -e
 
@@ -23,22 +23,22 @@ SETTINGS_FILE="$PROJECT_ROOT/.claude/settings.json"
 CACHE_DIR="$PROJECT_ROOT/.cache/tts/elevenlabs"
 mkdir -p "$CACHE_DIR"
 
-# Default voice mappings
+# Default voice mappings (using common ElevenLabs voice IDs)
 declare -A DEFAULT_VOICE_MAP=(
-    ["orchestrator"]="adam"
-    ["developer"]="josh"
-    ["architect"]="antoni"
-    ["analyst"]="rachel"
-    ["qa"]="domi"
-    ["pm"]="josh"
-    ["po"]="adam"
-    ["sm"]="josh"
-    ["design_architect"]="bella"
+    ["orchestrator"]="JBFqnCBsd6RMkjVDRZzb"  # George
+    ["developer"]="VR6AewLTigWG4xSOukaG"     # Arnold
+    ["architect"]="pNInz6obpgDQGcFmaJgB"     # Adam
+    ["analyst"]="21m00Tcm4TlvDq8ikWAM"       # Rachel
+    ["qa"]="AZnzlk1XvdvUeBnXmlld"           # Domi
+    ["pm"]="VR6AewLTigWG4xSOukaG"           # Arnold
+    ["po"]="JBFqnCBsd6RMkjVDRZzb"           # George
+    ["sm"]="VR6AewLTigWG4xSOukaG"           # Arnold
+    ["design_architect"]="EXAVITQu4vr4xnSDxMaL"  # Bella
 )
 
 # Provider info
 info() {
-    echo "ElevenLabs - Premium AI voice synthesis with natural intonation"
+    echo "ElevenLabs - Premium AI text-to-speech with natural voices"
 }
 
 # Get API key from various sources
@@ -86,26 +86,10 @@ get_api_key() {
 check() {
     local api_key=$(get_api_key)
     
-    if [ -z "$api_key" ]; then
-        return 1
-    fi
-    
-    # Quick API check (cached for 5 minutes)
-    local check_cache="$CACHE_DIR/.api_check"
-    if [ -f "$check_cache" ] && [ $(($(date +%s) - $(stat -f %m "$check_cache" 2>/dev/null || stat -c %Y "$check_cache" 2>/dev/null || echo 0))) -lt 300 ]; then
-        return 0
-    fi
-    
-    # Test API key
-    local response=$(curl -s -o /dev/null -w "%{http_code}" \
-        -H "xi-api-key: $api_key" \
-        "https://api.elevenlabs.io/v1/user" 2>/dev/null)
-    
-    if [ "$response" = "200" ]; then
-        touch "$check_cache"
+    # Simply check if API key exists
+    if [ -n "$api_key" ]; then
         return 0
     else
-        rm -f "$check_cache"
         return 1
     fi
 }
@@ -124,7 +108,7 @@ get_voice() {
     fi
     
     # Use default mapping
-    echo "${DEFAULT_VOICE_MAP[$persona]:-adam}"
+    echo "${DEFAULT_VOICE_MAP[$persona]:-JBFqnCBsd6RMkjVDRZzb}"
 }
 
 # Play audio file cross-platform
@@ -271,7 +255,6 @@ store_api_key() {
 # Update settings file with configuration
 update_settings() {
     local api_key_ref="$1"
-    local voices="$2"
     
     # Ensure settings directory exists
     mkdir -p "$(dirname "$SETTINGS_FILE")"
@@ -287,13 +270,6 @@ update_settings() {
         local tmp_file=$(mktemp)
         jq ".ap.tts.providers.elevenlabs.api_key = \"$api_key_ref\"" "$SETTINGS_FILE" > "$tmp_file" && mv "$tmp_file" "$SETTINGS_FILE"
         
-        # Update voice mappings if provided
-        if [ -n "$voices" ]; then
-            echo "$voices" | jq -s '.[0]' | jq -r 'to_entries | .[] | "\(.key) \(.value)"' | while read persona voice; do
-                jq ".ap.tts.voices.$persona.elevenlabs = \"$voice\"" "$SETTINGS_FILE" > "$tmp_file" && mv "$tmp_file" "$SETTINGS_FILE"
-            done
-        fi
-        
         # Set provider to elevenlabs
         jq '.ap.tts.provider = "elevenlabs"' "$SETTINGS_FILE" > "$tmp_file" && mv "$tmp_file" "$SETTINGS_FILE"
         
@@ -308,13 +284,8 @@ update_settings() {
 configure() {
     echo "=== ElevenLabs TTS Configuration ==="
     echo ""
-    echo "ElevenLabs provides high-quality, natural-sounding voices."
-    echo "You'll need an API key from https://elevenlabs.io"
-    echo ""
-    echo "To get your API key:"
-    echo "1. Sign up at https://elevenlabs.io (free tier available)"
-    echo "2. Go to your Profile Settings"
-    echo "3. Copy your API key"
+    echo "ElevenLabs provides high-quality text-to-speech voices."
+    echo "You'll need a TTS API key from https://elevenlabs.io"
     echo ""
     
     # Check if already configured
@@ -330,7 +301,7 @@ configure() {
     fi
     
     # Get API key
-    printf "${YELLOW}Please paste your ElevenLabs API key (or press Enter to skip): ${NC}"
+    printf "${YELLOW}Please paste your ElevenLabs TTS API key (or press Enter to skip): ${NC}"
     read ELEVENLABS_API_KEY
     
     if [ -z "$ELEVENLABS_API_KEY" ]; then
@@ -338,40 +309,25 @@ configure() {
         return 0
     fi
     
-    # Validate API key format
-    if [[ ${#ELEVENLABS_API_KEY} -lt 20 ]]; then
-        echo "⚠️  Warning: API key seems too short. ElevenLabs keys are typically 32 characters."
-        printf "${YELLOW}Continue anyway? (y/N): ${NC}"
-        read -n 1 -r
-        echo
-        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-            return 1
-        fi
-    fi
-    
-    # Test API key
-    echo "Testing API key..."
-    local response=$(curl -s -o /dev/null -w "%{http_code}" \
+    # Test API key with a simple TTS request
+    echo "Testing TTS API key..."
+    local test_voice="JBFqnCBsd6RMkjVDRZzb"  # George voice
+    local test_response=$(curl -s -w "\n%{http_code}" \
+        -X POST "https://api.elevenlabs.io/v1/text-to-speech/$test_voice" \
         -H "xi-api-key: $ELEVENLABS_API_KEY" \
-        "https://api.elevenlabs.io/v1/user" 2>/dev/null)
+        -H "Content-Type: application/json" \
+        -d '{"text": "test", "model_id": "eleven_monolingual_v1"}' \
+        -o /tmp/elevenlabs_test.mp3 2>/dev/null)
     
-    if [ "$response" = "200" ]; then
-        echo "✅ API key validated successfully!"
-        
-        # Get available voices
-        echo "Fetching available voices..."
-        local voices_json=$(curl -s -H "xi-api-key: $ELEVENLABS_API_KEY" \
-            "https://api.elevenlabs.io/v1/voices" 2>/dev/null)
-        
-        if [ -n "$voices_json" ] && command -v jq >/dev/null 2>&1; then
-            echo ""
-            echo "Available voices in your account:"
-            echo "$voices_json" | jq -r '.voices[] | "- \(.name) (\(.voice_id))"' 2>/dev/null || \
-                echo "Could not parse voices. Will use default voice mappings."
-        fi
+    local http_code=$(echo "$test_response" | tail -n 1)
+    
+    if [ "$http_code" = "200" ] && [ -s "/tmp/elevenlabs_test.mp3" ]; then
+        echo "✅ TTS API key validated successfully!"
+        rm -f /tmp/elevenlabs_test.mp3
     else
-        echo "❌ API key validation failed (HTTP $response)"
+        echo "❌ TTS API key validation failed (HTTP $http_code)"
         echo "Please check your API key and try again."
+        rm -f /tmp/elevenlabs_test.mp3
         return 1
     fi
     
@@ -392,45 +348,20 @@ configure() {
     # Store API key
     local api_key_ref=$(store_api_key "$ELEVENLABS_API_KEY" "$storage_option")
     
-    # Voice customization
-    local custom_voices="{}"
-    echo ""
-    printf "${YELLOW}Would you like to customize voices for each persona? (y/N): ${NC}"
-    read -n 1 -r
-    echo
-    
-    if [[ $REPLY =~ ^[Yy]$ ]] && [ -n "$voices_json" ] && command -v jq >/dev/null 2>&1; then
-        # Show available voices with numbers
-        echo ""
-        echo "Available voices:"
-        local voice_array=$(echo "$voices_json" | jq -r '.voices[] | .voice_id')
-        local voice_names=$(echo "$voices_json" | jq -r '.voices[] | .name')
-        
-        # Convert to arrays
-        IFS=$'\n' read -d '' -r -a voice_ids <<< "$voice_array" || true
-        IFS=$'\n' read -d '' -r -a names <<< "$voice_names" || true
-        
-        # Display numbered list
-        for i in "${!voice_ids[@]}"; do
-            echo "$((i+1)). ${names[$i]} (${voice_ids[$i]})"
-        done
-        
-        # Get selections for each persona
-        custom_voices="{}"
-        for persona in orchestrator developer architect analyst qa pm po sm design_architect; do
-            echo ""
-            printf "${YELLOW}Select voice for %s (1-%d) or Enter for default: ${NC}" "$persona" "${#voice_ids[@]}"
-            read choice
-            
-            if [ -n "$choice" ] && [ "$choice" -gt 0 ] && [ "$choice" -le "${#voice_ids[@]}" ]; then
-                local selected_id="${voice_ids[$((choice-1))]}"
-                custom_voices=$(echo "$custom_voices" | jq ". + {\"$persona\": \"$selected_id\"}")
-            fi
-        done
-    fi
-    
     # Update settings
-    update_settings "$api_key_ref" "$custom_voices"
+    update_settings "$api_key_ref"
+    
+    # Show default voice mappings
+    echo ""
+    echo "Default voice assignments:"
+    echo "- Orchestrator: George (authoritative)"
+    echo "- Developer: Arnold (technical)"
+    echo "- Architect: Adam (professional)"
+    echo "- Analyst: Rachel (analytical)"
+    echo "- QA: Domi (precise)"
+    echo "- Design Architect: Bella (creative)"
+    echo ""
+    echo "You can customize these later in settings.json"
     
     # Final instructions
     echo ""
