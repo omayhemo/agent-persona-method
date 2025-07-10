@@ -24,17 +24,17 @@ CACHE_DIR="$PROJECT_ROOT/.cache/tts/elevenlabs"
 mkdir -p "$CACHE_DIR"
 
 # Default voice mappings (using common ElevenLabs voice IDs)
-# Using George for all voices as it's confirmed to work with the API key
+# These are commonly available voices - if one doesn't work, it will fall back to George
 declare -A DEFAULT_VOICE_MAP=(
-    ["orchestrator"]="JBFqnCBsd6RMkjVDRZzb"  # George
-    ["developer"]="JBFqnCBsd6RMkjVDRZzb"     # George
-    ["architect"]="JBFqnCBsd6RMkjVDRZzb"     # George
-    ["analyst"]="JBFqnCBsd6RMkjVDRZzb"       # George
-    ["qa"]="JBFqnCBsd6RMkjVDRZzb"           # George
-    ["pm"]="JBFqnCBsd6RMkjVDRZzb"           # George
-    ["po"]="JBFqnCBsd6RMkjVDRZzb"           # George
-    ["sm"]="JBFqnCBsd6RMkjVDRZzb"           # George
-    ["design_architect"]="JBFqnCBsd6RMkjVDRZzb"  # George
+    ["orchestrator"]="JBFqnCBsd6RMkjVDRZzb"  # George (British, mature)
+    ["developer"]="TxGEqnHWrfWFTfGW9XjX"     # Josh (American, young adult)
+    ["architect"]="pNInz6obpgDQGcFmaJgB"     # Adam (American, middle aged)
+    ["analyst"]="21m00Tcm4TlvDq8ikWAM"       # Rachel (American, young adult)
+    ["qa"]="ThT5KcBeYPX3keUQqHPh"           # Dorothy (British, young adult)
+    ["pm"]="TxGEqnHWrfWFTfGW9XjX"           # Josh (American, young adult)
+    ["po"]="JBFqnCBsd6RMkjVDRZzb"           # George (British, mature)
+    ["sm"]="Zlb1dXrM653N07WRdFW3"           # Daniel (British, middle aged)
+    ["design_architect"]="EXAVITQu4vr4xnSDxMaL"  # Bella (American, young adult)
 )
 
 # Provider info
@@ -181,6 +181,41 @@ speak() {
         mv "$cache_file.tmp" "$cache_file"
         play_audio "$cache_file"
         return $?
+    elif [ "$http_code" = "404" ] && [ "$voice" != "JBFqnCBsd6RMkjVDRZzb" ]; then
+        # Voice not found, try fallback to George
+        rm -f "$cache_file.tmp"
+        echo "Voice not available, trying George voice..." >&2
+        
+        # Retry with George voice
+        local george_voice="JBFqnCBsd6RMkjVDRZzb"
+        local cache_key_fallback=$(echo -n "${george_voice}-${message}" | md5sum | cut -d' ' -f1)
+        local cache_file_fallback="$CACHE_DIR/${cache_key_fallback}.mp3"
+        
+        # Check cache for George voice
+        if [ -f "$cache_file_fallback" ] && [ -s "$cache_file_fallback" ]; then
+            play_audio "$cache_file_fallback"
+            return $?
+        fi
+        
+        # Make request with George voice
+        local response_fallback=$(curl -s -w "\n%{http_code}" \
+            -X POST "https://api.elevenlabs.io/v1/text-to-speech/$george_voice" \
+            -H "xi-api-key: $api_key" \
+            -H "Content-Type: application/json" \
+            -d "{\"text\": \"$message\", \"model_id\": \"$model\"}" \
+            --output "$cache_file_fallback.tmp" 2>/dev/null)
+        
+        local http_code_fallback=$(echo "$response_fallback" | tail -n 1)
+        
+        if [ "$http_code_fallback" = "200" ] && [ -s "$cache_file_fallback.tmp" ]; then
+            mv "$cache_file_fallback.tmp" "$cache_file_fallback"
+            play_audio "$cache_file_fallback"
+            return $?
+        else
+            rm -f "$cache_file_fallback.tmp"
+            echo "Error: ElevenLabs API returned $http_code_fallback" >&2
+            return 1
+        fi
     else
         rm -f "$cache_file.tmp"
         echo "Error: ElevenLabs API returned $http_code" >&2
@@ -354,10 +389,17 @@ configure() {
     
     # Show default voice mappings
     echo ""
-    echo "Default voice assignment:"
-    echo "- All personas use George voice (confirmed working with TTS-only keys)"
+    echo "Default voice assignments:"
+    echo "- Orchestrator/PO: George (British, mature)"
+    echo "- Developer/PM: Josh (American, young adult)"
+    echo "- Architect: Adam (American, middle aged)"
+    echo "- Analyst: Rachel (American, young adult)"
+    echo "- QA: Dorothy (British, young adult)"
+    echo "- SM: Daniel (British, middle aged)"
+    echo "- Design Architect: Bella (American, young adult)"
     echo ""
-    echo "You can customize voices later in settings.json if you have access to other voices"
+    echo "Note: If a voice isn't available on your plan, it will automatically fall back to George."
+    echo "You can customize voices later in settings.json"
     
     # Final instructions
     echo ""
