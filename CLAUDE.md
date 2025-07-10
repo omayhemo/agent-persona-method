@@ -113,3 +113,7 @@ This is a methodology framework, not a traditional codebase. There are no standa
 - The system is designed to be project-agnostic and portable
 - The installer is preserved in `$AP_ROOT/.installer/` for updates and management
 - Updates are checked against GitHub releases and can be applied without data loss
+
+## Wget Commands
+
+- `wget https://github.com/[repository]/releases/latest/download/agentic-persona.tar.gz` - Download the latest release using wget
