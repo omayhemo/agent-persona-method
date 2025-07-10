@@ -146,6 +146,31 @@ ensure_dir() {
     fi
 }
 
+# Function to check and install audio dependencies
+check_audio_dependencies() {
+    local provider="$1"
+    
+    case "$provider" in
+        elevenlabs)
+            # ElevenLabs needs MP3 player
+            if ! command -v mpg123 >/dev/null 2>&1 && \
+               ! command -v ffplay >/dev/null 2>&1 && \
+               ! command -v afplay >/dev/null 2>&1; then
+                return 1
+            fi
+            ;;
+        piper|system)
+            # Piper/System need WAV player
+            if ! command -v aplay >/dev/null 2>&1 && \
+               ! command -v play >/dev/null 2>&1 && \
+               ! command -v afplay >/dev/null 2>&1; then
+                return 1
+            fi
+            ;;
+    esac
+    return 0
+}
+
 # Function to replace variables in templates
 replace_variables() {
     local input_file="$1"
@@ -433,13 +458,57 @@ else
         2)
             TTS_PROVIDER="elevenlabs"
             echo ""
-            echo "Note: ElevenLabs outputs MP3 files. For best audio quality, ensure you have"
-            echo "an MP3-capable player installed (mpg123 recommended):"
-            echo "  sudo apt-get install mpg123"
+            echo "Checking for MP3 audio player..."
+            
+            # Check for MP3-capable players
+            if command -v mpg123 >/dev/null 2>&1; then
+                echo "✓ Found mpg123"
+            elif command -v ffplay >/dev/null 2>&1; then
+                echo "✓ Found ffplay (ffmpeg)"
+            elif command -v afplay >/dev/null 2>&1; then
+                echo "✓ Found afplay (macOS)"
+            else
+                echo "No MP3-capable player found."
+                echo ""
+                
+                # Check if we can install mpg123
+                if command -v apt-get >/dev/null 2>&1; then
+                    if [ "$USE_DEFAULTS" = true ]; then
+                        INSTALL_MPG123="y"
+                    else
+                        printf "${YELLOW}Would you like to install mpg123 for audio playback? (Y/n): ${NC}"
+                        read -n 1 -r
+                        echo
+                        INSTALL_MPG123="${REPLY:-y}"
+                    fi
+                    
+                    if [[ $INSTALL_MPG123 =~ ^[Yy]$ ]]; then
+                        echo "Installing mpg123..."
+                        sudo apt-get update >/dev/null 2>&1
+                        if sudo apt-get install -y mpg123; then
+                            echo "✓ mpg123 installed successfully"
+                        else
+                            echo "⚠ Failed to install mpg123. Audio playback may not work correctly."
+                            echo "  You can install it manually later with: sudo apt-get install mpg123"
+                        fi
+                    else
+                        echo "⚠ Warning: Without an MP3 player, you may hear static instead of speech."
+                        echo "  Install mpg123 later with: sudo apt-get install mpg123"
+                    fi
+                elif command -v brew >/dev/null 2>&1; then
+                    # macOS with Homebrew
+                    echo "To install mpg123 on macOS: brew install mpg123"
+                else
+                    echo "⚠ Please install mpg123 manually for audio playback"
+                fi
+            fi
             echo ""
             ;;
         3)
             TTS_PROVIDER="system"
+            echo ""
+            echo "System TTS uses your operating system's built-in text-to-speech."
+            echo "Make sure you have TTS configured in your OS settings."
             ;;
         4)
             TTS_PROVIDER="discord"
@@ -460,6 +529,38 @@ echo "Selected TTS provider: $TTS_PROVIDER"
 # Configure the selected provider
 case "$TTS_PROVIDER" in
     piper)
+        echo ""
+        echo "Checking for audio player..."
+        
+        # Check for audio players that can handle WAV files
+        if command -v aplay >/dev/null 2>&1; then
+            echo "✓ Found aplay (ALSA)"
+        elif command -v play >/dev/null 2>&1; then
+            echo "✓ Found play (SoX)"
+        elif command -v afplay >/dev/null 2>&1; then
+            echo "✓ Found afplay (macOS)"
+        elif command -v mpg123 >/dev/null 2>&1; then
+            echo "✓ Found mpg123"
+        elif command -v ffplay >/dev/null 2>&1; then
+            echo "✓ Found ffplay (ffmpeg)"
+        else
+            echo "No audio player found."
+            echo ""
+            
+            # Try to install audio player
+            if command -v apt-get >/dev/null 2>&1; then
+                echo "Installing ALSA audio utilities..."
+                sudo apt-get update >/dev/null 2>&1
+                if sudo apt-get install -y alsa-utils; then
+                    echo "✓ ALSA utilities installed successfully"
+                else
+                    echo "⚠ Failed to install audio player. Audio playback may not work."
+                fi
+            else
+                echo "⚠ Please install an audio player manually"
+            fi
+        fi
+        
         echo ""
         echo "Installing Piper TTS system..."
         
