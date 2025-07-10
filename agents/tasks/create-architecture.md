@@ -1,5 +1,16 @@
 # Architecture Creation Task
 
+> **Note: Architecture validation and quality checks are now automated by Claude Code hooks.** Hooks validate document structure, verify required sections, and run architect-checklist compliance automatically.
+
+## Automated Support
+This task benefits from automated:
+- ✅ Prerequisite validation (PRD, project brief)
+- ✅ Section completeness checking
+- ✅ Architect checklist validation
+- ✅ Quality report generation
+- ✅ Next agent recommendations
+- ✅ Automatic handoff creation
+
 ## Purpose
 
 - To design a complete, robust, and well-documented technical architecture based on the project requirements (PRD, epics, brief), research findings, and user input.
@@ -65,17 +76,29 @@
     - Review existing epics/stories from the PRD and suggest technical considerations or acceptance criteria refinements to ensure they are implementable based on the chosen architecture. For example, specifying API endpoints to be called, data formats, or critical library versions.
     - After collaboration, prepare a concise summary detailing all proposed additions, updates, or modifications to epics and user stories. If no changes are identified, explicitly state this.
 
-6.  **Validate Architecture Against Checklist & Finalize Output:**
-    - Once the main architecture document components have been drafted and reviewed with the user, perform a comprehensive review using the `architect-checklist`.
-    - Go through each item in the checklist to ensure the architecture document is comprehensive, addresses all key architectural concerns (e.g., security, scalability, maintainability, testability (including confirmation that coding standards and the testing strategy clearly define unit test location and naming conventions), developer experience), and that proposed solutions are robust.
-    - For each checklist item, confirm its status (e.g., \[x] Completed, \[ ] N/A, \[!] Needs Attention).
-    - If deficiencies, gaps, or areas needing more detail or clarification are identified based on the checklist:
-      - Discuss these findings with the user.
-      - Collaboratively make necessary updates, additions, or refinements to the architecture document to address these points.
-    - After addressing all checklist points and ensuring the architecture document is robust and complete, present a summary of the checklist review to the user. This summary should highlight:
-      - Confirmation that all relevant sections/items of the checklist have been satisfied by the architecture.
-      - Any items marked N/A, with a brief justification.
-      - A brief note on any significant discussions, decisions, or changes made to the architecture document as a result of the checklist review.
+6.  **Architecture Quality & Finalization (Automated + Strategic):**
+    
+    > **Note: Architect checklist validation runs automatically.** Focus on strategic architectural decisions while hooks handle compliance checking.
+    
+    **Automated validation includes:**
+    - Comprehensive architect-checklist validation
+    - Security, scalability, and maintainability checks
+    - Testing strategy verification
+    - Required sections validation
+    - Quality metrics generation
+    
+    **Your strategic focus:**
+    - Review automated validation warnings
+    - Ensure architectural decisions are sound
+    - Validate technology choices make sense
+    - Confirm scalability approach is appropriate
+    - Address any complex architectural trade-offs
+    
+    **The system automatically:**
+    - Generates checklist compliance report
+    - Identifies missing or incomplete sections
+    - Creates quality assessment
+    - Prepares handoff documentation
     - **Offer Design Architect Prompt (If Applicable):**
       - If the architecture includes UI components, ask the user if they would like to include a dedicated prompt for a "Design Architect" at the end of the main architecture document.
       - Explain that this prompt can capture specific UI considerations, notes from discussions, or decisions that don't fit into the core technical architecture document but are crucial for the Design Architect.
@@ -122,3 +145,27 @@ Present the user with the following list of 'Advanced Reflective, Elicitation & 
 After I perform the selected action, we can discuss the outcome and decide on any further revisions for this section."
 
 REPEAT by Asking the user if they would like to perform another Reflective, Elicitation & Brainstorming Action UNIT the user indicates it is time to proceed ot the next section (or selects #8)
+
+## Automated Post-Creation Processes
+
+**Upon architecture document completion, hooks automatically:**
+- Run full architect-checklist validation
+- Verify all required sections (System Overview, Key Components, Data Flow, etc.)
+- Check for architecture diagrams or visual representations
+- Validate technology stack completeness
+- Generate comprehensive quality report
+- Determine next agent recommendation
+- Create handoff documentation
+
+**Next Agent Recommendation:**
+- If frontend components exist: Design Architect for frontend architecture
+- If ready for stories: Product Owner for story creation
+- The system provides this recommendation automatically
+
+**You'll receive:**
+- Complete validation report with any issues
+- Checklist compliance status
+- Automatic handoff document for next agent
+- Session tracking for continuity
+
+Focus on creating solid, implementable architecture while automation ensures quality and smooth transitions.

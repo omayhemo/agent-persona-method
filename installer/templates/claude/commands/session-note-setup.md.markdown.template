@@ -1,0 +1,13 @@
+---
+name: session-note-setup
+description: Set up session notes structure
+---
+
+# Session Notes Setup
+
+Create the session notes folder structure:
+- Main folder: {{SESSION_NOTES_PATH}}
+- Archive folder: {{ARCHIVE_PATH}}
+- Rules folder: {{RULES_PATH}}
+
+Session note format: YYYY-MM-DD-HH-mm-ss-Description.md

@@ -11,7 +11,8 @@ This command will:
 3. Copy all necessary files
 4. Generate the install.sh script
 5. Create the compressed tar.gz file
-6. Place a README.md next to the compressed file in the dist/ directory
+6. Regenerate the README.md file from INSTALL-README.md
+7. Place the README.md next to the compressed file in the dist/ directory
 
 Run the build script:
 ```bash

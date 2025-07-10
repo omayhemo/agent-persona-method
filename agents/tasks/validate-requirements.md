@@ -1,11 +1,22 @@
 ==================== START: validate-requirements ====================
 # Validate Requirements Task
 
+> **Note: Requirements validation is now automated by Claude Code hooks.** The hooks automatically check document completeness, validate formats, and ensure quality standards. This task now focuses on strategic validation and interpreting automated results.
+
+## Automated Support
+This task benefits from automated:
+- ✅ Document completeness checking
+- ✅ Format validation (user stories, acceptance criteria)
+- ✅ Cross-document consistency verification
+- ✅ Testability assessment
+- ✅ Validation report generation
+- ✅ Issue tracking and metrics
+
 ## Purpose
 
 To systematically review and validate project requirements (PRD, User Stories, Acceptance Criteria) for completeness, testability, and quality assurance readiness before development begins.
 
-## Inputs for this Task
+## Inputs for this Task (Automatically Validated)
 
 - Product Requirements Document (PRD)
 - Epic definitions and user stories
@@ -15,147 +26,148 @@ To systematically review and validate project requirements (PRD, User Stories, A
 
 ## Task Execution Instructions
 
-### 1. PRD Quality Assessment
+### 1. Review Automated Validation Results
 
-- **Completeness Review:**
-  - [ ] All functional requirements clearly defined
-  - [ ] Non-functional requirements specified with measurable criteria
-  - [ ] User personas and target audience well-defined
-  - [ ] Success metrics and KPIs identified
-  - [ ] Out-of-scope items clearly documented
-- **Clarity & Consistency:**
-  - [ ] Requirements use consistent terminology throughout
-  - [ ] No conflicting or contradictory requirements
-  - [ ] Technical assumptions are realistic and feasible
-  - [ ] Business rules and constraints clearly stated
-- **Testability Assessment:**
-  - [ ] Each requirement can be objectively verified
-  - [ ] Success criteria are measurable and specific
-  - [ ] Edge cases and error scenarios considered
-  - [ ] Performance requirements include specific thresholds
+**The hooks automatically check:**
+- Document existence and format compliance
+- Required sections in PRDs and epics
+- User story format (As a... I want... So that...)
+- Acceptance criteria completeness
+- Cross-document consistency
 
-### 2. Epic & User Story Validation
+**Your role:**
+- Interpret validation reports
+- Assess the business impact of any issues
+- Provide context-specific recommendations
+- Guide prioritization of fixes
 
-- **Story Quality Review:**
-  - [ ] Each story follows proper user story format (As a... I want... So that...)
-  - [ ] Stories are independent and can be developed/tested separately
-  - [ ] Stories are appropriately sized (not too large or too small)
-  - [ ] Stories provide clear business value
-  - [ ] Story dependencies are identified and manageable
-- **Epic Coherence:**
-  - [ ] Epics represent logical groupings of related functionality
-  - [ ] Epic sequence supports incremental value delivery
-  - [ ] Epic goals align with overall project objectives
-  - [ ] Epic scope is appropriate for development capacity
+### 2. Strategic Quality Assessment
 
-### 3. Acceptance Criteria Assessment
+Focus on aspects that require human judgment:
 
-- **Criteria Completeness:**
-  - [ ] All stories have comprehensive acceptance criteria
-  - [ ] Criteria cover happy path scenarios
-  - [ ] Error conditions and edge cases addressed
-  - [ ] Integration points and dependencies specified
-  - [ ] Performance and usability requirements included where relevant
-- **Criteria Quality:**
-  - [ ] Criteria are specific and unambiguous
-  - [ ] Criteria are testable and verifiable
-  - [ ] Criteria include both positive and negative test scenarios
-  - [ ] Criteria specify expected system behavior clearly
-  - [ ] Data validation and security requirements included
+**Business Alignment:**
+- Do requirements align with business objectives?
+- Are success metrics meaningful and achievable?
+- Is the scope appropriate for available resources?
 
-### 4. Cross-Reference Validation
+**Technical Feasibility:**
+- Are technical assumptions realistic?
+- Do requirements consider system constraints?
+- Are integration points well-defined?
 
-- **Requirement Traceability:**
-  - [ ] All PRD requirements map to specific epics/stories
-  - [ ] No orphaned or missing requirements
-  - [ ] Acceptance criteria support higher-level requirements
-  - [ ] Architecture supports all specified requirements
-- **Consistency Check:**
-  - [ ] User stories align with defined user personas
-  - [ ] Technical requirements match architectural capabilities
-  - [ ] UI/UX requirements are feasible within technical constraints
-  - [ ] Timeline expectations are realistic given scope
+**User Experience:**
+- Do stories reflect actual user needs?
+- Are workflows logical and efficient?
+- Is accessibility properly addressed?
 
-### 5. Risk & Quality Assessment
+### 3. Deep Validation (Beyond Automation)
 
-- **Quality Risk Identification:**
-  - [ ] Complex or high-risk functionality identified
-  - [ ] Areas requiring specialized testing approaches noted
-  - [ ] Integration points that need extra attention marked
-  - [ ] Performance-critical paths highlighted
-  - [ ] Security-sensitive operations flagged
-- **Testing Readiness:**
-  - [ ] Requirements provide sufficient detail for test case creation
-  - [ ] Test data requirements can be determined from requirements
-  - [ ] Environment needs are clear from specifications
-  - [ ] Automation opportunities identified
+While hooks validate structure, you validate meaning:
 
-### 6. Stakeholder Alignment
+**Requirement Coherence:**
+- Do all requirements work together logically?
+- Are there hidden dependencies or conflicts?
+- Is the implementation sequence optimal?
 
-- **Review Process:**
-  - Present findings to PM, Architect, and PO
-  - Discuss any gaps, ambiguities, or concerns identified
-  - Collaborate on resolution of requirement issues
-  - Ensure all stakeholders understand testing implications
-- **Documentation Updates:**
-  - Work with PM to refine unclear requirements
-  - Support story refinement and acceptance criteria improvement
-  - Update requirements based on QA review findings
-  - Document any assumptions or clarifications made
+**Risk Assessment:**
+- What are the quality risks?
+- Which requirements are most critical?
+- Where might testing be challenging?
 
-### 7. Create Validation Report
+**Gap Analysis:**
+- What scenarios might be missing?
+- Are edge cases adequately covered?
+- Do we need additional non-functional requirements?
 
-Generate a comprehensive validation report including:
+### 4. Stakeholder Communication
 
-- **Summary of Findings:** Overall assessment of requirement quality
-- **Identified Issues:** Specific problems with recommendations
-- **Risk Assessment:** Quality risks and mitigation suggestions
-- **Testing Readiness:** Assessment of readiness for test planning
-- **Recommendations:** Specific actions to improve requirement quality
-- **Sign-off Status:** Approval status and any conditions
+Transform automated findings into actionable insights:
 
-## Validation Criteria Checklist
+**For Product Managers:**
+- Explain impact of missing requirements
+- Suggest clarifications needed
+- Highlight business risks
 
-### Functional Requirements
-- [ ] **Complete:** All necessary functionality described
-- [ ] **Clear:** Unambiguous and specific language used
-- [ ] **Consistent:** No contradictions or conflicts
-- [ ] **Testable:** Can be objectively verified
-- [ ] **Feasible:** Technically and practically achievable
+**For Developers:**
+- Identify technical ambiguities
+- Flag integration challenges
+- Suggest implementation approaches
 
-### Non-Functional Requirements
-- [ ] **Performance:** Specific response time, throughput, and scalability targets
-- [ ] **Security:** Authentication, authorization, and data protection requirements
-- [ ] **Usability:** User experience and accessibility standards
-- [ ] **Reliability:** Uptime, availability, and error recovery expectations
-- [ ] **Compatibility:** Browser, device, and platform support specifications
+**For QA Team:**
+- Highlight testing challenges
+- Identify areas needing test focus
+- Suggest test strategy adjustments
 
-### User Stories & Acceptance Criteria
-- [ ] **Value-Focused:** Clear business value and user benefit
-- [ ] **Independent:** Can be developed and tested separately
-- [ ] **Negotiable:** Flexible enough to accommodate implementation details
-- [ ] **Estimable:** Sufficient detail for effort estimation
-- [ ] **Small:** Appropriately sized for development iterations
-- [ ] **Testable:** Clear criteria for completion verification
+### 5. Create Strategic Validation Report
 
-## Output Deliverables
+Build upon the automated report with:
 
-- **Requirements Validation Report**
-- **Issue Tracking Matrix** with prioritized findings
-- **Testing Readiness Assessment**
-- **Requirement Improvement Recommendations**
-- **Updated Requirements** (if changes were made during validation)
-- **Quality Risk Register** for high-risk requirements
+**Executive Summary:**
+- Overall requirements health assessment
+- Critical issues requiring immediate attention
+- Strategic recommendations
 
-## Success Criteria
+**Risk Analysis:**
+- Quality risks by priority
+- Mitigation strategies
+- Resource implications
 
-Requirements validation is complete when:
+**Action Plan:**
+- Specific improvements needed
+- Owner assignments
+- Timeline recommendations
 
-1. All requirements meet quality criteria (complete, clear, consistent, testable, feasible)
-2. Acceptance criteria are comprehensive and unambiguous
-3. Quality risks are identified and mitigation plans are in place
-4. Requirements provide sufficient detail for test planning and execution
-5. Stakeholders have reviewed and approved validation findings
-6. Any identified issues have been resolved or documented for future resolution
+## Working with Automated Reports
+
+### Understanding Hook Output
+
+Automated reports include:
+```markdown
+# Requirements Validation Report
+- Document compliance status
+- Format validation results
+- Missing sections list
+- Consistency issues
+- Testability assessment
+```
+
+### Your Value-Add
+
+Focus on:
+1. **Interpretation**: What do the findings mean for the project?
+2. **Prioritization**: Which issues are critical vs nice-to-have?
+3. **Solutions**: How to address complex requirement gaps?
+4. **Communication**: Translate technical findings for stakeholders
+
+## Quality Gates
+
+### Automated Checks (Via Hooks)
+- ✅ All required documents present
+- ✅ Documents follow templates
+- ✅ User stories properly formatted
+- ✅ Acceptance criteria complete
+
+### Manual Strategic Review
+- ✅ Business value clearly articulated
+- ✅ Technical approach is sound
+- ✅ User experience well-considered
+- ✅ Risks identified and manageable
+
+## Report Locations
+
+- Automated validation: `$AP_ROOT/hooks/task-hooks/validation-report-*.md`
+- Task workspaces: `$AP_ROOT/hooks/task-hooks/workspaces/`
+- Session logs: Check for validation execution history
+
+## Next Steps
+
+1. Review all automated validation reports
+2. Conduct strategic assessment
+3. Create consolidated findings document
+4. Meet with stakeholders to discuss
+5. Track remediation progress
+6. Re-validate after updates
+
+Remember: Automation handles the mechanical validation. Your expertise provides the strategic insight that ensures requirements truly meet project needs.
 
 ==================== END: validate-requirements ====================

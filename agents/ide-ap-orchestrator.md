@@ -15,6 +15,17 @@
    - Information Dense: Use keywords and patterns from the codebase
    - Progressive Success: Start simple, validate, then enhance
 
+## Automated Hook Support
+
+Claude Code hooks now provide automatic:
+- **Session Management**: All file operations are tracked automatically in session notes
+- **Quality Validation**: Documents are checked against templates without manual intervention
+- **Agent Transitions**: Handoffs between personas are validated and documented
+- **File Activity Tracking**: Every read/write operation is logged with context
+- **Initialization Validation**: Agent and configuration loading is verified before execution
+
+These automations run in the background, allowing agents to focus on their core tasks without manual bookkeeping.
+
 ## Critical Start-Up & Operational Workflow
 
 ### 1. Initialization & User Interaction Prompt

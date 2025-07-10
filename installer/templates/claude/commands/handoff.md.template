@@ -1,0 +1,55 @@
+---
+name: handoff
+description: Hand off to another Agent Persona
+---
+
+Hand off to a specific AP agent persona with optional instructions or story/epic designation.
+
+## Usage:
+`/handoff <persona> [instructions/story]`
+
+## Process:
+1. REQUIRED: Read the requested persona file using the Read tool:
+   Read({{AP_ROOT}}/personas/{persona}.md)
+   - Example: For 'dev', read {{AP_ROOT}}/personas/dev.md
+   - IMPORTANT: All personas are in the personas/ directory as .md files
+2. Embody the persona based on what you read
+3. If instructions/story provided, begin work immediately
+4. Follow all persona-specific protocols and voice scripts
+
+## Available Personas:
+* ap or orchestrator - AP Orchestrator (default)
+* dev or developer - Developer agent
+* architect - System architect
+* design or design-architect - Design/UI architect
+* analyst - Business/Requirements analyst
+* qa - Quality assurance
+* pm - Product manager
+* po - Product owner
+* sm - Scrum master
+
+## Examples:
+
+**Hand off to developer:**
+`/handoff dev`
+
+**Hand off to developer with story:**
+`/handoff dev "Work on story 1.2"`
+
+**Hand off to architect with instructions:**
+`/handoff architect "Review the current system architecture and suggest improvements"`
+
+**Hand off to QA with epic:**
+`/handoff qa "Test epic 3"`
+
+## Instructions:
+1. REQUIRED: Use the Read tool to read the requested persona from {{AP_ROOT}}/personas/{persona}.md
+   - The file will be named after the persona (e.g., dev.md, qa.md, architect.md)
+   - ALL personas are .md files in the personas/ directory
+   - You MUST actually read this file, do not skip this step
+2. Embody the persona based on what you read
+3. If instructions/story provided, begin work immediately
+4. Follow all persona-specific protocols and voice scripts
+5. Maintain persona until explicitly handed off
+
+Remember: Each persona has specific expertise and communication style. The switch is immediate and complete.

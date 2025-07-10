@@ -1,5 +1,16 @@
 # PRD Generate Task
 
+> **Note: Document validation and quality checks are now automated by Claude Code hooks.** Hooks validate structure, check required sections, and ensure quality standards as you create the PRD.
+
+## Automated Support
+This task benefits from automated:
+- ✅ Section-by-section quality validation
+- ✅ Required content verification
+- ✅ Success metrics validation
+- ✅ Automatic checklist compliance
+- ✅ Next agent recommendations
+- ✅ Quality report generation
+
 ## Purpose
 
 - Transform inputs into core product definition documents conforming to the `prd-tmpl` template.
@@ -90,13 +101,27 @@ Present the user with the complete full draft once all sections are completed (o
 
 If there is a UI component to this PRD, you can inform the user that the Design Architect should take this final output.
 
-### 5\. Checklist Assessment
+### 5\. Quality Assessment (Automated + Strategic)
 
-- Use the `pm-checklist` to consider each item in the checklist is met (or n/a) against the PRD.
-- Document completion status for each item.
-- Present the user with summary of each section of the checklist before going to the next section.
-- Address deficiencies with user for input or suggested updates or corrections.
-- Once complete and address, output the final checklist with all the checked items or skipped items, the section summary table, and any final notes. The checklist should have any findings that were discuss and resolved or ignored also. This will be a nice artifact for the user to keep.
+> **Note: Quality validation now runs automatically.** The hooks validate document structure, required sections, and checklist compliance as you work. Focus on strategic quality aspects.
+
+**Automated checks include:**
+- PM checklist validation runs after each section
+- Required sections verification
+- Success metrics format validation
+- Document structure compliance
+
+**Your strategic review:**
+- Review automated validation warnings
+- Assess business value clarity
+- Ensure technical feasibility
+- Validate user needs alignment
+- Address any quality gaps with the user
+
+**The system automatically:**
+- Generates quality reports
+- Tracks completion metrics
+- Creates validation artifacts
 
 ### 6\. Produce the PRD
 
@@ -227,3 +252,26 @@ Present the user with the following list of 'Advanced Reflective, Elicitation & 
 After I perform the selected action, we can discuss the outcome and decide on any further revisions for this section."
 
 REPEAT by Asking the user if they would like to perform another Reflective, Elicitation & Brainstorming Action UNIT the user indicates it is time to proceed ot the next section (or selects #8)
+
+## Automated Post-Creation Processes
+
+**Upon PRD completion, hooks automatically:**
+- Validate the entire document against PM checklist
+- Check all required sections are present
+- Verify measurable success metrics exist
+- Generate comprehensive quality report
+- Recommend next agent (Architect or Design Architect)
+- Create handoff documentation
+
+**Next Agent Recommendation:**
+- If significant UI/UX components: Design Architect
+- If primarily backend/system: Architect
+- The system provides this recommendation automatically
+
+**You'll receive:**
+- Validation report with any issues found
+- Quality metrics and completion status
+- Automatic handoff document for next agent
+- Session tracking for continuity
+
+Focus on creating comprehensive, strategic PRD content while automation ensures quality and smooth transitions.

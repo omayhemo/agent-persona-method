@@ -1,0 +1,22 @@
+---
+name: session-note-setup
+description: Set up session notes structure
+---
+
+# Session Notes Setup
+
+Create the session notes folder structure:
+
+## Primary (Obsidian):
+- Main folder: {{SESSION_NOTES_PATH}}
+- Archive folder: {{ARCHIVE_PATH}}
+- Rules folder: {{RULES_PATH}}
+
+## Fallback (Local):
+- Main folder: {{FALLBACK_SESSION_NOTES_PATH}}
+- Archive folder: {{FALLBACK_ARCHIVE_PATH}}
+- Rules folder: {{FALLBACK_RULES_PATH}}
+
+Session note format: YYYY-MM-DD-HH-mm-ss-Description.md
+
+Note: Fallback folders are automatically created for redundancy when Obsidian is unavailable.

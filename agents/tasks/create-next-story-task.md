@@ -1,5 +1,16 @@
 # Create Next Story Task
 
+> **Note: Story validation and prerequisite checking are now automated by Claude Code hooks.** The hooks automatically validate story sequences, check prerequisites, and ensure proper formatting. This task now focuses on story content creation while automation handles validation.
+
+## Automated Support
+This task benefits from automated:
+- ✅ Story sequence validation
+- ✅ Prerequisite checking
+- ✅ Epic alignment verification
+- ✅ Format compliance validation
+- ✅ Automatic handoff generation
+- ✅ Story draft checklist validation
+
 ## Purpose
 
 To identify the next logical story based on project progress and epic definitions, and then to prepare a comprehensive, self-contained, and actionable story file using the `Story Template`. This task ensures the story is enriched with all necessary technical context, requirements, and acceptance criteria, making it ready for efficient implementation by a Developer Agent with minimal need for additional research.
@@ -26,35 +37,27 @@ To identify the next logical story based on project progress and epic definition
 
 ## Task Execution Instructions
 
-### 1. Identify Next Story for Preparation
+### 1. Identify Next Story for Preparation (Automated)
 
-- Review `$PROJECT_DOCS/stories/` to find the highest-numbered story file.
-- **If a highest story file exists (`{lastEpicNum}.{lastStoryNum}.story.md`):**
+**The task-pre-hook automatically:**
+- Scans `$PROJECT_DOCS/stories/` for the highest-numbered story
+- Validates previous story completion status
+- Checks epic files for the next story in sequence
+- Verifies all prerequisites are met
+- Alerts you to any blocking issues
 
-  - Verify its `Status` is 'Done' (or equivalent).
-  - If not 'Done', present an alert to the user:
+**If automation detects issues:**
+- You'll see warnings in the console (e.g., "Previous story incomplete" or "Prerequisites not met")
+- Discuss with the user whether to proceed
+- The user can choose to override and continue
 
-    ```
-    ALERT: Found incomplete story:
-    File: {lastEpicNum}.{lastStoryNum}.story.md
-    Status: [current status]
+**If all validations pass:**
+- The system announces: "Identified next story for preparation: {epicNum}.{storyNum} - {Story Title}"
+- Proceed directly to gathering requirements
 
-    Would you like to:
-    1. View the incomplete story details (instructs user to do so, agent does not display)
-    2. Cancel new story creation at this time
-    3. Accept risk & Override to create the next story in draft
-
-    Please choose an option (1/2/3):
-    ```
-
-  - Proceed only if user selects option 3 (Override) or if the last story was 'Done'.
-  - If proceeding: Check the Epic File for `{lastEpicNum}` for a story numbered `{lastStoryNum + 1}`. If it exists and its prerequisites (per Epic File) are met, this is the next story.
-  - Else (story not found or prerequisites not met): The next story is the first story in the next Epic File (e.g., `$PROJECT_DOCS/epics/epic-{lastEpicNum + 1}.md`, then `{lastEpicNum + 2}.md`, etc.) whose prerequisites are met.
-
-- **If no story files exist in `$PROJECT_DOCS/stories/`:**
-  - The next story is the first story in `$PROJECT_DOCS/epics/epic-1.md` (then `$PROJECT_DOCS/epics/epic-2.md`, etc.) whose prerequisites are met.
-- If no suitable story with met prerequisites is found, report to the user that story creation is blocked, specifying what prerequisites are pending. HALT task.
-- Announce the identified story to the user: "Identified next story for preparation: {epicNum}.{storyNum} - {Story Title}".
+**Manual fallback (if needed):**
+- Use the traditional sequence checking only if hooks are disabled
+- Follow epic orchestration guide for complex scenarios
 
 ### 2. Gather Core Story Requirements (from Epic File)
 
@@ -99,3 +102,42 @@ To identify the next logical story based on project progress and epic definition
   - Link tasks to ACs where applicable (e.g., `Task 1 (AC: 1, 3)`).
 - Add notes on project structure alignment or discrepancies found in Step 4.
 - Prepare content for the "Deviation Analysis" based on discrepancies noted in Step 3.
+
+### 6. Quality Validation (Automated)
+
+**Upon saving the story file, the task-post-hook automatically:**
+- Validates story format (As a... I want... So that...)
+- Checks all required sections are present
+- Runs the story-draft-checklist validation
+- Verifies acceptance criteria format
+- Ensures technical requirements are documented
+- Generates a validation report
+
+**You'll receive:**
+- Immediate feedback on any validation issues
+- A comprehensive validation report in the task workspace
+- Automatic handoff document for the Developer agent
+
+### 7. Review and Finalize
+
+- Review any validation warnings from the automated checks
+- Address critical issues if any
+- Confirm the story is ready for development
+- The system will automatically:
+  - Update the story index
+  - Create developer handoff documentation
+  - Track the story creation in session logs
+
+## Post-Creation Notes
+
+The automated hooks ensure:
+- Story numbering remains consistent
+- All prerequisites are properly tracked
+- Quality standards are maintained
+- Smooth handoff to development
+
+Focus your expertise on:
+- Crafting clear, actionable acceptance criteria
+- Providing comprehensive technical guidance
+- Ensuring the story aligns with project goals
+- Making the story self-contained for efficient implementation

@@ -1,6 +1,17 @@
 ==================== START: run-qa-checklist ====================
 # Run QA Checklist Task
 
+> **Note: QA checklist execution and tracking are now automated by Claude Code hooks.** Hooks automatically run appropriate checklists, track completion status, and generate reports. This task now focuses on interpreting results and strategic quality decisions.
+
+## Automated Support
+This task benefits from automated:
+- ✅ Checklist selection and execution
+- ✅ Pass/fail status tracking
+- ✅ Issue identification and logging
+- ✅ Progress monitoring
+- ✅ Report generation
+- ✅ Metrics collection
+
 ## Purpose
 
 To execute comprehensive quality assurance checklists at various project milestones to ensure deliverables meet quality standards before progression to the next phase. This task provides systematic validation using predefined quality criteria.
@@ -181,41 +192,44 @@ To execute comprehensive quality assurance checklists at various project milesto
 - [ ] Issue tracking and escalation procedures active
 - [ ] Success metrics monitoring established
 
-### 7. Document Results & Actions
+### 7. Review Automated Results & Strategic Actions
 
-- **Checklist Completion Status:**
-  - Document pass/fail status for each checklist item
-  - Provide evidence or verification details for passed items
-  - Document specific findings for failed items
-  - Identify items marked as "Not Applicable" with justification
-- **Issue Identification & Prioritization:**
-  - Create detailed issue reports for all failed checklist items
-  - Categorize issues by severity (Critical, Major, Minor)
-  - Assign ownership and target resolution dates
-  - Define acceptance criteria for issue resolution
+> **Note: Results documentation and tracking are automated.** Focus on interpretation and strategic decisions.
+
+**Automated processes handle:**
+- Pass/fail status documentation for each item
+- Evidence collection and verification logging
+- Issue report generation for failed items
+- Severity categorization and tracking
+- Progress monitoring and updates
+- Metrics collection and trending
+
+**Your strategic focus:**
 - **Quality Gate Decision:**
-  - Make go/no-go recommendation based on checklist results
-  - Document any risks or concerns for moving forward
-  - Identify conditions that must be met before progression
+  - Interpret automated results for go/no-go recommendation
+  - Assess business impact of identified issues
+  - Define risk mitigation strategies
   - Recommend timeline adjustments if needed
 
-### 8. Communicate Results & Follow-up
+### 8. Strategic Communication & Follow-up
 
+**Automated tracking provides:**
+- Real-time issue status updates
+- Progress dashboards
+- Historical trend analysis
+- Automated re-validation triggers
+
+**Your value-add:**
 - **Stakeholder Communication:**
-  - Present checklist results to relevant team members
-  - Facilitate discussion of critical findings
-  - Collaborate on resolution planning and prioritization
-  - Schedule follow-up validation as needed
-- **Issue Tracking & Resolution:**
-  - Create tracking entries for all identified issues
-  - Monitor progress on issue resolution
-  - Validate fixes and re-run relevant checklist items
-  - Update checklist results as issues are resolved
+  - Translate technical findings for business stakeholders
+  - Facilitate strategic discussions on critical issues
+  - Guide prioritization based on business impact
+  - Build consensus on resolution approaches
 - **Process Improvement:**
-  - Identify patterns in checklist failures
-  - Recommend improvements to prevent similar issues
-  - Update checklists based on lessons learned
-  - Share best practices with team
+  - Analyze patterns in automated reports
+  - Recommend systemic improvements
+  - Enhance quality processes based on data
+  - Share insights across teams
 
 ## Checklist Execution Guidelines
 
@@ -236,13 +250,33 @@ To execute comprehensive quality assurance checklists at various project milesto
 - **Major:** Should be resolved soon (quality/functionality impact)
 - **Minor:** Can be addressed in future iterations (cosmetic/low impact)
 
+## Automated Reports & Locations
+
+**Hooks automatically generate:**
+- Checklist execution reports: `$AP_ROOT/hooks/task-hooks/checklist-report-*.md`
+- Completion tracking: `$AP_ROOT/hooks/task-hooks/checklist-tracking.json`
+- Quality metrics: Task workspace directories
+- Session activity logs with all validations
+
+**Report contents include:**
+- Total items checked
+- Pass/fail counts
+- Completion percentage
+- Detailed findings per item
+- Timestamp and agent information
+
 ## Output Deliverables
 
-- **Completed Checklist** with pass/fail status for each item
-- **Issue Summary Report** with prioritized findings
+**Automated outputs:**
+- **Completed Checklist** with pass/fail status for each item (automated)
+- **Issue Summary Report** with findings (automated)
+- **Tracking entries** for all issues (automated)
+- **Evidence logs** with verification details (automated)
+
+**Your strategic outputs:**
 - **Quality Gate Recommendation** (Go/No-Go decision)
-- **Resolution Action Plan** with ownership and timelines
-- **Evidence Package** with supporting documentation
+- **Resolution Action Plan** with business priorities
+- **Risk Assessment** for stakeholders
 - **Stakeholder Communication** summary and next steps
 
 ## Success Criteria

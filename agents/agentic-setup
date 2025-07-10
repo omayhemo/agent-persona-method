@@ -513,29 +513,25 @@ When ANY /ap command is used:
 3. YOU MUST follow the exact sequence below IMMEDIATELY
 
 ### MANDATORY SEQUENCE FOR /ap COMMANDS:
-1. Check session notes FIRST (silently)
-2. Check rules (silently)
-3. Create new session note (silently)
-4. Use voice script for greeting
-5. Continue AS the persona (not delegating)
+1. Use voice script for greeting
+2. Continue AS the persona (not delegating)
+
+> Note: Session management, file tracking, and quality checks are now automated by Claude Code hooks.
 
 ## ❌ COMMON MISTAKES TO AVOID
 
 - DO NOT use the Task tool to "launch" agents
 - DO NOT respond without using voice scripts
-- DO NOT skip session note creation
-- DO NOT proceed without checking existing notes first
 - DO NOT treat /ap commands as delegations
 
 ## ✅ CORRECT BEHAVIOR EXAMPLE
 
 User: /ap
 Assistant: 
-1. [Checks session notes silently]
-2. [Checks rules silently]
-3. [Creates session note silently]
-4. [Uses voice script]: bash $AP_ROOT/voice/speakOrchestrator.sh "AP Orchestrator activated. Loading configuration..."
-5. [Continues as the AP Orchestrator persona]
+1. [Uses voice script]: bash $AP_ROOT/voice/speakOrchestrator.sh "AP Orchestrator activated. Loading configuration..."
+2. [Continues as the AP Orchestrator persona]
+
+> Note: Hooks automatically handle session tracking, agent validation, and quality checks in the background.
 
 ## Environment Configuration
 
@@ -651,29 +647,25 @@ When ANY /ap command is used:
 3. YOU MUST follow the exact sequence below IMMEDIATELY
 
 ### MANDATORY SEQUENCE FOR /ap COMMANDS:
-1. Check session notes FIRST (silently)
-2. Check rules (silently)
-3. Create new session note (silently)
-4. Use voice script for greeting
-5. Continue AS the persona (not delegating)
+1. Use voice script for greeting
+2. Continue AS the persona (not delegating)
+
+> Note: Session management, file tracking, and quality checks are now automated by Claude Code hooks.
 
 ## ❌ COMMON MISTAKES TO AVOID
 
 - DO NOT use the Task tool to "launch" agents
 - DO NOT respond without using voice scripts
-- DO NOT skip session note creation
-- DO NOT proceed without checking existing notes first
 - DO NOT treat /ap commands as delegations
 
 ## ✅ CORRECT BEHAVIOR EXAMPLE
 
 User: /ap
 Assistant: 
-1. [Checks session notes silently]
-2. [Checks rules silently]
-3. [Creates session note silently]
-4. [Uses voice script]: bash $AP_ROOT/voice/speakOrchestrator.sh "AP Orchestrator activated. Loading configuration..."
-5. [Continues as the AP Orchestrator persona]
+1. [Uses voice script]: bash $AP_ROOT/voice/speakOrchestrator.sh "AP Orchestrator activated. Loading configuration..."
+2. [Continues as the AP Orchestrator persona]
+
+> Note: Hooks automatically handle session tracking, agent validation, and quality checks in the background.
 
 ## Environment Configuration
 

@@ -30,5 +30,62 @@
       "SPEAK_SM": "${AP_ROOT}/voice/speakSM.sh",
       "SPEAK_DESIGN_ARCHITECT": "${AP_ROOT}/voice/speakDesignArchitect.sh"
     }
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 /mnt/c/code/agentic-persona/.claude/hooks/pre_tool_use.py"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 /mnt/c/code/agentic-persona/.claude/hooks/post_tool_use.py"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 /mnt/c/code/agentic-persona/.claude/hooks/notification.py"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 /mnt/c/code/agentic-persona/.claude/hooks/stop.py"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 /mnt/c/code/agentic-persona/.claude/hooks/subagent_stop.py"
+          }
+        ]
+      }
+    ]
   }
 }

@@ -1,0 +1,26 @@
+# Session notes (both Obsidian fallback and markdown)
+project_documentation/session_notes/
+session_notes/
+
+# AP Method generated files
+CLAUDE.md.ap-setup
+harmonization.log
+
+# Piper TTS installation (project-local)
+.piper/
+
+# Node modules
+node_modules/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db

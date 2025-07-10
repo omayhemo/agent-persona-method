@@ -1,11 +1,21 @@
 ==================== START: create-test-strategy ====================
 # Create Test Strategy Task
 
+> **Note: Document prerequisites and validation are now automated by Claude Code hooks.** Hooks verify that required documents exist and validate the test strategy structure automatically.
+
+## Automated Support
+This task benefits from automated:
+- ✅ Prerequisite document validation
+- ✅ Test strategy template compliance
+- ✅ Quality checklist execution
+- ✅ Report generation
+- ✅ Handoff documentation
+
 ## Purpose
 
 To develop a comprehensive testing strategy that aligns with project requirements, technical architecture, and quality objectives. This strategy serves as the foundation for all testing activities throughout the project lifecycle.
 
-## Inputs for this Task
+## Inputs for this Task (Automatically Validated)
 
 - Product Requirements Document (PRD) with epics and user stories
 - Architecture Document (technical design and system components)
@@ -17,20 +27,22 @@ To develop a comprehensive testing strategy that aligns with project requirement
 
 ### 1. Analyze Project Context & Requirements
 
-- **Review PRD thoroughly:**
-  - Identify all functional requirements and user journeys
-  - Extract non-functional requirements (performance, security, accessibility)
-  - Note any compliance or regulatory requirements
-  - Understand target user personas and their critical workflows
-- **Assess Technical Architecture:**
-  - Review system components and their interactions
-  - Identify integration points and external dependencies
-  - Understand data flow and storage patterns
-  - Note any complex business logic or algorithms
-- **Evaluate UI/UX Requirements:**
-  - Review user interface specifications and design requirements
-  - Identify responsive design and accessibility requirements
-  - Note any complex user interactions or workflows
+**Automated validation ensures all required documents are present. Focus on strategic analysis:**
+
+- **Strategic PRD Analysis:**
+  - Focus on critical user journeys and business value
+  - Identify high-risk functional areas
+  - Assess compliance and regulatory impact
+  - Prioritize testing based on user impact
+- **Architecture Risk Assessment:**
+  - Identify complex integration points
+  - Assess performance bottlenecks
+  - Evaluate security vulnerabilities
+  - Plan for scalability testing
+- **UI/UX Testing Strategy:**
+  - Plan usability testing approaches
+  - Define accessibility standards
+  - Identify cross-browser/device needs
 
 ### 2. Risk Assessment & Prioritization
 

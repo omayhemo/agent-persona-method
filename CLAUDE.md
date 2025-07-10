@@ -58,6 +58,11 @@ The AP Method uses specialized AI agents, each embodying specific roles:
 - **Tasks**: Reusable task definitions in `agents/tasks/`
 - **Templates**: Document templates in `agents/templates/`
 
+## System Components
+
+### Installer System
+- Installer system = the installer folder and all the templates and scripts required for distribution
+
 ### Environment Configuration
 After running `agentic-setup`, the system creates `.claude/settings.json` with:
 - `AP_ROOT` - Path to agents directory
@@ -97,7 +102,7 @@ This is a methodology framework, not a traditional codebase. There are no standa
 - Use the provided scripts for agent management
 - Follow the AP workflow for project planning
 - Leverage specialized agents for specific tasks
-- Create session notes for cross-session memory
+- Session notes are created automatically by Claude Code hooks
 
 ## Important Notes
 

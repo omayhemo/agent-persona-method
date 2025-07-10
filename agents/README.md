@@ -26,8 +26,8 @@ The AP Orchestrator serves as the project's technical lead and coordinator:
 
 1. **Context Management**: Maintains project state and ensures agents have necessary context
 2. **Agent Selection**: Determines which specialist is best suited for current tasks
-3. **Quality Gates**: Ensures deliverables meet standards before handoffs
-4. **Memory Persistence**: Manages session notes and project documentation for continuity
+3. **Quality Gates**: Automated by hooks - documents are validated against templates
+4. **Memory Persistence**: Automated by hooks - session notes and activity tracking handled automatically
 
 ### Key Principles
 
@@ -198,17 +198,19 @@ All voice scripts are located in `agents/voice/`:
 
 ## Session Management
 
-### With Obsidian MCP
-- Sessions stored in configured Obsidian vault
-- Automatic archiving on wrap
-- Cross-session memory via Obsidian links
-- Automatic fallback to local files if Obsidian unavailable
-- Fallback location: `$PROJECT_DOCS/session_notes/`
+**Note: Session management is now fully automated by Claude Code hooks.**
 
-### With Markdown Files
-- Sessions stored in local markdown files
-- Manual archiving process
-- Structured format for consistency
+### Automated Features
+- **Activity Tracking**: All file operations logged automatically
+- **Session Notes**: Created daily with comprehensive activity logs
+- **Quality Validation**: Documents checked against templates in real-time
+- **Agent Handoffs**: Validated and documented automatically
+- **Session Summaries**: Generated when Claude Code stops
+
+### Storage Locations
+- **With Obsidian MCP**: Sessions stored in configured vault
+- **Fallback**: Local markdown files at `$PROJECT_DOCS/session_notes/`
+- **Logs**: Hook activity logs in `$AP_ROOT/hooks/`
 
 ## Troubleshooting
 

@@ -11,7 +11,14 @@ The AP (Agent Persona) method is a project-agnostic approach to orchestrating AI
 curl -L https://github.com/omayhemo/agent-persona-method/raw/main/dist/ap-method-v1.0.0.tar.gz | tar -xz
 
 # Run the installer
-./install.sh
+./installer/install.sh
+```
+
+### Silent Install Option
+
+```bash
+# Download, extract, and install with defaults in one command
+curl -L https://github.com/omayhemo/agent-persona-method/raw/main/dist/ap-method-v1.0.0.tar.gz | tar -xz && ./installer/install.sh -d
 ```
 
 ### Install from Source
@@ -67,12 +74,12 @@ The AP Method leverages specialized AI agents to handle different aspects of sof
 # Download and install in your project directory
 cd /path/to/your/project
 curl -L https://github.com/omayhemo/agent-persona-method/raw/main/dist/ap-method-v1.0.0.tar.gz | tar -xz
-./install.sh
+./installer/install.sh
 
 # Or download first, then extract
 curl -LO https://github.com/omayhemo/agent-persona-method/raw/main/dist/ap-method-v1.0.0.tar.gz
 tar -xzf ap-method-v1.0.0.tar.gz
-./install.sh
+./installer/install.sh
 ```
 
 ### Option 2: Install from Source
@@ -98,9 +105,9 @@ tar -xzf ap-method-v1.0.0.tar.gz
 For automated deployments:
 ```bash
 # Install with all defaults - no prompts
-./install.sh --defaults
+./installer/install.sh --defaults
 # or
-./install.sh -d
+./installer/install.sh -d
 ```
 
 ### Voice Setup (Optional)
