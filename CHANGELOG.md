@@ -2,6 +2,26 @@
 
 All notable changes to the AP Method will be documented in this file.
 
+## [1.1.0-alpha.2] - 2025-01-10
+
+### Added
+- **Automatic Audio Player Installation**: Installer now checks for and installs required audio players
+  - Automatically installs `mpg123` for ElevenLabs (MP3 support)
+  - Automatically installs `alsa-utils` for Piper (WAV support)
+  - Prevents audio static issues from the start
+
+### Fixed
+- **Audio Static Issue**: Fixed static/noise when using ElevenLabs on Linux/WSL
+  - Prioritized MP3-capable players (mpg123, ffplay) over aplay
+  - Added MP3-to-WAV conversion fallback when only aplay is available
+  - Reordered audio player detection for better compatibility
+
+### Changed
+- **Voice Variety**: Added multiple ElevenLabs voices with automatic fallback
+  - Each persona has a unique voice assignment
+  - Automatically falls back to George voice if others aren't available
+  - Works with both free and paid ElevenLabs plans
+
 ## [1.1.0-alpha] - 2025-01-10
 
 ### Added
