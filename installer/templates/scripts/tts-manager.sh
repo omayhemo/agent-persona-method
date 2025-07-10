@@ -2,22 +2,20 @@
 # TTS Manager - Central hub for all text-to-speech operations
 # Supports multiple providers: piper, elevenlabs, system, discord, none
 
-set -e
+# Don't use strict mode to allow graceful failures
+# set -e
 
 # Get the directory of this script
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 AP_ROOT="$(dirname "$SCRIPT_DIR")"
 PROJECT_ROOT="$(dirname "$AP_ROOT")"
 
-# Source utilities
-source "$SCRIPT_DIR/utils.sh" 2>/dev/null || true
-
 # Load settings
 SETTINGS_FILE="$PROJECT_ROOT/.claude/settings.json"
 
 # Cache directory for audio files
 CACHE_DIR="$PROJECT_ROOT/.cache/tts"
-mkdir -p "$CACHE_DIR"
+mkdir -p "$CACHE_DIR" 2>/dev/null || true
 
 # Provider directory
 PROVIDER_DIR="$SCRIPT_DIR/tts-providers"
@@ -31,7 +29,7 @@ get_tts_setting() {
         # First try jq, fall back to grep
         if command -v jq >/dev/null 2>&1; then
             local value=$(jq -r ".ap.tts.$key // \"$default\"" "$SETTINGS_FILE" 2>/dev/null)
-            if [ "$value" != "null" ] && [ "$value" != "$default" ]; then
+            if [ "$value" != "null" ] && [ -n "$value" ]; then
                 echo "$value"
             else
                 echo "$default"
@@ -52,7 +50,7 @@ get_provider_setting() {
     
     if [ -f "$SETTINGS_FILE" ] && command -v jq >/dev/null 2>&1; then
         local value=$(jq -r ".ap.tts.providers.$provider.$key // \"$default\"" "$SETTINGS_FILE" 2>/dev/null)
-        if [ "$value" != "null" ] && [ "$value" != "$default" ]; then
+        if [ "$value" != "null" ] && [ -n "$value" ]; then
             echo "$value"
         else
             echo "$default"
@@ -70,7 +68,7 @@ get_voice_mapping() {
     
     if [ -f "$SETTINGS_FILE" ] && command -v jq >/dev/null 2>&1; then
         local value=$(jq -r ".ap.tts.voices.$persona.$provider // \"$default\"" "$SETTINGS_FILE" 2>/dev/null)
-        if [ "$value" != "null" ] && [ "$value" != "$default" ]; then
+        if [ "$value" != "null" ] && [ -n "$value" ]; then
             echo "$value"
         else
             echo "$default"
@@ -147,39 +145,21 @@ speak() {
     local provider=$(get_provider)
     local provider_script="$PROVIDER_DIR/$provider.sh"
     
-    # Check if provider script exists
-    if [ ! -f "$provider_script" ]; then
+    # Check if provider script exists and is executable
+    if [ ! -f "$provider_script" ] || [ ! -x "$provider_script" ]; then
         # Try fallback provider
         local fallback=$(get_tts_setting "fallback_provider" "none")
         provider_script="$PROVIDER_DIR/$fallback.sh"
         
-        if [ ! -f "$provider_script" ]; then
+        if [ ! -f "$provider_script" ] || [ ! -x "$provider_script" ]; then
             # Silent fallback
             return 0
         fi
     fi
     
-    # Execute provider
-    "$provider_script" speak "$persona" "$message" "$options"
-}
-
-# Speak with fallback
-speak_with_fallback() {
-    local persona="$1"
-    local message="$2"
-    
-    if ! speak "$persona" "$message"; then
-        # Try fallback provider
-        local fallback=$(get_tts_setting "fallback_provider" "none")
-        local fallback_script="$PROVIDER_DIR/$fallback.sh"
-        
-        if [ -f "$fallback_script" ] && [ "$fallback" != "none" ]; then
-            "$fallback_script" speak "$persona" "$message"
-        else
-            # Text-only fallback
-            echo "[TTS - $persona]: $message"
-        fi
-    fi
+    # Execute provider speak command
+    "$provider_script" speak "$persona" "$message" "$options" 2>/dev/null || true
+    return 0
 }
 
 # Test TTS functionality
@@ -187,28 +167,49 @@ test_tts() {
     local provider="${1:-$(get_provider)}"
     
     echo "Testing TTS with provider: $provider"
+    echo "Settings file: $SETTINGS_FILE"
+    echo "Provider directory: $PROVIDER_DIR"
+    
+    # Check if settings file exists
+    if [ ! -f "$SETTINGS_FILE" ]; then
+        echo "Warning: Settings file not found"
+    else
+        echo "TTS enabled: $(get_tts_setting "enabled" "true")"
+        echo "Configured provider: $(get_tts_setting "provider" "auto")"
+    fi
     
     local test_message="Hello, this is a test of the $provider text-to-speech system."
     local provider_script="$PROVIDER_DIR/$provider.sh"
     
+    echo "Provider script: $provider_script"
+    
     if [ -f "$provider_script" ]; then
-        if "$provider_script" check; then
-            echo "Provider $provider is available"
-            "$provider_script" speak "test" "$test_message"
-            echo "Test complete"
+        if [ -x "$provider_script" ]; then
+            echo "Provider script is executable"
+            
+            if "$provider_script" check; then
+                echo "Provider $provider is available"
+                echo "Speaking test message..."
+                "$provider_script" speak "orchestrator" "$test_message"
+                echo "Test complete"
+            else
+                echo "Provider $provider check failed"
+                return 1
+            fi
         else
-            echo "Provider $provider is not available"
+            echo "Provider script is not executable"
+            echo "Fix with: chmod +x $provider_script"
             return 1
         fi
     else
-        echo "Provider $provider not found"
+        echo "Provider script not found"
         return 1
     fi
 }
 
 # Configure TTS provider
 configure_provider() {
-    local provider="$1"
+    local provider="${1:-$(get_provider)}"
     local provider_script="$PROVIDER_DIR/$provider.sh"
     
     if [ -f "$provider_script" ] && [ -x "$provider_script" ]; then
@@ -250,8 +251,28 @@ clear_cache() {
     echo "Cache cleared"
 }
 
+# Show help
+show_help() {
+    echo "TTS Manager - Text-to-Speech Management Tool"
+    echo ""
+    echo "Usage: $0 <command> [options]"
+    echo ""
+    echo "Commands:"
+    echo "  speak <persona> <message>  - Speak a message as a persona"
+    echo "  test [provider]           - Test TTS functionality"
+    echo "  configure [provider]      - Configure a TTS provider"
+    echo "  list                      - List available providers"
+    echo "  clear-cache              - Clear audio cache"
+    echo "  help                     - Show this help"
+    echo ""
+    echo "Examples:"
+    echo "  $0 speak orchestrator \"Hello world\""
+    echo "  $0 test elevenlabs"
+    echo "  $0 configure"
+}
+
 # Main command handler
-case "${1:-speak}" in
+case "${1:-help}" in
     speak)
         speak "$2" "$3" "$4"
         ;;
@@ -267,19 +288,12 @@ case "${1:-speak}" in
     clear-cache)
         clear_cache
         ;;
-    detect)
-        detect_providers
+    help|--help|-h)
+        show_help
         ;;
     *)
-        echo "Usage: $0 {speak|test|configure|list|clear-cache|detect} [args...]"
-        echo ""
-        echo "Commands:"
-        echo "  speak <persona> <message>  - Speak a message as persona"
-        echo "  test [provider]           - Test TTS functionality"
-        echo "  configure <provider>      - Configure a provider"
-        echo "  list                      - List available providers"
-        echo "  clear-cache              - Clear audio cache"
-        echo "  detect                   - Detect available providers"
+        echo "Unknown command: $1"
+        show_help
         exit 1
         ;;
 esac
