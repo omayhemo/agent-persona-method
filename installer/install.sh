@@ -432,6 +432,11 @@ else
             ;;
         2)
             TTS_PROVIDER="elevenlabs"
+            echo ""
+            echo "Note: ElevenLabs outputs MP3 files. For best audio quality, ensure you have"
+            echo "an MP3-capable player installed (mpg123 recommended):"
+            echo "  sudo apt-get install mpg123"
+            echo ""
             ;;
         3)
             TTS_PROVIDER="system"

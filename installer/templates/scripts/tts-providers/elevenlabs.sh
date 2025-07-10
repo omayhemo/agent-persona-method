@@ -116,20 +116,35 @@ get_voice() {
 play_audio() {
     local file="$1"
     
-    if command -v afplay >/dev/null 2>&1; then
-        # macOS
-        afplay "$file" 2>/dev/null
-    elif command -v aplay >/dev/null 2>&1; then
-        # Linux with ALSA
-        aplay -q "$file" 2>/dev/null
-    elif command -v play >/dev/null 2>&1; then
-        # SoX
-        play -q "$file" 2>/dev/null
-    elif command -v mpg123 >/dev/null 2>&1; then
-        # mpg123
+    # Prioritize MP3-capable players for ElevenLabs MP3 output
+    if command -v mpg123 >/dev/null 2>&1; then
+        # mpg123 - best for MP3 files
         mpg123 -q "$file" 2>/dev/null
+    elif command -v ffplay >/dev/null 2>&1; then
+        # ffplay - handles MP3 well
+        ffplay -nodisp -autoexit -loglevel quiet "$file" 2>/dev/null
+    elif command -v afplay >/dev/null 2>&1; then
+        # macOS - handles MP3 natively
+        afplay "$file" 2>/dev/null
+    elif command -v play >/dev/null 2>&1; then
+        # SoX - can handle MP3 if compiled with support
+        play -q "$file" 2>/dev/null
+    elif command -v aplay >/dev/null 2>&1; then
+        # ALSA - NOT good for MP3, will produce static
+        # Convert MP3 to WAV first if this is the only option
+        echo "Warning: Using aplay which doesn't handle MP3 well" >&2
+        local wav_file="${file%.mp3}.wav"
+        if command -v ffmpeg >/dev/null 2>&1; then
+            ffmpeg -i "$file" -acodec pcm_s16le -ar 44100 "$wav_file" -y -loglevel quiet 2>/dev/null
+            aplay -q "$wav_file" 2>/dev/null
+            rm -f "$wav_file"
+        else
+            # Last resort - will likely produce static
+            aplay -q "$file" 2>/dev/null
+        fi
     else
-        echo "Warning: No audio player found" >&2
+        echo "Warning: No audio player found. Install mpg123 for best results:" >&2
+        echo "  sudo apt-get install mpg123" >&2
         return 1
     fi
 }
