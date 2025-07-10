@@ -43,6 +43,7 @@ Commands:
     repair          Repair corrupted installation
     rollback        Rollback to previous version
     version         Show current version
+    configure-tts   Configure Text-to-Speech settings
     help            Show this help message
 
 Examples:
@@ -337,6 +338,15 @@ case "${1:-help}" in
         ;;
     version)
         show_version
+        ;;
+    configure-tts)
+        # Run TTS configuration utility
+        if [ -f "$SCRIPT_DIR/configure-tts.sh" ]; then
+            bash "$SCRIPT_DIR/configure-tts.sh" "$2"
+        else
+            echo -e "${RED}TTS configuration utility not found${NC}"
+            exit 1
+        fi
         ;;
     help|--help|-h)
         usage

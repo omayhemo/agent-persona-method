@@ -5,6 +5,13 @@
 
 set -e
 
+# Colors
+YELLOW='\033[1;33m'
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
 echo "========================================"
 echo "Piper Chat Setup Script"
 echo "========================================"
@@ -45,7 +52,8 @@ if ! command_exists apt-get; then
     echo "Warning: This script is designed for Debian-based systems (Ubuntu, etc.)"
     echo "You'll need to manually install espeak-ng for your system."
     echo ""
-    read -p "Continue anyway? (y/n): " -n 1 -r
+    printf "${YELLOW}Continue anyway? (y/n): ${NC}"
+    read -n 1 -r
     echo
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then
         exit 1
@@ -77,7 +85,8 @@ else
     echo "1) Download pre-compiled binary (recommended - fast)"
     echo "2) Build from source (slower, requires build tools)"
     echo ""
-    read -p "Enter choice (1 or 2) [1]: " BUILD_CHOICE
+    printf "${YELLOW}Enter choice (1 or 2) [1]: ${NC}"
+    read BUILD_CHOICE
     BUILD_CHOICE="${BUILD_CHOICE:-1}"
 fi
 

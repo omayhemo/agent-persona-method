@@ -148,12 +148,66 @@ See the [AP Manager Documentation](../agents/docs/ap-manager.md) for detailed in
 
 ## Optional Features
 
-### Piper TTS (Text-to-Speech)
+### Text-to-Speech (TTS) System
 
-During installation, you can optionally install Piper TTS for voice notifications:
-- Downloads ~100MB Piper binary and voice model
-- Enables voice announcements for agent transitions
-- Can be installed later with `agents/scripts/setup-piper-chat.sh`
+The AP Method includes a modular TTS system that supports multiple providers:
+
+#### Available TTS Providers:
+
+1. **Piper** (Default)
+   - Local, offline text-to-speech
+   - ~100MB download for binary and voice models
+   - 9 different voices (5 women, 4 men)
+   - No internet connection required
+
+2. **ElevenLabs**
+   - High-quality cloud-based voices
+   - Requires API key (free tier available)
+   - Natural-sounding AI voices
+   - Automatic response caching
+
+3. **System TTS**
+   - Uses your OS built-in TTS
+   - macOS: `say` command
+   - Linux: `espeak`, `festival`, or `spd-say`
+   - No additional downloads required
+
+4. **Discord**
+   - Send notifications to Discord channel
+   - Optional TTS in Discord voice channels
+   - Requires webhook URL
+
+5. **None**
+   - Silent mode - no audio output
+   - For environments without audio support
+
+#### TTS Configuration:
+
+During installation, you'll be prompted to select a TTS provider. You can also configure TTS later:
+
+```bash
+# Configure TTS after installation
+agents/scripts/ap-manager.sh configure-tts
+
+# Or use the configuration utility directly
+agents/scripts/configure-tts.sh
+```
+
+#### Managing TTS:
+
+```bash
+# Test current TTS provider
+agents/scripts/tts-manager.sh test
+
+# List available providers
+agents/scripts/tts-manager.sh list
+
+# Clear audio cache
+agents/scripts/tts-manager.sh clear-cache
+
+# Configure specific provider
+agents/scripts/tts-manager.sh configure elevenlabs
+```
 
 ### Obsidian MCP Integration
 

@@ -6,7 +6,12 @@
 set -e
 
 # Configuration
-VERSION="1.0.0"
+# Read version from VERSION file if it exists
+if [ -f "VERSION" ]; then
+    VERSION=$(cat VERSION)
+else
+    VERSION="1.0.0"
+fi
 DIST_NAME="ap-method-v$VERSION"
 DIST_DIR="dist/$DIST_NAME"
 

@@ -29,6 +29,71 @@
       "SPEAK_PO": "${AP_ROOT}/voice/speakPO.sh",
       "SPEAK_SM": "${AP_ROOT}/voice/speakSM.sh",
       "SPEAK_DESIGN_ARCHITECT": "${AP_ROOT}/voice/speakDesignArchitect.sh"
+    },
+    "tts": {
+      "enabled": true,
+      "provider": "auto",
+      "fallback_provider": "none",
+      "providers": {
+        "piper": {
+          "install_path": "${PROJECT_ROOT}/.piper"
+        },
+        "elevenlabs": {
+          "api_key": "${ELEVENLABS_API_KEY}",
+          "model": "eleven_monolingual_v1"
+        },
+        "discord": {
+          "webhook_url": "${DISCORD_WEBHOOK_URL}",
+          "tts_enabled": false
+        }
+      },
+      "voices": {
+        "orchestrator": {
+          "piper": "ryan",
+          "elevenlabs": "adam",
+          "system": "Alex"
+        },
+        "developer": {
+          "piper": "joe",
+          "elevenlabs": "josh",
+          "system": "Daniel"
+        },
+        "architect": {
+          "piper": "ryan",
+          "elevenlabs": "antoni",
+          "system": "Tom"
+        },
+        "analyst": {
+          "piper": "kathy",
+          "elevenlabs": "rachel",
+          "system": "Samantha"
+        },
+        "qa": {
+          "piper": "kathleen",
+          "elevenlabs": "domi",
+          "system": "Victoria"
+        },
+        "pm": {
+          "piper": "joe",
+          "elevenlabs": "josh",
+          "system": "Daniel"
+        },
+        "po": {
+          "piper": "ryan",
+          "elevenlabs": "adam",
+          "system": "Alex"
+        },
+        "sm": {
+          "piper": "joe",
+          "elevenlabs": "josh",
+          "system": "Daniel"
+        },
+        "design_architect": {
+          "piper": "amy",
+          "elevenlabs": "bella",
+          "system": "Karen"
+        }
+      }
     }
   },
   "hooks": {

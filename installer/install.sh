@@ -5,6 +5,13 @@
 
 set -e
 
+# Colors
+YELLOW='\033[1;33m'
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
 # Check for --defaults flag
 USE_DEFAULTS=false
 if [ "$1" = "--defaults" ] || [ "$1" = "-d" ]; then
@@ -13,7 +20,7 @@ if [ "$1" = "--defaults" ] || [ "$1" = "-d" ]; then
 fi
 
 echo "=========================================="
-echo "AP Method Installation"
+echo "   Agentic Persona Method Installation"
 echo "=========================================="
 echo ""
 
@@ -50,7 +57,8 @@ if [ "$#" -eq 0 ] && [ -f "$INSTALLER_DIR/install.sh" ] && [ -d "$DIST_DIR/agent
         echo "3) Install to existing project (specify path)"
         echo "4) Show manual installation options"
         echo ""
-        read -p "Enter choice (1-4) [1]: " CHOICE
+        printf "${YELLOW}Enter choice (1-4) [1]: ${NC}"
+        read CHOICE
         CHOICE="${CHOICE:-1}"
         
         case $CHOICE in
@@ -64,7 +72,8 @@ if [ "$#" -eq 0 ] && [ -f "$INSTALLER_DIR/install.sh" ] && [ -d "$DIST_DIR/agent
                 ;;
             2)
                 echo ""
-                read -p "Enter project name [my-project]: " PROJ_NAME
+                printf "${YELLOW}Enter project name [my-project]: ${NC}"
+                read PROJ_NAME
                 PROJ_NAME="${PROJ_NAME:-my-project}"
                 TARGET_DIR="../$PROJ_NAME"
                 
@@ -76,7 +85,8 @@ if [ "$#" -eq 0 ] && [ -f "$INSTALLER_DIR/install.sh" ] && [ -d "$DIST_DIR/agent
                 ;;
             3)
                 echo ""
-                read -p "Enter path to existing project: " PROJ_PATH
+                printf "${YELLOW}Enter path to existing project: ${NC}"
+                read PROJ_PATH
                 if [ -z "$PROJ_PATH" ]; then
                     echo "Error: No path specified"
                     exit 1
@@ -121,7 +131,8 @@ get_input() {
     if [ "$USE_DEFAULTS" = true ]; then
         echo "$default"
     else
-        read -p "$prompt [$default]: " response
+        printf "${YELLOW}%s [%s]: ${NC}" "$prompt" "$default" >&2
+        read response
         echo "${response:-$default}"
     fi
 }
@@ -193,6 +204,13 @@ else
     AP_ROOT="$PROJECT_ROOT/agents"
 fi
 
+# Replace voice scripts with TTS-manager versions
+echo "Installing updated voice scripts..."
+rm -rf "$AP_ROOT/voice"
+mkdir -p "$AP_ROOT/voice"
+cp "$INSTALLER_DIR/templates/voice"/*.sh "$AP_ROOT/voice/"
+chmod +x "$AP_ROOT/voice"/*.sh
+
 # Install ap-manager.sh
 echo "Installing AP Method Manager..."
 if [ -f "$INSTALLER_DIR/templates/scripts/ap-manager.sh" ]; then
@@ -230,7 +248,8 @@ else
     echo "Choose your session notes system:"
     echo "1) Obsidian MCP (recommended if you use Obsidian)"
     echo "2) Markdown files (standalone markdown files)"
-    read -p "Enter choice (1-2) [2]: " NOTES_SYSTEM
+    printf "${YELLOW}Enter choice (1-2) [2]: ${NC}"
+    read NOTES_SYSTEM
     NOTES_SYSTEM="${NOTES_SYSTEM:-2}"
 fi
 
@@ -245,16 +264,20 @@ if [ "$NOTES_SYSTEM" = "1" ]; then
     else
         echo ""
         echo "Configure Obsidian MCP paths (relative to Obsidian vault root):"
-        read -p "Obsidian vault root (relative to project) [.]: " OBSIDIAN_ROOT
+        printf "${YELLOW}Obsidian vault root (relative to project) [.]: ${NC}"
+        read OBSIDIAN_ROOT
         OBSIDIAN_ROOT="${OBSIDIAN_ROOT:-.}"
         
-        read -p "Session notes folder (in Obsidian) [Sessions/]: " SESSION_NOTES_PATH
+        printf "${YELLOW}Session notes folder (in Obsidian) [Sessions/]: ${NC}"
+        read SESSION_NOTES_PATH
         SESSION_NOTES_PATH="${SESSION_NOTES_PATH:-Sessions/}"
         
-        read -p "Rules folder (in Obsidian) [Rules/]: " RULES_PATH
+        printf "${YELLOW}Rules folder (in Obsidian) [Rules/]: ${NC}"
+        read RULES_PATH
         RULES_PATH="${RULES_PATH:-Rules/}"
         
-        read -p "Archive folder (in Obsidian) [Sessions/Archive/]: " ARCHIVE_PATH
+        printf "${YELLOW}Archive folder (in Obsidian) [Sessions/Archive/]: ${NC}"
+        read ARCHIVE_PATH
         ARCHIVE_PATH="${ARCHIVE_PATH:-Sessions/Archive/}"
     fi
 else
@@ -369,56 +392,118 @@ echo "-------------------------------"
 echo "✓ Python hooks configured in $CLAUDE_DIR/hooks/"
 
 echo ""
-echo "Step 8: Installing Piper Voice System (Optional)"
+echo "Step 8: Configuring Text-to-Speech (TTS) System"
 echo "-----------------------------------------------"
 
-# Ask if user wants to install piper
+# Install TTS manager
+echo "Installing TTS manager..."
+cp "$INSTALLER_DIR/templates/scripts/tts-manager.sh" "$AP_ROOT/scripts/"
+chmod +x "$AP_ROOT/scripts/tts-manager.sh"
+
+# Install TTS configuration utility
+cp "$INSTALLER_DIR/templates/scripts/configure-tts.sh" "$AP_ROOT/scripts/"
+chmod +x "$AP_ROOT/scripts/configure-tts.sh"
+
+# Create TTS providers directory
+mkdir -p "$AP_ROOT/scripts/tts-providers"
+cp "$INSTALLER_DIR/templates/scripts/tts-providers"/*.sh "$AP_ROOT/scripts/tts-providers/"
+chmod +x "$AP_ROOT/scripts/tts-providers"/*.sh
+
+# Configure TTS provider
 if [ "$USE_DEFAULTS" = true ]; then
-    echo "Installing Piper text-to-speech system (default behavior)"
-    INSTALL_PIPER=true
+    echo "Using default TTS configuration (Piper - offline)"
+    TTS_PROVIDER="piper"
 else
-    read -p "Would you like to install the Piper text-to-speech system for voice notifications? (Y/n): " -n 1 -r
-    echo
-    if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then
-        INSTALL_PIPER=true
-    else
-        INSTALL_PIPER=false
-    fi
+    echo ""
+    echo "Select a Text-to-Speech (TTS) provider:"
+    echo ""
+    echo "1) Piper (local, offline, ~100MB download)"
+    echo "2) ElevenLabs (cloud, high quality, requires API key)"
+    echo "3) System TTS (uses OS built-in TTS)"
+    echo "4) Discord (send notifications to Discord channel)"
+    echo "5) None (silent mode, no audio)"
+    echo ""
+    printf "${YELLOW}Select TTS provider (1-5) [1]: ${NC}"
+    read tts_choice
+    
+    case "${tts_choice:-1}" in
+        1)
+            TTS_PROVIDER="piper"
+            ;;
+        2)
+            TTS_PROVIDER="elevenlabs"
+            ;;
+        3)
+            TTS_PROVIDER="system"
+            ;;
+        4)
+            TTS_PROVIDER="discord"
+            ;;
+        5)
+            TTS_PROVIDER="none"
+            ;;
+        *)
+            echo "Invalid choice. Using Piper."
+            TTS_PROVIDER="piper"
+            ;;
+    esac
 fi
 
-if [ "$INSTALL_PIPER" = true ]; then
-    echo "Installing Piper voice system..."
-    echo ""
-    
-    # Check if setup script exists
-    PIPER_SETUP_SCRIPT="$AP_ROOT/scripts/setup-piper-chat.sh"
-    if [ -f "$PIPER_SETUP_SCRIPT" ]; then
-        # Run the piper setup script
-        if [ "$USE_DEFAULTS" = true ]; then
-            # Pass USE_DEFAULTS to piper setup
-            USE_DEFAULTS=true bash "$PIPER_SETUP_SCRIPT" "$PROJECT_ROOT/.piper"
-        else
-            bash "$PIPER_SETUP_SCRIPT" "$PROJECT_ROOT/.piper"
-        fi
+echo ""
+echo "Selected TTS provider: $TTS_PROVIDER"
+
+# Configure the selected provider
+case "$TTS_PROVIDER" in
+    piper)
+        echo ""
+        echo "Installing Piper TTS system..."
         
-        if [ $? -eq 0 ]; then
-            echo ""
-            echo "Piper installation completed successfully!"
-            echo "Voice notifications will be available for all AP agents."
-        else
-            echo ""
-            echo "Warning: Piper installation encountered issues."
-            echo "You can manually install it later by running:"
-            echo "  bash $PIPER_SETUP_SCRIPT"
+        # Check if setup script exists
+        PIPER_SETUP_SCRIPT="$AP_ROOT/scripts/setup-piper-chat.sh"
+        if [ -f "$PIPER_SETUP_SCRIPT" ]; then
+            # Run the piper setup script
+            if [ "$USE_DEFAULTS" = true ]; then
+                USE_DEFAULTS=true bash "$PIPER_SETUP_SCRIPT" "$PROJECT_ROOT/.piper"
+            else
+                bash "$PIPER_SETUP_SCRIPT" "$PROJECT_ROOT/.piper"
+            fi
+            
+            if [ $? -eq 0 ]; then
+                echo "✓ Piper installation completed successfully!"
+            else
+                echo "⚠ Piper installation encountered issues."
+                echo "You can manually install it later."
+            fi
         fi
-    else
-        echo "Error: Piper setup script not found at: $PIPER_SETUP_SCRIPT"
-        echo "Voice features will not be available."
-    fi
-else
-    echo "Skipping Piper installation."
-    echo "You can install it later by running:"
-    echo "  bash \$AP_ROOT/scripts/setup-piper-chat.sh"
+        ;;
+        
+    elevenlabs)
+        echo ""
+        # Run ElevenLabs configuration
+        "$AP_ROOT/scripts/tts-providers/elevenlabs.sh" configure
+        ;;
+        
+    system)
+        echo ""
+        # Check system TTS availability
+        "$AP_ROOT/scripts/tts-providers/system.sh" configure
+        ;;
+        
+    discord)
+        echo ""
+        # Configure Discord webhook
+        "$AP_ROOT/scripts/tts-providers/discord.sh" configure
+        ;;
+        
+    none)
+        echo "Silent mode selected. No audio output will be produced."
+        ;;
+esac
+
+# Update settings with TTS provider
+if [ -f "$SETTINGS_FILE" ] && command -v jq >/dev/null 2>&1; then
+    tmp_file=$(mktemp)
+    jq ".ap.tts.provider = \"$TTS_PROVIDER\" | .ap.tts.enabled = true" "$SETTINGS_FILE" > "$tmp_file" && mv "$tmp_file" "$SETTINGS_FILE"
 fi
 
 echo ""
@@ -435,7 +520,8 @@ else
     echo "  - Python wrapper scripts"
     echo "  - Requirements management"
     echo ""
-    read -p "Would you like to set up Python support for hooks and scripts? (y/N): " -n 1 -r
+    printf "${YELLOW}Would you like to set up Python support for hooks and scripts? (y/N): ${NC}"
+    read -n 1 -r
     echo
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         SETUP_PYTHON=true

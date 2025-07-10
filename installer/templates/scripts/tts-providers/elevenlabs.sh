@@ -1,0 +1,474 @@
+#!/bin/bash
+# ElevenLabs TTS Provider - High-quality cloud text-to-speech
+
+set -e
+
+# Colors
+YELLOW='\033[1;33m'
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+# Get script directory
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TTS_MANAGER_DIR="$(dirname "$SCRIPT_DIR")"
+AP_ROOT="$(dirname "$TTS_MANAGER_DIR")"
+PROJECT_ROOT="$(dirname "$AP_ROOT")"
+
+# Load settings
+SETTINGS_FILE="$PROJECT_ROOT/.claude/settings.json"
+
+# Cache directory
+CACHE_DIR="$PROJECT_ROOT/.cache/tts/elevenlabs"
+mkdir -p "$CACHE_DIR"
+
+# Default voice mappings
+declare -A DEFAULT_VOICE_MAP=(
+    ["orchestrator"]="adam"
+    ["developer"]="josh"
+    ["architect"]="antoni"
+    ["analyst"]="rachel"
+    ["qa"]="domi"
+    ["pm"]="josh"
+    ["po"]="adam"
+    ["sm"]="josh"
+    ["design_architect"]="bella"
+)
+
+# Provider info
+info() {
+    echo "ElevenLabs - Premium AI voice synthesis with natural intonation"
+}
+
+# Get API key from various sources
+get_api_key() {
+    if [ -f "$SETTINGS_FILE" ] && command -v jq >/dev/null 2>&1; then
+        local stored_value=$(jq -r '.ap.tts.providers.elevenlabs.api_key // ""' "$SETTINGS_FILE" 2>/dev/null)
+        
+        case "$stored_value" in
+            '${ELEVENLABS_API_KEY}')
+                # Environment variable
+                echo "$ELEVENLABS_API_KEY"
+                ;;
+            encrypted:*)
+                # Decode obfuscated key
+                echo "${stored_value#encrypted:}" | base64 -d 2>/dev/null || echo ""
+                ;;
+            keychain:*)
+                # Retrieve from macOS keychain
+                if command -v security >/dev/null 2>&1; then
+                    security find-generic-password -a "$USER" -s "${stored_value#keychain:}" -w 2>/dev/null || echo ""
+                fi
+                ;;
+            secret-tool:*)
+                # Retrieve from Linux secret storage
+                if command -v secret-tool >/dev/null 2>&1; then
+                    secret-tool lookup application ap-method service elevenlabs 2>/dev/null || echo ""
+                fi
+                ;;
+            ""|null)
+                # Try environment variable as fallback
+                echo "$ELEVENLABS_API_KEY"
+                ;;
+            *)
+                # Direct value (not recommended but supported)
+                echo "$stored_value"
+                ;;
+        esac
+    else
+        # Fallback to environment variable
+        echo "$ELEVENLABS_API_KEY"
+    fi
+}
+
+# Check if ElevenLabs is available
+check() {
+    local api_key=$(get_api_key)
+    
+    if [ -z "$api_key" ]; then
+        return 1
+    fi
+    
+    # Quick API check (cached for 5 minutes)
+    local check_cache="$CACHE_DIR/.api_check"
+    if [ -f "$check_cache" ] && [ $(($(date +%s) - $(stat -f %m "$check_cache" 2>/dev/null || stat -c %Y "$check_cache" 2>/dev/null || echo 0))) -lt 300 ]; then
+        return 0
+    fi
+    
+    # Test API key
+    local response=$(curl -s -o /dev/null -w "%{http_code}" \
+        -H "xi-api-key: $api_key" \
+        "https://api.elevenlabs.io/v1/user" 2>/dev/null)
+    
+    if [ "$response" = "200" ]; then
+        touch "$check_cache"
+        return 0
+    else
+        rm -f "$check_cache"
+        return 1
+    fi
+}
+
+# Get voice for persona
+get_voice() {
+    local persona="$1"
+    
+    # First check settings for custom mapping
+    if [ -f "$SETTINGS_FILE" ] && command -v jq >/dev/null 2>&1; then
+        local custom_voice=$(jq -r ".ap.tts.voices.$persona.elevenlabs // \"\"" "$SETTINGS_FILE" 2>/dev/null)
+        if [ -n "$custom_voice" ] && [ "$custom_voice" != "null" ]; then
+            echo "$custom_voice"
+            return
+        fi
+    fi
+    
+    # Use default mapping
+    echo "${DEFAULT_VOICE_MAP[$persona]:-adam}"
+}
+
+# Play audio file cross-platform
+play_audio() {
+    local file="$1"
+    
+    if command -v afplay >/dev/null 2>&1; then
+        # macOS
+        afplay "$file" 2>/dev/null
+    elif command -v aplay >/dev/null 2>&1; then
+        # Linux with ALSA
+        aplay -q "$file" 2>/dev/null
+    elif command -v play >/dev/null 2>&1; then
+        # SoX
+        play -q "$file" 2>/dev/null
+    elif command -v mpg123 >/dev/null 2>&1; then
+        # mpg123
+        mpg123 -q "$file" 2>/dev/null
+    else
+        echo "Warning: No audio player found" >&2
+        return 1
+    fi
+}
+
+# Speak function
+speak() {
+    local persona="$1"
+    local message="$2"
+    local options="$3"
+    
+    local api_key=$(get_api_key)
+    if [ -z "$api_key" ]; then
+        return 1
+    fi
+    
+    # Get voice for persona
+    local voice=$(get_voice "$persona")
+    
+    # Create cache key (simple hash)
+    local cache_key=$(echo -n "${voice}-${message}" | md5sum | cut -d' ' -f1)
+    local cache_file="$CACHE_DIR/${cache_key}.mp3"
+    
+    # Check cache
+    if [ -f "$cache_file" ] && [ -s "$cache_file" ]; then
+        play_audio "$cache_file"
+        return $?
+    fi
+    
+    # Get model from settings or use default
+    local model="eleven_monolingual_v1"
+    if [ -f "$SETTINGS_FILE" ] && command -v jq >/dev/null 2>&1; then
+        local custom_model=$(jq -r '.ap.tts.providers.elevenlabs.model // ""' "$SETTINGS_FILE" 2>/dev/null)
+        if [ -n "$custom_model" ] && [ "$custom_model" != "null" ]; then
+            model="$custom_model"
+        fi
+    fi
+    
+    # Make API request
+    local response=$(curl -s -w "\n%{http_code}" \
+        -X POST "https://api.elevenlabs.io/v1/text-to-speech/$voice" \
+        -H "xi-api-key: $api_key" \
+        -H "Content-Type: application/json" \
+        -d "{\"text\": \"$message\", \"model_id\": \"$model\"}" \
+        --output "$cache_file.tmp" 2>/dev/null)
+    
+    local http_code=$(echo "$response" | tail -n 1)
+    
+    if [ "$http_code" = "200" ] && [ -s "$cache_file.tmp" ]; then
+        mv "$cache_file.tmp" "$cache_file"
+        play_audio "$cache_file"
+        return $?
+    else
+        rm -f "$cache_file.tmp"
+        echo "Error: ElevenLabs API returned $http_code" >&2
+        return 1
+    fi
+}
+
+# Store API key securely
+store_api_key() {
+    local api_key="$1"
+    local storage_method="$2"
+    
+    case "$storage_method" in
+        1|env|environment)
+            # Add to shell profile
+            local shell_profile=""
+            if [ -f "$HOME/.zshrc" ]; then
+                shell_profile="$HOME/.zshrc"
+            elif [ -f "$HOME/.bashrc" ]; then
+                shell_profile="$HOME/.bashrc"
+            else
+                shell_profile="$HOME/.profile"
+            fi
+            
+            # Check if already exists
+            if ! grep -q "export ELEVENLABS_API_KEY=" "$shell_profile" 2>/dev/null; then
+                echo "" >> "$shell_profile"
+                echo "# ElevenLabs API key for AP Method TTS" >> "$shell_profile"
+                echo "export ELEVENLABS_API_KEY='$api_key'" >> "$shell_profile"
+            else
+                # Update existing
+                sed -i.bak "s/export ELEVENLABS_API_KEY=.*/export ELEVENLABS_API_KEY='$api_key'/" "$shell_profile"
+                rm -f "$shell_profile.bak"
+            fi
+            
+            echo '${ELEVENLABS_API_KEY}'
+            ;;
+            
+        2|encrypted|obfuscated)
+            # Simple obfuscation with base64
+            echo "encrypted:$(echo -n "$api_key" | base64)"
+            ;;
+            
+        3|keychain)
+            # System keychain
+            if command -v security >/dev/null 2>&1; then
+                # macOS keychain
+                security add-generic-password -U -a "$USER" -s "ap-method-elevenlabs" -w "$api_key" 2>/dev/null
+                echo "keychain:ap-method-elevenlabs"
+            elif command -v secret-tool >/dev/null 2>&1; then
+                # Linux secret storage
+                echo -n "$api_key" | secret-tool store --label="AP Method ElevenLabs" \
+                    application ap-method service elevenlabs 2>/dev/null
+                echo "secret-tool:ap-method-elevenlabs"
+            else
+                # Fallback to obfuscated
+                echo "encrypted:$(echo -n "$api_key" | base64)"
+            fi
+            ;;
+            
+        4|manual|later)
+            # User will set up manually
+            echo '${ELEVENLABS_API_KEY}'
+            ;;
+            
+        *)
+            # Default to environment variable
+            echo '${ELEVENLABS_API_KEY}'
+            ;;
+    esac
+}
+
+# Update settings file with configuration
+update_settings() {
+    local api_key_ref="$1"
+    local voices="$2"
+    
+    # Ensure settings directory exists
+    mkdir -p "$(dirname "$SETTINGS_FILE")"
+    
+    # Create minimal settings if doesn't exist
+    if [ ! -f "$SETTINGS_FILE" ]; then
+        echo '{"ap": {"tts": {}}}' > "$SETTINGS_FILE"
+    fi
+    
+    # Update settings using jq if available
+    if command -v jq >/dev/null 2>&1; then
+        # Update API key
+        local tmp_file=$(mktemp)
+        jq ".ap.tts.providers.elevenlabs.api_key = \"$api_key_ref\"" "$SETTINGS_FILE" > "$tmp_file" && mv "$tmp_file" "$SETTINGS_FILE"
+        
+        # Update voice mappings if provided
+        if [ -n "$voices" ]; then
+            echo "$voices" | jq -s '.[0]' | jq -r 'to_entries | .[] | "\(.key) \(.value)"' | while read persona voice; do
+                jq ".ap.tts.voices.$persona.elevenlabs = \"$voice\"" "$SETTINGS_FILE" > "$tmp_file" && mv "$tmp_file" "$SETTINGS_FILE"
+            done
+        fi
+        
+        # Set provider to elevenlabs
+        jq '.ap.tts.provider = "elevenlabs"' "$SETTINGS_FILE" > "$tmp_file" && mv "$tmp_file" "$SETTINGS_FILE"
+        
+        # Pretty print
+        jq '.' "$SETTINGS_FILE" > "$tmp_file" && mv "$tmp_file" "$SETTINGS_FILE"
+    else
+        echo "Warning: jq not found. Please manually update $SETTINGS_FILE"
+    fi
+}
+
+# Configure ElevenLabs
+configure() {
+    echo "=== ElevenLabs TTS Configuration ==="
+    echo ""
+    echo "ElevenLabs provides high-quality, natural-sounding voices."
+    echo "You'll need an API key from https://elevenlabs.io"
+    echo ""
+    echo "To get your API key:"
+    echo "1. Sign up at https://elevenlabs.io (free tier available)"
+    echo "2. Go to your Profile Settings"
+    echo "3. Copy your API key"
+    echo ""
+    
+    # Check if already configured
+    local existing_key=$(get_api_key)
+    if [ -n "$existing_key" ]; then
+        echo "ElevenLabs is already configured."
+        printf "${YELLOW}Reconfigure? (y/N): ${NC}"
+        read -n 1 -r
+        echo
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            return 0
+        fi
+    fi
+    
+    # Get API key
+    printf "${YELLOW}Please paste your ElevenLabs API key (or press Enter to skip): ${NC}"
+    read ELEVENLABS_API_KEY
+    
+    if [ -z "$ELEVENLABS_API_KEY" ]; then
+        echo "Skipping ElevenLabs configuration."
+        return 0
+    fi
+    
+    # Validate API key format
+    if [[ ${#ELEVENLABS_API_KEY} -lt 20 ]]; then
+        echo "⚠️  Warning: API key seems too short. ElevenLabs keys are typically 32 characters."
+        printf "${YELLOW}Continue anyway? (y/N): ${NC}"
+        read -n 1 -r
+        echo
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            return 1
+        fi
+    fi
+    
+    # Test API key
+    echo "Testing API key..."
+    local response=$(curl -s -o /dev/null -w "%{http_code}" \
+        -H "xi-api-key: $ELEVENLABS_API_KEY" \
+        "https://api.elevenlabs.io/v1/user" 2>/dev/null)
+    
+    if [ "$response" = "200" ]; then
+        echo "✅ API key validated successfully!"
+        
+        # Get available voices
+        echo "Fetching available voices..."
+        local voices_json=$(curl -s -H "xi-api-key: $ELEVENLABS_API_KEY" \
+            "https://api.elevenlabs.io/v1/voices" 2>/dev/null)
+        
+        if [ -n "$voices_json" ] && command -v jq >/dev/null 2>&1; then
+            echo ""
+            echo "Available voices in your account:"
+            echo "$voices_json" | jq -r '.voices[] | "- \(.name) (\(.voice_id))"' 2>/dev/null || \
+                echo "Could not parse voices. Will use default voice mappings."
+        fi
+    else
+        echo "❌ API key validation failed (HTTP $response)"
+        echo "Please check your API key and try again."
+        return 1
+    fi
+    
+    # Storage method
+    echo ""
+    echo "=== API Key Storage ==="
+    echo "How would you like to store your API key?"
+    echo ""
+    echo "1) Environment variable (add to .bashrc/.zshrc)"
+    echo "2) Project settings file (obfuscated)"
+    echo "3) System keychain (if available)"
+    echo "4) Manual setup later"
+    echo ""
+    printf "${YELLOW}Select option (1-4) [1]: ${NC}"
+    read storage_option
+    storage_option=${storage_option:-1}
+    
+    # Store API key
+    local api_key_ref=$(store_api_key "$ELEVENLABS_API_KEY" "$storage_option")
+    
+    # Voice customization
+    local custom_voices="{}"
+    echo ""
+    printf "${YELLOW}Would you like to customize voices for each persona? (y/N): ${NC}"
+    read -n 1 -r
+    echo
+    
+    if [[ $REPLY =~ ^[Yy]$ ]] && [ -n "$voices_json" ] && command -v jq >/dev/null 2>&1; then
+        # Show available voices with numbers
+        echo ""
+        echo "Available voices:"
+        local voice_array=$(echo "$voices_json" | jq -r '.voices[] | .voice_id')
+        local voice_names=$(echo "$voices_json" | jq -r '.voices[] | .name')
+        
+        # Convert to arrays
+        IFS=$'\n' read -d '' -r -a voice_ids <<< "$voice_array" || true
+        IFS=$'\n' read -d '' -r -a names <<< "$voice_names" || true
+        
+        # Display numbered list
+        for i in "${!voice_ids[@]}"; do
+            echo "$((i+1)). ${names[$i]} (${voice_ids[$i]})"
+        done
+        
+        # Get selections for each persona
+        custom_voices="{}"
+        for persona in orchestrator developer architect analyst qa pm po sm design_architect; do
+            echo ""
+            printf "${YELLOW}Select voice for %s (1-%d) or Enter for default: ${NC}" "$persona" "${#voice_ids[@]}"
+            read choice
+            
+            if [ -n "$choice" ] && [ "$choice" -gt 0 ] && [ "$choice" -le "${#voice_ids[@]}" ]; then
+                local selected_id="${voice_ids[$((choice-1))]}"
+                custom_voices=$(echo "$custom_voices" | jq ". + {\"$persona\": \"$selected_id\"}")
+            fi
+        done
+    fi
+    
+    # Update settings
+    update_settings "$api_key_ref" "$custom_voices"
+    
+    # Final instructions
+    echo ""
+    echo "✅ ElevenLabs TTS configured successfully!"
+    
+    case "$storage_option" in
+        1)
+            echo ""
+            echo "To use in current session, run:"
+            echo "  export ELEVENLABS_API_KEY='$ELEVENLABS_API_KEY'"
+            ;;
+        4)
+            echo ""
+            echo "To complete setup, set your API key:"
+            echo "  export ELEVENLABS_API_KEY='your-api-key-here'"
+            ;;
+    esac
+    
+    echo ""
+    echo "Test with: $TTS_MANAGER_DIR/tts-manager.sh test elevenlabs"
+}
+
+# Main command handler
+case "${1:-info}" in
+    info)
+        info
+        ;;
+    check)
+        check
+        ;;
+    speak)
+        speak "$2" "$3" "$4"
+        ;;
+    configure)
+        configure
+        ;;
+    *)
+        echo "Usage: $0 {info|check|speak|configure}"
+        exit 1
+        ;;
+esac
