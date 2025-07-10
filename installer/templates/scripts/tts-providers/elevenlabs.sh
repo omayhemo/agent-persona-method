@@ -24,16 +24,17 @@ CACHE_DIR="$PROJECT_ROOT/.cache/tts/elevenlabs"
 mkdir -p "$CACHE_DIR"
 
 # Default voice mappings (using common ElevenLabs voice IDs)
+# Using George for all voices as it's confirmed to work with the API key
 declare -A DEFAULT_VOICE_MAP=(
     ["orchestrator"]="JBFqnCBsd6RMkjVDRZzb"  # George
-    ["developer"]="VR6AewLTigWG4xSOukaG"     # Arnold
-    ["architect"]="pNInz6obpgDQGcFmaJgB"     # Adam
-    ["analyst"]="21m00Tcm4TlvDq8ikWAM"       # Rachel
-    ["qa"]="AZnzlk1XvdvUeBnXmlld"           # Domi
-    ["pm"]="VR6AewLTigWG4xSOukaG"           # Arnold
+    ["developer"]="JBFqnCBsd6RMkjVDRZzb"     # George
+    ["architect"]="JBFqnCBsd6RMkjVDRZzb"     # George
+    ["analyst"]="JBFqnCBsd6RMkjVDRZzb"       # George
+    ["qa"]="JBFqnCBsd6RMkjVDRZzb"           # George
+    ["pm"]="JBFqnCBsd6RMkjVDRZzb"           # George
     ["po"]="JBFqnCBsd6RMkjVDRZzb"           # George
-    ["sm"]="VR6AewLTigWG4xSOukaG"           # Arnold
-    ["design_architect"]="EXAVITQu4vr4xnSDxMaL"  # Bella
+    ["sm"]="JBFqnCBsd6RMkjVDRZzb"           # George
+    ["design_architect"]="JBFqnCBsd6RMkjVDRZzb"  # George
 )
 
 # Provider info
@@ -353,15 +354,10 @@ configure() {
     
     # Show default voice mappings
     echo ""
-    echo "Default voice assignments:"
-    echo "- Orchestrator: George (authoritative)"
-    echo "- Developer: Arnold (technical)"
-    echo "- Architect: Adam (professional)"
-    echo "- Analyst: Rachel (analytical)"
-    echo "- QA: Domi (precise)"
-    echo "- Design Architect: Bella (creative)"
+    echo "Default voice assignment:"
+    echo "- All personas use George voice (confirmed working with TTS-only keys)"
     echo ""
-    echo "You can customize these later in settings.json"
+    echo "You can customize voices later in settings.json if you have access to other voices"
     
     # Final instructions
     echo ""
