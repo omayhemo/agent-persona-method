@@ -21,13 +21,31 @@ curl -L https://github.com/omayhemo/agent-persona-method/raw/main/dist/ap-method
 curl -L https://github.com/omayhemo/agent-persona-method/raw/main/dist/ap-method-v1.0.0.tar.gz | tar -xz && ./installer/install.sh -d
 ```
 
+### Update Management
+
+After installation, use the built-in manager for updates and maintenance:
+
+```bash
+# Check for updates
+agents/scripts/ap-manager.sh update
+
+# Verify installation
+agents/scripts/ap-manager.sh verify
+
+# Show version
+agents/scripts/ap-manager.sh version
+```
+
 ### Install from Source
 
-1. **Clone and run setup:**
+1. **Clone and build:**
    ```bash
    git clone https://github.com/omayhemo/agent-persona-method.git
    cd agent-persona-method
-   ./agents/agentic-setup
+   ./build-distribution.sh
+   cd dist
+   tar -xzf ap-method-v*.tar.gz
+   ./installer/install.sh
    ```
 
 2. **Launch the orchestrator in Claude:**
@@ -82,6 +100,8 @@ tar -xzf ap-method-v1.0.0.tar.gz
 ./installer/install.sh
 ```
 
+**Note:** The installer is preserved in `agents/.installer/` for future updates and management.
+
 ### Option 2: Install from Source
 
 1. Clone the repository:
@@ -90,9 +110,12 @@ tar -xzf ap-method-v1.0.0.tar.gz
    cd agent-persona-method
    ```
 
-2. Run the setup script:
+2. Build and run installer:
    ```bash
-   ./agents/agentic-setup
+   ./build-distribution.sh
+   cd dist
+   tar -xzf ap-method-v*.tar.gz
+   ./installer/install.sh
    ```
 
 3. Follow the prompts to configure:
@@ -192,24 +215,6 @@ agentic-persona/
 ```
 
 ## Advanced Features
-
-### Parallel Development
-
-Set up Git worktrees for parallel agent work:
-
-```bash
-bash $AP_ROOT/agents/scripts/setup-agent-worktrees.sh
-bash $AP_ROOT/agents/scripts/parallel-sprint.sh
-```
-
-### Custom Agents
-
-Create custom agent configurations in `.ap-agents`:
-
-```bash
-create_worktree "dev-api" "agent/dev/api-main"
-create_worktree "dev-ui" "agent/dev/ui-main"
-```
 
 ### Session Management
 

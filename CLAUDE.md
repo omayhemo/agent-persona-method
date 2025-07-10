@@ -10,12 +10,6 @@ This is the AP (Agent Persona) Method repository - a project-agnostic approach t
 
 ## Key Commands
 
-### Setup and Initialization
-```bash
-# Initial setup for new projects
-./agents/agentic-setup
-```
-
 ### Core AP Commands
 - `/ap` - Launch AP Orchestrator
 - `/handoff` - Hand off to another agent persona (direct transition)
@@ -23,13 +17,20 @@ This is the AP (Agent Persona) Method repository - a project-agnostic approach t
 - `/wrap` - Wrap up current session
 - `/session-note-setup` - Set up session notes structure
 
-### Script Execution
-```bash
-# Launch parallel agents for sprint work
-bash $AP_ROOT/agents/scripts/parallel-sprint.sh
 
-# Generate all stories from epics
-node $AP_ROOT/agents/scripts/generate-all-stories.js
+### Management Commands
+```bash
+# Check for updates from GitHub releases
+$AP_ROOT/scripts/ap-manager.sh update
+
+# Verify installation integrity
+$AP_ROOT/scripts/ap-manager.sh verify
+
+# Show current version
+$AP_ROOT/scripts/ap-manager.sh version
+
+# Uninstall AP Method (with backup)
+$AP_ROOT/scripts/ap-manager.sh uninstall
 ```
 
 ## High-Level Architecture
@@ -110,3 +111,5 @@ This is a methodology framework, not a traditional codebase. There are no standa
 - Session notes are excluded from git (check `.gitignore`)
 - Voice scripts require text-to-speech capabilities
 - The system is designed to be project-agnostic and portable
+- The installer is preserved in `$AP_ROOT/.installer/` for updates and management
+- Updates are checked against GitHub releases and can be applied without data loss

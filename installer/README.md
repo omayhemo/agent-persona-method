@@ -50,8 +50,10 @@ For development or customization:
 git clone https://github.com/omayhemo/agent-persona-method.git
 cd agent-persona-method
 
-# Run the setup wizard
-./agents/agentic-setup
+# Build and run the installer
+./build-distribution.sh
+cd dist && tar -xzf ap-method-v*.tar.gz
+./installer/install.sh
 ```
 
 ## What Gets Installed
@@ -99,7 +101,7 @@ The installer will:
 ### 1. Make Scripts Executable (Unix/Linux/macOS)
 
 ```bash
-chmod +x agents/agentic-setup agents/scripts/*.sh agents/voice/*.sh
+chmod +x agents/scripts/*.sh agents/voice/*.sh
 ```
 
 ### 2. Verify Installation
@@ -132,6 +134,18 @@ The `.claude/settings.json` file contains:
 
 Claude automatically reads these settings when working in your project.
 
+## Version Management
+
+The installer includes comprehensive version and update management:
+
+- **Version Tracking**: Automatically creates `agents/version.txt` during installation
+- **Update Checking**: Uses GitHub Releases API to check for new versions  
+- **In-Place Updates**: Updates can be applied without losing your work
+- **Automatic Backups**: Creates backups before updates and uninstalls
+- **Installer Preservation**: Installer saved to `agents/.installer/` for future use
+
+See the [AP Manager Documentation](../agents/docs/ap-manager.md) for detailed information.
+
 ## Optional Features
 
 ### Piper TTS (Text-to-Speech)
@@ -148,13 +162,23 @@ For cross-session memory using Obsidian:
 2. Configure during setup with your vault path
 3. Session notes will sync automatically
 
+### Python Support
+
+The installer can optionally set up Python support for hooks and scripts:
+- Creates a virtual environment for package isolation
+- Provides wrapper scripts for Python execution
+- Manages dependencies via requirements.txt
+- Install during setup or later with `agents/python-support/setup-python.sh`
+
+Note: Hooks work with system Python by default. The virtual environment is only needed if you want to add Python packages.
+
 ## Troubleshooting
 
 ### Permission Denied
 
 If you get permission errors:
 ```bash
-chmod +x install.sh agents/agentic-setup
+chmod +x install.sh
 ```
 
 ### Existing Installation
@@ -189,6 +213,26 @@ After installation:
 2. Use `/ap` command to start the AP Orchestrator
 3. Begin with the Analyst agent to create a project brief
 4. Follow the AP workflow through each phase
+
+## Managing Your Installation
+
+The AP Method includes `ap-manager.sh` for ongoing management:
+
+```bash
+# Check for updates
+agents/scripts/ap-manager.sh update
+
+# Verify installation integrity
+agents/scripts/ap-manager.sh verify
+
+# Show current version
+agents/scripts/ap-manager.sh version
+
+# Uninstall AP Method
+agents/scripts/ap-manager.sh uninstall
+```
+
+Updates are checked against the official GitHub releases and can be applied in-place without losing your project work.
 
 ## Support
 

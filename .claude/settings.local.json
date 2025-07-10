@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bash:*)",
+      "Bash(tar:*)",
+      "Bash(/ap)",
+      "Bash(mkdir:*)",
+      "Bash(chmod:*)",
+      "Bash(ls:*)",
+      "Bash(find:*)",
+      "Bash(./installer/install.sh:*)",
+      "Bash(mv:*)",
+      "Bash(cp:*)",
+      "Bash(rm:*)",
+      "Bash(./monitor-hooks.sh)",
+      "Bash(./build-distribution.sh:*)",
+      "Bash(grep:*)"
+    ],
+    "deny": []
+  }
+}

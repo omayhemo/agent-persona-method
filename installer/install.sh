@@ -193,6 +193,16 @@ else
     AP_ROOT="$PROJECT_ROOT/agents"
 fi
 
+# Install ap-manager.sh
+echo "Installing AP Method Manager..."
+if [ -f "$INSTALLER_DIR/templates/scripts/ap-manager.sh" ]; then
+    cp "$INSTALLER_DIR/templates/scripts/ap-manager.sh" "$AP_ROOT/scripts/"
+    chmod +x "$AP_ROOT/scripts/ap-manager.sh"
+    echo "- Installed ap-manager.sh for updates and management"
+else
+    echo "- Warning: ap-manager.sh not found in installer"
+fi
+
 echo ""
 echo "Step 2: Project Configuration"
 echo "-----------------------------"
@@ -412,8 +422,44 @@ else
 fi
 
 echo ""
-echo "Step 9: Updating CLAUDE.md"
-echo "--------------------------"
+echo "Step 9: Setting Up Python Support (Optional)"
+echo "-------------------------------------------"
+
+# Ask if user wants to set up Python support
+if [ "$USE_DEFAULTS" = true ]; then
+    echo "Skipping Python support setup (use --python to include)"
+    SETUP_PYTHON=false
+else
+    echo "Python support includes:"
+    echo "  - Virtual environment management"
+    echo "  - Python wrapper scripts"
+    echo "  - Requirements management"
+    echo ""
+    read -p "Would you like to set up Python support for hooks and scripts? (y/N): " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        SETUP_PYTHON=true
+    else
+        SETUP_PYTHON=false
+    fi
+fi
+
+if [ "$SETUP_PYTHON" = true ]; then
+    echo "Installing Python support..."
+    if [ -f "$INSTALLER_DIR/templates/python-support/install-python-support.sh" ]; then
+        bash "$INSTALLER_DIR/templates/python-support/install-python-support.sh" "$PROJECT_ROOT"
+        echo "✓ Python support installed"
+    else
+        echo "⚠ Python support files not found in installer"
+    fi
+else
+    echo "Skipping Python support setup."
+    echo "Hooks will use system Python if available."
+fi
+
+echo ""
+echo "Step 10: Updating CLAUDE.md"
+echo "---------------------------"
 
 # Check if CLAUDE.md exists
 CLAUDE_MD="$PROJECT_ROOT/CLAUDE.md"
@@ -432,7 +478,7 @@ fi
 echo "Created: $CLAUDE_MD"
 
 echo ""
-echo "Step 10: Configuring .gitignore"
+echo "Step 11: Configuring .gitignore"
 echo "-------------------------------"
 
 # Configure .gitignore
@@ -478,17 +524,23 @@ echo "- Location: $PROJECT_ROOT"
 echo "- Project: $PROJECT_NAME"
 echo ""
 
-# Clean up installation files
-echo "Cleaning up installation files..."
+# Create version file for update checking
+echo "$VERSION" > "$AP_ROOT/version.txt"
+echo "Created version file: $AP_ROOT/version.txt"
 
-# Change to project root before removing installer directory to avoid pwd errors
-cd "$PROJECT_ROOT" 2>/dev/null || true
+# Preserve installer for future management
+echo "Preserving installer for updates and management..."
 
-# Remove the installer directory
-if [ -d "$PROJECT_ROOT/installer" ]; then
-    rm -rf "$PROJECT_ROOT/installer"
-    echo "- Removed installer directory"
+# Move installer to hidden directory in AP_ROOT
+INSTALLER_PRESERVE_DIR="$AP_ROOT/.installer"
+if [ -d "$PROJECT_ROOT/installer" ] && [ ! -d "$INSTALLER_PRESERVE_DIR" ]; then
+    mkdir -p "$INSTALLER_PRESERVE_DIR"
+    cp -r "$PROJECT_ROOT/installer"/* "$INSTALLER_PRESERVE_DIR/"
+    echo "- Installer preserved at: $INSTALLER_PRESERVE_DIR"
 fi
+
+# Change to project root before cleaning up
+cd "$PROJECT_ROOT" 2>/dev/null || true
 
 # Remove the tar.gz file if it exists in the project root
 if [ -f "$PROJECT_ROOT/ap-method-v$VERSION.tar.gz" ]; then
@@ -519,6 +571,11 @@ echo ""
 echo "1. Open the project in Claude Code"
 echo "2. Try running: /ap"
 echo "3. Check out the documentation at: $PROJECT_DOCS"
+echo ""
+echo "Management commands:"
+echo "- Check for updates: $AP_ROOT/scripts/ap-manager.sh update"
+echo "- Verify installation: $AP_ROOT/scripts/ap-manager.sh verify"
+echo "- Show version: $AP_ROOT/scripts/ap-manager.sh version"
 echo ""
 echo "For more information, see:"
 echo "- Main instructions: $CLAUDE_MD"

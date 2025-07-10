@@ -9,6 +9,11 @@ Launch the orchestrator:
 /ap
 ```
 
+Check for updates:
+```bash
+scripts/ap-manager.sh update
+```
+
 ## How the AP Method Works
 
 ### Core Philosophy
