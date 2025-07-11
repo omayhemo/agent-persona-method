@@ -128,7 +128,7 @@ configure() {
     fi
     
     # Run Piper setup script
-    local setup_script="$AP_ROOT/scripts/setup-piper-chat.sh"
+    local setup_script="$AP_ROOT/scripts/tts-setup/setup-piper-chat.sh"
     if [ -f "$setup_script" ]; then
         bash "$setup_script" "$PIPER_DIR"
     else

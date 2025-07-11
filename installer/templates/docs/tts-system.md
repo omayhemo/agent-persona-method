@@ -46,7 +46,7 @@ Features:
 Installation:
 ```bash
 # Automatic during AP Method setup, or:
-agents/scripts/setup-piper-chat.sh
+agents/scripts/tts-setup/setup-piper-chat.sh
 ```
 
 ### 2. ElevenLabs
@@ -273,7 +273,7 @@ Edit voice mappings in settings.json:
 
 1. Piper not found:
    ```bash
-   agents/scripts/setup-piper-chat.sh
+   agents/scripts/tts-setup/setup-piper-chat.sh
    ```
 
 2. ElevenLabs API errors:

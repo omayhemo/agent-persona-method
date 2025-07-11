@@ -9,9 +9,8 @@ CLAUDE.md.ap-setup
 harmonization.log
 
 # Project-specific documentation (created during actual use)
-project_documentation/claude-code/
-project_documentation/elevenlabs-*/
-
+project_documentation/reference/
+project_documentation/archive
 
 # Piper TTS installation (if installed locally)
 piper-chat/

@@ -1,0 +1,1 @@
+"""CLI interface for task management with backward compatibility."""

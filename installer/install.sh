@@ -434,6 +434,11 @@ mkdir -p "$AP_ROOT/scripts/tts-providers"
 cp "$INSTALLER_DIR/templates/scripts/tts-providers"/*.sh "$AP_ROOT/scripts/tts-providers/"
 chmod +x "$AP_ROOT/scripts/tts-providers"/*.sh
 
+# Create TTS setup directory
+mkdir -p "$AP_ROOT/scripts/tts-setup"
+cp "$INSTALLER_DIR/templates/scripts/tts-setup"/*.sh "$AP_ROOT/scripts/tts-setup/"
+chmod +x "$AP_ROOT/scripts/tts-setup"/*.sh
+
 # Configure TTS provider
 if [ "$USE_DEFAULTS" = true ]; then
     echo "Using default TTS configuration (Piper - offline)"
@@ -565,7 +570,7 @@ case "$TTS_PROVIDER" in
         echo "Installing Piper TTS system..."
         
         # Check if setup script exists
-        PIPER_SETUP_SCRIPT="$AP_ROOT/scripts/setup-piper-chat.sh"
+        PIPER_SETUP_SCRIPT="$INSTALLER_DIR/templates/scripts/tts-setup/setup-piper-chat.sh"
         if [ -f "$PIPER_SETUP_SCRIPT" ]; then
             # Run the piper setup script
             if [ "$USE_DEFAULTS" = true ]; then

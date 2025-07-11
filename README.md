@@ -138,7 +138,7 @@ For automated deployments:
 To enable voice notifications:
 
 ```bash
-./agents/scripts/setup-piper-chat.sh
+./installer/templates/scripts/tts-setup/setup-piper-chat.sh
 ```
 
 This installs the Piper TTS system with 9 different US English voices.

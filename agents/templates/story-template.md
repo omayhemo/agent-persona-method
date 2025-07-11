@@ -75,14 +75,29 @@
 
 ---
 
-## Tasks / Subtasks
+## Tasks
+<!-- AP-TASKS-START -->
+<!-- 
+Task Template:
+### [TASK-XXX] Task Title
+- **Type**: development|testing|documentation|research
+- **Priority**: high|medium|low  
+- **Persona**: developer|qa|architect|pm|po|sm|analyst
+- **Estimate**: Xh
+- **Dependencies**: TASK-YYY, TASK-ZZZ | none
+- **Description**: Clear description of what needs to be done
+-->
 
-- [ ] Task 1: {Description} (AC: #)
-  - [ ] Subtask 1.1: {Description}
-  - [ ] Subtask 1.2: {Description}
-- [ ] Task 2: {Description} (AC: #)
-  - [ ] Subtask 2.1: {Description}
-- [ ] Task 3: {Description} (AC: #)
+### [TASK-XXX] [Replace with task title]
+- **Type**: [type]
+- **Priority**: [priority]
+- **Persona**: [persona]
+- **Estimate**: [hours]h
+- **Dependencies**: [task-ids or none]
+- **Description**: [description]
+
+<!-- Add more tasks as needed -->
+<!-- AP-TASKS-END -->
 
 ---
 
