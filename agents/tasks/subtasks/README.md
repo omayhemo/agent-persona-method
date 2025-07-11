@@ -32,12 +32,21 @@ subtasks/
 # In agent conversation:
 I'll analyze your authentication system using parallel subtasks.
 
-Task("Review authentication code quality using agents/tasks/subtasks/analysis/code-quality.md focusing on security patterns")
-Task("Analyze authentication flow for OWASP compliance")
-Task("Check session management for security vulnerabilities")
+# CRITICAL: All Task invocations must be in ONE response for parallel execution
+[Multiple Task tool calls in single function_calls block]:
+- Task 1: "Review authentication code quality..."
+- Task 2: "Analyze authentication flow..."
+- Task 3: "Check session management..."
 
-# After results return, synthesize findings using weighted pattern...
+# After ALL tasks complete, synthesize findings...
 ```
+
+### ⚠️ PARALLEL EXECUTION REQUIREMENT
+
+**DO**: Invoke all Task tools in a single response (one function_calls block)
+**DON'T**: Call Task tools one at a time in separate responses
+
+This ensures true parallel execution rather than sequential processing.
 
 ## Best Practices
 

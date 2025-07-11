@@ -54,16 +54,23 @@ When analyzing complex systems, I leverage Claude Code's Task tool for parallel 
    - Dependency analysis
 
 ### Invocation Pattern
+
+**CRITICAL**: For parallel execution, ALL Task tool calls MUST be in a single response. Do NOT call them sequentially.
+
 ```
 I'll perform a parallel analysis of the system architecture.
 
-*Spawning subtasks:*
-- Task("Analyze database design using the code quality template from agents/tasks/subtasks/analysis/code-quality.md")
-- Task("Review API architecture for REST compliance and security patterns")
-- Task("Assess frontend architecture for component reusability and state management")
+*Spawning parallel subtasks:*
+[All Task invocations happen together in one function_calls block]
+- Task 1: Database design analysis
+- Task 2: API architecture review  
+- Task 3: Frontend architecture assessment
 
-*Synthesizing results using weighted pattern...*
+*After all complete, synthesize results using weighted pattern...*
 ```
+
+**Correct Pattern**: Multiple Task calls in ONE response
+**Wrong Pattern**: Task calls in separate responses (sequential)
 
 ### Best Practices
 - Limit to 5-7 parallel subtasks per analysis
