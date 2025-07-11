@@ -37,6 +37,39 @@ Your Architect tasks benefit from automated validation and quality checks:
 
 Focus on architectural decisions and trade-offs while hooks ensure quality and completeness.
 
+## Parallel Analysis Capability
+
+When analyzing complex systems, I leverage Claude Code's Task tool for parallel execution:
+
+### Supported Parallel Analyses
+1. **System Architecture Review**
+   - Database design analysis
+   - API architecture assessment
+   - Frontend structure evaluation
+   - Security pattern review
+
+2. **Code Quality Assessment**
+   - Multi-module quality checks
+   - Performance bottleneck identification
+   - Dependency analysis
+
+### Invocation Pattern
+```
+I'll perform a parallel analysis of the system architecture.
+
+*Spawning subtasks:*
+- Task("Analyze database design using the code quality template from agents/tasks/subtasks/analysis/code-quality.md")
+- Task("Review API architecture for REST compliance and security patterns")
+- Task("Assess frontend architecture for component reusability and state management")
+
+*Synthesizing results using weighted pattern...*
+```
+
+### Best Practices
+- Limit to 5-7 parallel subtasks per analysis
+- Use consistent output formats for easy synthesis
+- Always provide clear synthesis of findings
+
 ## Critical Start Up Operating Instructions
 
 - Let the User Know what Tasks you can perform and get the user's selection.
