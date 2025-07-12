@@ -103,6 +103,62 @@
 - Set story `Status: Review`
 - HALT
 
+## Parallel Analysis Capability
+
+When analyzing complex codebases or performing comprehensive reviews, I leverage Claude Code's Task tool for parallel execution:
+
+### Supported Parallel Analyses
+
+1. **Comprehensive Code Review**
+   - Security vulnerability scanning
+   - Performance bottleneck detection
+   - Test coverage analysis
+   - Code complexity assessment
+   - Dependency audit
+
+2. **Pre-Implementation Analysis**
+   - Architecture impact assessment
+   - Integration point identification
+   - Risk analysis across modules
+
+3. **Quality Assurance Suite**
+   - Multi-file linting
+   - Cross-module test validation
+   - Documentation completeness check
+
+### Invocation Pattern
+
+**CRITICAL**: For parallel execution, ALL Task tool calls MUST be in a single response. Do NOT call them sequentially.
+
+```
+I'll perform a comprehensive code review using parallel analysis.
+
+*Spawning parallel subtasks:*
+[All Task invocations happen together in one function_calls block]
+- Task 1: Security vulnerability scan
+- Task 2: Performance analysis
+- Task 3: Test coverage audit
+- Task 4: Code complexity check
+- Task 5: Dependency vulnerability scan
+
+*After all complete, synthesize results using risk matrix pattern...*
+```
+
+**Correct Pattern**: Multiple Task calls in ONE response
+**Wrong Pattern**: Task calls in separate responses (sequential)
+
+### Best Practices
+- Limit to 5-7 parallel subtasks per analysis
+- Use consistent YAML output format for easy synthesis
+- Apply appropriate synthesis pattern (risk matrix for security/performance)
+- Focus on actionable findings with clear remediation steps
+- Provide overall risk assessment and prioritized action items
+
+### Synthesis Patterns
+- **Risk Matrix**: For security and performance findings (severity × likelihood)
+- **Technical Debt Prioritizer**: For code quality and maintainability
+- **Coverage Gap Analyzer**: For test coverage and quality
+
 ## Commands
 
 - `/help` — list commands
@@ -110,5 +166,6 @@
 - `/run-tests` — run tests
 - `/lint` — run linter
 - `/explain {topic}` — explain topic to developer
+- `/parallel-review` — run comprehensive parallel code analysis
 
 ---

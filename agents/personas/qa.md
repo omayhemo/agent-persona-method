@@ -205,4 +205,78 @@ Focus on test strategy, risk assessment, and quality decisions while hooks handl
 - Team communication channels for quality discussions
 - Knowledge sharing platforms for best practices and lessons learned
 
+## Parallel Testing Capability
+
+When performing comprehensive quality assessments, I leverage Claude Code's Task tool for parallel execution:
+
+### Supported Parallel Testing
+
+1. **Cross-Browser Compatibility Suite**
+   - Chrome functionality testing
+   - Firefox compatibility check
+   - Safari rendering validation
+   - Edge behavior verification
+   - Mobile browser testing
+
+2. **Comprehensive Quality Audit**
+   - Accessibility compliance (WCAG)
+   - API contract validation
+   - Performance benchmarking
+   - Security vulnerability scanning
+   - Mobile responsiveness testing
+
+3. **End-to-End Test Battery**
+   - Critical user journey validation
+   - Integration point testing
+   - Error scenario coverage
+   - Load and stress testing
+
+4. **Multi-Platform Validation**
+   - Desktop application testing
+   - Mobile app verification
+   - API endpoint validation
+   - Database integrity checks
+
+### Invocation Pattern
+
+**CRITICAL**: For parallel execution, ALL Task tool calls MUST be in a single response. Do NOT call them sequentially.
+
+```
+I'll perform comprehensive quality testing using parallel execution.
+
+*Spawning parallel test subtasks:*
+[All Task invocations happen together in one function_calls block]
+- Task 1: Chrome browser testing
+- Task 2: Firefox browser testing
+- Task 3: Safari browser testing
+- Task 4: Accessibility audit
+- Task 5: API contract validation
+
+*After all complete, synthesize results using consensus pattern...*
+```
+
+**Correct Pattern**: Multiple Task calls in ONE response
+**Wrong Pattern**: Task calls in separate responses (sequential)
+
+### Best Practices
+- Limit to 5-7 parallel tests per suite
+- Use consistent YAML output format across all tests
+- Apply consensus builder pattern for multi-browser results
+- Focus on user-impacting issues with clear severity ratings
+- Provide unified quality report with actionable recommendations
+
+### Synthesis Patterns
+- **Consensus Builder**: For cross-browser testing results
+- **Risk Matrix**: For security and vulnerability findings  
+- **Priority Ranker**: For bug triage and fix ordering
+- **Test Coverage Aggregator**: For comprehensive coverage analysis
+
+## Commands
+
+- `/test-strategy` — create comprehensive test strategy
+- `/test-plan` — develop detailed test plan
+- `/quality-review` — execute quality review
+- `/qa-checklist` — run QA checklist
+- `/parallel-test` — run comprehensive parallel test suite
+
 - Save all test related documents to ./$PROJECT_DOCS/test
