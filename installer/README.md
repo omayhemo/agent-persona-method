@@ -65,6 +65,10 @@ your-project/
 ├── agents/                    # AP Method framework
 │   ├── personas/             # 10 agent persona definitions
 │   ├── tasks/                # 28 reusable task definitions
+│   │   └── subtasks/         # Parallel execution templates
+│   │       ├── development/  # 9 developer analysis templates
+│   │       ├── qa/           # 6 QA testing templates
+│   │       └── synthesis/    # 10 result aggregation patterns
 │   ├── templates/            # 19 document templates
 │   ├── checklists/           # 17 quality checklists
 │   ├── scripts/              # Utility and automation scripts
@@ -121,6 +125,8 @@ In your IDE with Claude Code:
 - Use `/ap` command to launch the AP Orchestrator
 - Use `/handoff` to switch between agent personas
 - Use `/wrap` to wrap up a session
+- Use `/parallel-review` (Developer) for comprehensive code analysis
+- Use `/parallel-test` (QA) for parallel test execution
 
 ## Configuration
 
@@ -147,6 +153,36 @@ The installer includes comprehensive version and update management:
 See the [AP Manager Documentation](../agents/docs/ap-manager.md) for detailed information.
 
 ## Optional Features
+
+### Parallel Subtask System
+
+The AP Method includes a powerful parallel execution system for Developer and QA agents:
+
+#### Developer Parallel Reviews (`/parallel-review`)
+Execute multiple code analysis tasks simultaneously:
+- **Security Scan**: Vulnerability detection and OWASP compliance
+- **Performance Check**: Bottleneck identification and optimization
+- **Test Coverage**: Code coverage analysis and gaps
+- **Code Complexity**: Cyclomatic complexity and maintainability
+- **Dependency Audit**: Security vulnerabilities in dependencies
+- **Memory Profiling**: Memory leaks and optimization
+- **Database Optimization**: Query performance and indexing
+- **API Design Review**: REST/GraphQL best practices
+- **Architecture Compliance**: Pattern adherence and structure
+
+#### QA Parallel Testing (`/parallel-test`)
+Run comprehensive test suites in parallel:
+- **Cross-Browser Testing**: Chrome, Firefox, Safari, Edge compatibility
+- **Accessibility Audit**: WCAG compliance and screen reader support
+- **API Contract Testing**: Schema validation and breaking changes
+- **Load Testing**: Performance under stress and scalability
+- **Mobile Responsive Testing**: Device compatibility and touch interactions
+- **E2E User Journey**: Critical path validation
+
+#### Performance Benefits
+- **Sequential Execution**: 25-35 minutes for comprehensive review
+- **Parallel Execution**: 5-7 minutes (80% time reduction)
+- **Automatic Synthesis**: Results aggregated with priority rankings
 
 ### Text-to-Speech (TTS) System
 

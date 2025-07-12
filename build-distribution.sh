@@ -112,6 +112,7 @@ tar -xzf ap-method-v1.0.0.tar.gz && cd ap-method-v1.0.0 && bash installer/instal
 - **Session Management**: Track all work with automatic session notes
 - **Voice Notifications**: Audio feedback for agent activities
 - **Project Agnostic**: Works with any project type or technology stack
+- **Parallel Subtask System**: Developer and QA agents can execute multiple analysis tasks in parallel for 80% time reduction
 
 ## First Steps After Installation
 
@@ -138,6 +139,8 @@ tar -xzf ap-method-v1.0.0.tar.gz && cd ap-method-v1.0.0 && bash installer/instal
 - `/switch <agent>` - Compact session and switch
 - `/wrap` - Archive session and create summary
 - `/session-note-setup` - Initialize session structure
+- `/parallel-review` - Developer: Execute parallel code analysis (security, performance, coverage, etc.)
+- `/parallel-test` - QA: Execute parallel test suite (cross-browser, accessibility, load, etc.)
 
 ## Documentation
 

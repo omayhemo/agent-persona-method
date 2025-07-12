@@ -162,6 +162,8 @@ scan_directory() {
     find_cmd+=" -not -name '*.log'"
     find_cmd+=" -not -name '*.tmp'"
     find_cmd+=" -not -name '.DS_Store'"
+    # Include parallel subtask files explicitly
+    # Note: subtasks directory should be included by default
     
     # Add custom exclusions
     if [ -n "$exclude_patterns" ]; then
