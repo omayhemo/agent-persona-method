@@ -1,35 +1,27 @@
 {
-  "ap": {
-    "core": {
-      "AP_ROOT": "/mnt/c/code/agentic-persona/agents",
-      "PROJECT_ROOT": "/mnt/c/code/agentic-persona",
-      "PROJECT_DOCS": "/mnt/c/code/agentic-persona/project_documentation",
-      "PROJECT_NAME": "agentic-persona"
-    },
-    "claude": {
-      "CLAUDE_COMMANDS_DIR": "/mnt/c/code/agentic-persona/.claude/commands"
-    },
-    "session_notes": {
-      "NOTES_TYPE": "obsidian",
-      "SESSION_NOTES_PATH": "GemMMA/Sessions",
-      "RULES_PATH": "GemMMA/Rules",
-      "ARCHIVE_PATH": "GemMMA/Sessions/archive",
-      "FALLBACK_SESSION_NOTES_PATH": "${PROJECT_DOCS}/session_notes",
-      "FALLBACK_RULES_PATH": "${PROJECT_DOCS}/rules",
-      "FALLBACK_ARCHIVE_PATH": "${PROJECT_DOCS}/session_notes/archive"
-    },
-    "voice": {
-      "PIPER_DIR": "${PROJECT_ROOT}/.piper",
-      "SPEAK_ORCHESTRATOR": "${AP_ROOT}/voice/speakOrchestrator.sh",
-      "SPEAK_DEVELOPER": "${AP_ROOT}/voice/speakDeveloper.sh",
-      "SPEAK_ARCHITECT": "${AP_ROOT}/voice/speakArchitect.sh",
-      "SPEAK_ANALYST": "${AP_ROOT}/voice/speakAnalyst.sh",
-      "SPEAK_QA": "${AP_ROOT}/voice/speakQA.sh",
-      "SPEAK_PM": "${AP_ROOT}/voice/speakPM.sh",
-      "SPEAK_PO": "${AP_ROOT}/voice/speakPO.sh",
-      "SPEAK_SM": "${AP_ROOT}/voice/speakSM.sh",
-      "SPEAK_DESIGN_ARCHITECT": "${AP_ROOT}/voice/speakDesignArchitect.sh"
-    }
+  "env": {
+    "AP_ROOT": "/mnt/c/code/agentic-persona/agents",
+    "PROJECT_ROOT": "/mnt/c/code/agentic-persona",
+    "PROJECT_DOCS": "/mnt/c/code/agentic-persona/project_documentation",
+    "PROJECT_NAME": "agentic-persona",
+    "CLAUDE_COMMANDS_DIR": "/mnt/c/code/agentic-persona/.claude/commands",
+    "NOTES_TYPE": "obsidian",
+    "SESSION_NOTES_PATH": "GemMMA/Sessions",
+    "RULES_PATH": "GemMMA/Rules",
+    "ARCHIVE_PATH": "GemMMA/Sessions/archive",
+    "FALLBACK_SESSION_NOTES_PATH": "${PROJECT_DOCS}/session_notes",
+    "FALLBACK_RULES_PATH": "${PROJECT_DOCS}/rules",
+    "FALLBACK_ARCHIVE_PATH": "${PROJECT_DOCS}/session_notes/archive",
+    "PIPER_DIR": "${PROJECT_ROOT}/.piper",
+    "SPEAK_ORCHESTRATOR": "${AP_ROOT}/voice/speakOrchestrator.sh",
+    "SPEAK_DEVELOPER": "${AP_ROOT}/voice/speakDeveloper.sh",
+    "SPEAK_ARCHITECT": "${AP_ROOT}/voice/speakArchitect.sh",
+    "SPEAK_ANALYST": "${AP_ROOT}/voice/speakAnalyst.sh",
+    "SPEAK_QA": "${AP_ROOT}/voice/speakQA.sh",
+    "SPEAK_PM": "${AP_ROOT}/voice/speakPM.sh",
+    "SPEAK_PO": "${AP_ROOT}/voice/speakPO.sh",
+    "SPEAK_SM": "${AP_ROOT}/voice/speakSM.sh",
+    "SPEAK_DESIGN_ARCHITECT": "${AP_ROOT}/voice/speakDesignArchitect.sh"
   },
   "hooks": {
     "PreToolUse": [

@@ -614,7 +614,7 @@ esac
 # Update settings with TTS provider
 if [ -f "$SETTINGS_FILE" ] && command -v jq >/dev/null 2>&1; then
     tmp_file=$(mktemp)
-    jq ".ap.tts.provider = \"$TTS_PROVIDER\" | .ap.tts.enabled = true" "$SETTINGS_FILE" > "$tmp_file" && mv "$tmp_file" "$SETTINGS_FILE"
+    jq ".env.TTS_PROVIDER = \"$TTS_PROVIDER\" | .env.TTS_ENABLED = \"true\"" "$SETTINGS_FILE" > "$tmp_file" && mv "$tmp_file" "$SETTINGS_FILE"
 fi
 
 echo ""

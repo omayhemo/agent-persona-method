@@ -1,100 +1,62 @@
 {
-  "ap": {
-    "core": {
-      "AP_ROOT": "{{AP_ROOT}}",
-      "PROJECT_ROOT": "{{PROJECT_ROOT}}",
-      "PROJECT_DOCS": "{{PROJECT_DOCS}}",
-      "PROJECT_NAME": "{{PROJECT_NAME}}"
-    },
-    "claude": {
-      "CLAUDE_COMMANDS_DIR": "{{CLAUDE_COMMANDS_DIR}}"
-    },
-    "session_notes": {
-      "NOTES_TYPE": "{{NOTES_TYPE}}",
-      "SESSION_NOTES_PATH": "{{SESSION_NOTES_PATH}}",
-      "RULES_PATH": "{{RULES_PATH}}",
-      "ARCHIVE_PATH": "{{ARCHIVE_PATH}}",
-      "FALLBACK_SESSION_NOTES_PATH": "{{FALLBACK_SESSION_NOTES_PATH}}",
-      "FALLBACK_RULES_PATH": "{{FALLBACK_RULES_PATH}}",
-      "FALLBACK_ARCHIVE_PATH": "{{FALLBACK_ARCHIVE_PATH}}"
-    },
-    "voice": {
-      "PIPER_DIR": "${PROJECT_ROOT}/.piper",
-      "SPEAK_ORCHESTRATOR": "${AP_ROOT}/voice/speakOrchestrator.sh",
-      "SPEAK_DEVELOPER": "${AP_ROOT}/voice/speakDeveloper.sh",
-      "SPEAK_ARCHITECT": "${AP_ROOT}/voice/speakArchitect.sh",
-      "SPEAK_ANALYST": "${AP_ROOT}/voice/speakAnalyst.sh",
-      "SPEAK_QA": "${AP_ROOT}/voice/speakQA.sh",
-      "SPEAK_PM": "${AP_ROOT}/voice/speakPM.sh",
-      "SPEAK_PO": "${AP_ROOT}/voice/speakPO.sh",
-      "SPEAK_SM": "${AP_ROOT}/voice/speakSM.sh",
-      "SPEAK_DESIGN_ARCHITECT": "${AP_ROOT}/voice/speakDesignArchitect.sh"
-    },
-    "tts": {
-      "enabled": true,
-      "provider": "auto",
-      "fallback_provider": "none",
-      "providers": {
-        "piper": {
-          "install_path": "${PROJECT_ROOT}/.piper"
-        },
-        "elevenlabs": {
-          "api_key": "${ELEVENLABS_API_KEY}",
-          "model": "eleven_monolingual_v1"
-        },
-        "discord": {
-          "webhook_url": "${DISCORD_WEBHOOK_URL}",
-          "tts_enabled": false
-        }
-      },
-      "voices": {
-        "orchestrator": {
-          "piper": "ryan",
-          "elevenlabs": "adam",
-          "system": "Alex"
-        },
-        "developer": {
-          "piper": "joe",
-          "elevenlabs": "josh",
-          "system": "Daniel"
-        },
-        "architect": {
-          "piper": "ryan",
-          "elevenlabs": "antoni",
-          "system": "Tom"
-        },
-        "analyst": {
-          "piper": "kathy",
-          "elevenlabs": "rachel",
-          "system": "Samantha"
-        },
-        "qa": {
-          "piper": "kathleen",
-          "elevenlabs": "domi",
-          "system": "Victoria"
-        },
-        "pm": {
-          "piper": "joe",
-          "elevenlabs": "josh",
-          "system": "Daniel"
-        },
-        "po": {
-          "piper": "ryan",
-          "elevenlabs": "adam",
-          "system": "Alex"
-        },
-        "sm": {
-          "piper": "joe",
-          "elevenlabs": "josh",
-          "system": "Daniel"
-        },
-        "design_architect": {
-          "piper": "amy",
-          "elevenlabs": "bella",
-          "system": "Karen"
-        }
-      }
-    }
+  "env": {
+    "AP_ROOT": "{{AP_ROOT}}",
+    "PROJECT_ROOT": "{{PROJECT_ROOT}}",
+    "PROJECT_DOCS": "{{PROJECT_DOCS}}",
+    "PROJECT_NAME": "{{PROJECT_NAME}}",
+    "CLAUDE_COMMANDS_DIR": "{{CLAUDE_COMMANDS_DIR}}",
+    "NOTES_TYPE": "{{NOTES_TYPE}}",
+    "SESSION_NOTES_PATH": "{{SESSION_NOTES_PATH}}",
+    "RULES_PATH": "{{RULES_PATH}}",
+    "ARCHIVE_PATH": "{{ARCHIVE_PATH}}",
+    "FALLBACK_SESSION_NOTES_PATH": "{{FALLBACK_SESSION_NOTES_PATH}}",
+    "FALLBACK_RULES_PATH": "{{FALLBACK_RULES_PATH}}",
+    "FALLBACK_ARCHIVE_PATH": "{{FALLBACK_ARCHIVE_PATH}}",
+    "PIPER_DIR": "${PROJECT_ROOT}/.piper",
+    "SPEAK_ORCHESTRATOR": "${AP_ROOT}/voice/speakOrchestrator.sh",
+    "SPEAK_DEVELOPER": "${AP_ROOT}/voice/speakDeveloper.sh",
+    "SPEAK_ARCHITECT": "${AP_ROOT}/voice/speakArchitect.sh",
+    "SPEAK_ANALYST": "${AP_ROOT}/voice/speakAnalyst.sh",
+    "SPEAK_QA": "${AP_ROOT}/voice/speakQA.sh",
+    "SPEAK_PM": "${AP_ROOT}/voice/speakPM.sh",
+    "SPEAK_PO": "${AP_ROOT}/voice/speakPO.sh",
+    "SPEAK_SM": "${AP_ROOT}/voice/speakSM.sh",
+    "SPEAK_DESIGN_ARCHITECT": "${AP_ROOT}/voice/speakDesignArchitect.sh",
+    "TTS_ENABLED": "true",
+    "TTS_PROVIDER": "auto",
+    "TTS_FALLBACK_PROVIDER": "none",
+    "TTS_PIPER_INSTALL_PATH": "${PROJECT_ROOT}/.piper",
+    "TTS_ELEVENLABS_API_KEY": "${ELEVENLABS_API_KEY}",
+    "TTS_ELEVENLABS_MODEL": "eleven_monolingual_v1",
+    "TTS_DISCORD_WEBHOOK_URL": "${DISCORD_WEBHOOK_URL}",
+    "TTS_DISCORD_TTS_ENABLED": "false",
+    "TTS_VOICE_ORCHESTRATOR_PIPER": "ryan",
+    "TTS_VOICE_ORCHESTRATOR_ELEVENLABS": "adam",
+    "TTS_VOICE_ORCHESTRATOR_SYSTEM": "Alex",
+    "TTS_VOICE_DEVELOPER_PIPER": "joe",
+    "TTS_VOICE_DEVELOPER_ELEVENLABS": "josh",
+    "TTS_VOICE_DEVELOPER_SYSTEM": "Daniel",
+    "TTS_VOICE_ARCHITECT_PIPER": "ryan",
+    "TTS_VOICE_ARCHITECT_ELEVENLABS": "antoni",
+    "TTS_VOICE_ARCHITECT_SYSTEM": "Tom",
+    "TTS_VOICE_ANALYST_PIPER": "kathy",
+    "TTS_VOICE_ANALYST_ELEVENLABS": "rachel",
+    "TTS_VOICE_ANALYST_SYSTEM": "Samantha",
+    "TTS_VOICE_QA_PIPER": "kathleen",
+    "TTS_VOICE_QA_ELEVENLABS": "domi",
+    "TTS_VOICE_QA_SYSTEM": "Victoria",
+    "TTS_VOICE_PM_PIPER": "joe",
+    "TTS_VOICE_PM_ELEVENLABS": "josh",
+    "TTS_VOICE_PM_SYSTEM": "Daniel",
+    "TTS_VOICE_PO_PIPER": "ryan",
+    "TTS_VOICE_PO_ELEVENLABS": "adam",
+    "TTS_VOICE_PO_SYSTEM": "Alex",
+    "TTS_VOICE_SM_PIPER": "joe",
+    "TTS_VOICE_SM_ELEVENLABS": "josh",
+    "TTS_VOICE_SM_SYSTEM": "Daniel",
+    "TTS_VOICE_DESIGN_ARCHITECT_PIPER": "amy",
+    "TTS_VOICE_DESIGN_ARCHITECT_ELEVENLABS": "bella",
+    "TTS_VOICE_DESIGN_ARCHITECT_SYSTEM": "Karen"
   },
   "hooks": {
     "PreToolUse": [
