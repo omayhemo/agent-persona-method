@@ -103,18 +103,49 @@ if [ "$BUILD_CHOICE" = "1" ]; then
     PIPER_VERSION="2023.11.14-2"
     
     # Map to actual release file names
-    case "$ARCH" in
-        x86_64) 
-            PIPER_FILE="piper_${OS}_x86_64.tar.gz"
+    case "$OS" in
+        darwin)
+            echo ""
+            echo -e "${YELLOW}WARNING: Piper does not provide official macOS binaries.${NC}"
+            echo ""
+            echo "Options:"
+            echo "1) Try building from source (requires development tools)"
+            echo "2) Skip Piper installation (use different TTS provider)"
+            echo ""
+            echo "Note: Building from source requires:"
+            echo "  - Xcode Command Line Tools"
+            echo "  - CMake"
+            echo "  - Python 3.7+"
+            echo ""
+            printf "${YELLOW}Continue with build from source? (y/N): ${NC}"
+            read -n 1 -r
+            echo
+            if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+                echo "Skipping Piper installation."
+                echo "You can configure a different TTS provider later."
+                exit 0
+            fi
+            BUILD_CHOICE="2"
             ;;
-        aarch64) 
-            PIPER_FILE="piper_${OS}_arm64.tar.gz"
-            ;;
-        armv7l) 
-            PIPER_FILE="piper_${OS}_armv7.tar.gz"
+        linux)
+            case "$ARCH" in
+                x86_64) 
+                    PIPER_FILE="piper_${OS}_x86_64.tar.gz"
+                    ;;
+                aarch64|arm64) 
+                    PIPER_FILE="piper_${OS}_arm64.tar.gz"
+                    ;;
+                armv7l) 
+                    PIPER_FILE="piper_${OS}_armv7.tar.gz"
+                    ;;
+                *)
+                    echo "Unsupported architecture: $ARCH"
+                    BUILD_CHOICE="2"
+                    ;;
+            esac
             ;;
         *)
-            echo "Unsupported architecture: $ARCH"
+            echo "Unsupported operating system: $OS"
             BUILD_CHOICE="2"
             ;;
     esac

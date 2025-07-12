@@ -171,6 +171,113 @@ check_audio_dependencies() {
     return 0
 }
 
+# Function to detect available audio players
+detect_audio_player() {
+    echo "Detecting available audio players..."
+    
+    # Detect WSL2 environment
+    IS_WSL2=false
+    if grep -qi microsoft /proc/version 2>/dev/null; then
+        IS_WSL2=true
+        echo "✓ Detected WSL2 environment"
+    fi
+    
+    # Check for WAV players first (needed for Piper)
+    # Priority order for WSL2: paplay, aplay, play
+    # Priority order for others: aplay, paplay, play
+    if [ "$IS_WSL2" = true ]; then
+        # WSL2: Prefer paplay (PulseAudio)
+        if command -v paplay >/dev/null 2>&1; then
+            WAV_PLAYER="paplay"
+            WAV_PLAYER_ARGS=""
+            echo "✓ Found paplay (PulseAudio) for WAV playback - preferred for WSL2"
+        elif command -v aplay >/dev/null 2>&1; then
+            WAV_PLAYER="aplay"
+            WAV_PLAYER_ARGS="-q"
+            echo "✓ Found aplay (ALSA) for WAV playback"
+        elif command -v play >/dev/null 2>&1; then
+            WAV_PLAYER="play"
+            WAV_PLAYER_ARGS="-q"
+            echo "✓ Found play (SoX) for WAV playback"
+        else
+            WAV_PLAYER="none"
+            WAV_PLAYER_ARGS=""
+        fi
+    else
+        # Non-WSL2: Standard order
+        if command -v aplay >/dev/null 2>&1; then
+            WAV_PLAYER="aplay"
+            WAV_PLAYER_ARGS="-q"
+            echo "✓ Found aplay (ALSA) for WAV playback"
+        elif command -v paplay >/dev/null 2>&1; then
+            WAV_PLAYER="paplay"
+            WAV_PLAYER_ARGS=""
+            echo "✓ Found paplay (PulseAudio) for WAV playback"
+        elif command -v play >/dev/null 2>&1; then
+            WAV_PLAYER="play"
+            WAV_PLAYER_ARGS="-q"
+            echo "✓ Found play (SoX) for WAV playback"
+        elif command -v afplay >/dev/null 2>&1; then
+            WAV_PLAYER="afplay"
+            WAV_PLAYER_ARGS=""
+            echo "✓ Found afplay (macOS) for WAV playback"
+        else
+            WAV_PLAYER="none"
+            WAV_PLAYER_ARGS=""
+        fi
+    fi
+    
+    # Check for MP3 players
+    if command -v mpg123 >/dev/null 2>&1; then
+        AUDIO_PLAYER="mpg123"
+        AUDIO_PLAYER_ARGS="-q"
+        echo "✓ Found mpg123 for MP3 playback"
+    elif command -v play >/dev/null 2>&1; then
+        AUDIO_PLAYER="play"
+        AUDIO_PLAYER_ARGS="-q"
+        echo "✓ Found sox/play for audio playback"
+    elif command -v afplay >/dev/null 2>&1; then
+        AUDIO_PLAYER="afplay"
+        AUDIO_PLAYER_ARGS=""
+        echo "✓ Found afplay (macOS) for audio playback"
+    elif command -v ffplay >/dev/null 2>&1; then
+        AUDIO_PLAYER="ffplay"
+        AUDIO_PLAYER_ARGS="-nodisp -autoexit -loglevel quiet"
+        echo "✓ Found ffplay for audio playback"
+    else
+        AUDIO_PLAYER="none"
+        AUDIO_PLAYER_ARGS=""
+        if [ "$WAV_PLAYER" = "none" ]; then
+            echo -e "${YELLOW}⚠ No audio players found. Audio will not work.${NC}"
+            echo ""
+            echo "To enable audio, install one of:"
+            if [ "$IS_WSL2" = true ]; then
+                echo "  - WSL2: sudo apt-get install pulseaudio-utils (recommended)"
+                echo "  - WSL2: sudo apt-get install alsa-utils"
+            else
+                echo "  - Linux: sudo apt-get install alsa-utils"
+                echo "  - Linux: sudo apt-get install mpg123"
+            fi
+            echo "  - macOS: brew install mpg123"
+        fi
+    fi
+    
+    # For Piper, use WAV player as primary audio player if no MP3 player
+    if [ "$TTS_PROVIDER" = "piper" ] && [ "$AUDIO_PLAYER" = "none" ] && [ "$WAV_PLAYER" != "none" ]; then
+        AUDIO_PLAYER="$WAV_PLAYER"
+        AUDIO_PLAYER_ARGS="$WAV_PLAYER_ARGS"
+        echo "✓ Using $WAV_PLAYER for Piper TTS audio output"
+    fi
+    
+    # Check for ffmpeg (for conversion)
+    if command -v ffmpeg >/dev/null 2>&1; then
+        FFMPEG_AVAILABLE="true"
+        echo "✓ Found ffmpeg for audio conversion"
+    else
+        FFMPEG_AVAILABLE="false"
+    fi
+}
+
 # Function to replace variables in templates
 replace_variables() {
     local input_file="$1"
@@ -281,6 +388,47 @@ fi
 # Configure based on choice
 if [ "$NOTES_SYSTEM" = "1" ]; then
     NOTES_TYPE="obsidian"
+    
+    # Warn about Obsidian MCP requirements
+    echo ""
+    echo -e "${YELLOW}IMPORTANT: Obsidian MCP Server Requirements${NC}"
+    echo "==========================================="
+    echo ""
+    echo "To use Obsidian integration, you must have:"
+    echo "1. Obsidian MCP server installed:"
+    echo "   ${GREEN}npm install -g @modelcontextprotocol/server-obsidian${NC}"
+    echo ""
+    echo "2. Claude Desktop configured with MCP:"
+    echo "   Add to ~/.config/claude/claude_desktop_config.json:"
+    echo "   ${GREEN}{
+      \"mcpServers\": {
+        \"obsidian\": {
+          \"command\": \"npx\",
+          \"args\": [\"-y\", \"@modelcontextprotocol/server-obsidian\", \"/path/to/vault\"]
+        }
+      }
+    }${NC}"
+    echo ""
+    echo "3. Restart Claude with MCP support"
+    echo ""
+    
+    if [ "$USE_DEFAULTS" != true ]; then
+        printf "${YELLOW}Have you completed these steps? (y/N): ${NC}"
+        read -n 1 -r
+        echo
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            echo ""
+            echo "Please complete MCP setup first, then re-run installer."
+            echo "Alternatively, choose 'Local markdown files' for now."
+            echo ""
+            echo "Switching to local markdown files..."
+            NOTES_SYSTEM="2"
+            NOTES_TYPE="markdown"
+        fi
+    fi
+fi
+
+if [ "$NOTES_TYPE" = "obsidian" ]; then
     if [ "$USE_DEFAULTS" = true ]; then
         OBSIDIAN_ROOT="."
         SESSION_NOTES_PATH="Sessions/"
@@ -370,6 +518,9 @@ ensure_dir "$CLAUDE_DIR"
 replace_variables "$INSTALLER_DIR/templates/claude/settings.json.template" "$CLAUDE_DIR/settings.json"
 echo "Created Claude settings configuration: $CLAUDE_DIR/settings.json"
 
+# Set SETTINGS_FILE for use in later steps
+SETTINGS_FILE="$CLAUDE_DIR/settings.json"
+
 # Create .claude/hooks directory and copy hook scripts
 ensure_dir "$CLAUDE_DIR/hooks"
 if [ -d "$INSTALLER_DIR/templates/hooks" ]; then
@@ -441,22 +592,44 @@ chmod +x "$AP_ROOT/scripts/tts-setup"/*.sh
 
 # Configure TTS provider
 if [ "$USE_DEFAULTS" = true ]; then
-    echo "Using default TTS configuration (Piper - offline)"
-    TTS_PROVIDER="piper"
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        echo "Using default TTS configuration (System TTS - macOS)"
+        TTS_PROVIDER="system"
+    else
+        echo "Using default TTS configuration (Piper - offline)"
+        TTS_PROVIDER="piper"
+    fi
 else
     echo ""
     echo "Select a Text-to-Speech (TTS) provider:"
     echo ""
-    echo "1) Piper (local, offline, ~100MB download)"
-    echo "2) ElevenLabs (cloud, high quality, requires API key)"
-    echo "3) System TTS (uses OS built-in TTS)"
-    echo "4) Discord (send notifications to Discord channel)"
-    echo "5) None (silent mode, no audio)"
-    echo ""
-    printf "${YELLOW}Select TTS provider (1-5) [1]: ${NC}"
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        echo "1) Piper (local, offline - ${YELLOW}Note: Requires building from source on macOS${NC})"
+        echo "2) ElevenLabs (cloud, high quality, requires API key)"
+        echo "3) System TTS (${GREEN}Recommended for macOS${NC} - uses built-in 'say' command)"
+        echo "4) Discord (send notifications to Discord channel)"
+        echo "5) None (silent mode, no audio)"
+        echo ""
+        printf "${YELLOW}Select TTS provider (1-5) [3]: ${NC}"
+    else
+        echo "1) Piper (local, offline, ~100MB download)"
+        echo "2) ElevenLabs (cloud, high quality, requires API key)"
+        echo "3) System TTS (uses OS built-in TTS)"
+        echo "4) Discord (send notifications to Discord channel)"
+        echo "5) None (silent mode, no audio)"
+        echo ""
+        printf "${YELLOW}Select TTS provider (1-5) [1]: ${NC}"
+    fi
     read tts_choice
     
-    case "${tts_choice:-1}" in
+    # Set appropriate default based on OS
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        tts_choice="${tts_choice:-3}"  # Default to System TTS on macOS
+    else
+        tts_choice="${tts_choice:-1}"  # Default to Piper on Linux
+    fi
+    
+    case "$tts_choice" in
         1)
             TTS_PROVIDER="piper"
             ;;
@@ -531,38 +704,122 @@ fi
 echo ""
 echo "Selected TTS provider: $TTS_PROVIDER"
 
+# If TTS is enabled, detect audio players early
+if [ "$TTS_PROVIDER" != "none" ]; then
+    echo ""
+    echo "Detecting audio players for TTS..."
+    detect_audio_player
+    
+    # Save audio player configuration immediately
+    if [ -f "$SETTINGS_FILE" ] && command -v jq >/dev/null 2>&1; then
+        tmp_file=$(mktemp)
+        jq ".env.AUDIO_PLAYER = \"$AUDIO_PLAYER\" |
+            .env.AUDIO_PLAYER_ARGS = \"$AUDIO_PLAYER_ARGS\" |
+            .env.WAV_PLAYER = \"$WAV_PLAYER\" |
+            .env.WAV_PLAYER_ARGS = \"$WAV_PLAYER_ARGS\" |
+            .env.FFMPEG_AVAILABLE = \"$FFMPEG_AVAILABLE\"" "$SETTINGS_FILE" > "$tmp_file" && mv "$tmp_file" "$SETTINGS_FILE"
+    fi
+fi
+
 # Configure the selected provider
 case "$TTS_PROVIDER" in
     piper)
         echo ""
         echo "Checking for audio player..."
         
+        # Detect WSL2
+        IS_WSL2=false
+        if grep -qi microsoft /proc/version 2>/dev/null; then
+            IS_WSL2=true
+        fi
+        
         # Check for audio players that can handle WAV files
-        if command -v aplay >/dev/null 2>&1; then
-            echo "✓ Found aplay (ALSA)"
-        elif command -v play >/dev/null 2>&1; then
-            echo "✓ Found play (SoX)"
-        elif command -v afplay >/dev/null 2>&1; then
-            echo "✓ Found afplay (macOS)"
-        elif command -v mpg123 >/dev/null 2>&1; then
-            echo "✓ Found mpg123"
-        elif command -v ffplay >/dev/null 2>&1; then
-            echo "✓ Found ffplay (ffmpeg)"
+        FOUND_PLAYER=false
+        if [ "$IS_WSL2" = true ]; then
+            # WSL2: Check paplay first
+            if command -v paplay >/dev/null 2>&1; then
+                echo "✓ Found paplay (PulseAudio) - recommended for WSL2"
+                FOUND_PLAYER=true
+            elif command -v aplay >/dev/null 2>&1; then
+                echo "✓ Found aplay (ALSA)"
+                FOUND_PLAYER=true
+            fi
         else
+            # Non-WSL2: Check aplay first
+            if command -v aplay >/dev/null 2>&1; then
+                echo "✓ Found aplay (ALSA)"
+                FOUND_PLAYER=true
+            elif command -v paplay >/dev/null 2>&1; then
+                echo "✓ Found paplay (PulseAudio)"
+                FOUND_PLAYER=true
+            fi
+        fi
+        
+        # Check other players
+        if [ "$FOUND_PLAYER" = false ]; then
+            if command -v play >/dev/null 2>&1; then
+                echo "✓ Found play (SoX)"
+                FOUND_PLAYER=true
+            elif command -v afplay >/dev/null 2>&1; then
+                echo "✓ Found afplay (macOS)"
+                FOUND_PLAYER=true
+            elif command -v mpg123 >/dev/null 2>&1; then
+                echo "✓ Found mpg123"
+                FOUND_PLAYER=true
+            elif command -v ffplay >/dev/null 2>&1; then
+                echo "✓ Found ffplay (ffmpeg)"
+                FOUND_PLAYER=true
+            fi
+        fi
+        
+        if [ "$FOUND_PLAYER" = false ]; then
             echo "No audio player found."
             echo ""
             
             # Try to install audio player
             if command -v apt-get >/dev/null 2>&1; then
-                echo "Installing ALSA audio utilities..."
-                sudo apt-get update >/dev/null 2>&1
-                if sudo apt-get install -y alsa-utils; then
-                    echo "✓ ALSA utilities installed successfully"
+                if [ "$IS_WSL2" = true ]; then
+                    echo "Installing PulseAudio utilities (recommended for WSL2)..."
+                    sudo apt-get update >/dev/null 2>&1
+                    if sudo apt-get install -y pulseaudio-utils; then
+                        echo "✓ PulseAudio utilities installed successfully"
+                    else
+                        echo "Trying ALSA utilities as fallback..."
+                        if sudo apt-get install -y alsa-utils; then
+                            echo "✓ ALSA utilities installed successfully"
+                        else
+                            echo "⚠ Failed to install audio player. Audio playback may not work."
+                        fi
+                    fi
                 else
-                    echo "⚠ Failed to install audio player. Audio playback may not work."
+                    echo "Installing ALSA audio utilities..."
+                    sudo apt-get update >/dev/null 2>&1
+                    if sudo apt-get install -y alsa-utils; then
+                        echo "✓ ALSA utilities installed successfully"
+                    else
+                        echo "⚠ Failed to install audio player. Audio playback may not work."
+                    fi
                 fi
             else
                 echo "⚠ Please install an audio player manually"
+                if [ "$IS_WSL2" = true ]; then
+                    echo "  For WSL2: sudo apt-get install pulseaudio-utils"
+                fi
+            fi
+            
+            # Re-detect audio players after installation attempt
+            echo ""
+            echo "Re-detecting audio players..."
+            detect_audio_player
+            
+            # Update settings with newly detected audio players
+            if [ -f "$SETTINGS_FILE" ] && command -v jq >/dev/null 2>&1; then
+                tmp_file=$(mktemp)
+                jq ".env.AUDIO_PLAYER = \"$AUDIO_PLAYER\" |
+                    .env.AUDIO_PLAYER_ARGS = \"$AUDIO_PLAYER_ARGS\" |
+                    .env.WAV_PLAYER = \"$WAV_PLAYER\" |
+                    .env.WAV_PLAYER_ARGS = \"$WAV_PLAYER_ARGS\" |
+                    .env.FFMPEG_AVAILABLE = \"$FFMPEG_AVAILABLE\"" "$SETTINGS_FILE" > "$tmp_file" && mv "$tmp_file" "$SETTINGS_FILE"
             fi
         fi
         
@@ -581,9 +838,77 @@ case "$TTS_PROVIDER" in
             
             if [ $? -eq 0 ]; then
                 echo "✓ Piper installation completed successfully!"
+                
+                # Ensure TTS_PROVIDER is set to piper in settings
+                if [ -f "$SETTINGS_FILE" ] && command -v jq >/dev/null 2>&1; then
+                    tmp_file=$(mktemp)
+                    jq '.env.TTS_PROVIDER = "piper" | .env.TTS_ENABLED = "true"' "$SETTINGS_FILE" > "$tmp_file" && mv "$tmp_file" "$SETTINGS_FILE"
+                    echo "✓ TTS provider set to Piper"
+                fi
+                
+                # Offer to test audio
+                if [ "$USE_DEFAULTS" != true ] && [ "$WAV_PLAYER" != "none" ]; then
+                    echo ""
+                    printf "${YELLOW}Would you like to test audio playback? (Y/n): ${NC}"
+                    read -n 1 -r
+                    echo
+                    if [[ ! $REPLY =~ ^[Nn]$ ]]; then
+                        echo "Playing test message..."
+                        # Different players need different parameters for raw audio
+                        case "$WAV_PLAYER" in
+                            paplay)
+                                echo "Welcome to the AP Method. This is the orchestrator voice." | \
+                                    "$PROJECT_ROOT/.piper/piper" \
+                                    --model "$PROJECT_ROOT/.piper/models/en_US-ryan-medium.onnx" \
+                                    --output-raw 2>/dev/null | \
+                                    paplay --raw --rate=22050 --format=s16le --channels=1
+                                ;;
+                            aplay)
+                                echo "Welcome to the AP Method. This is the orchestrator voice." | \
+                                    "$PROJECT_ROOT/.piper/piper" \
+                                    --model "$PROJECT_ROOT/.piper/models/en_US-ryan-medium.onnx" \
+                                    --output-raw 2>/dev/null | \
+                                    aplay -q -r 22050 -f S16_LE -t raw -c 1 -
+                                ;;
+                            play)
+                                echo "Welcome to the AP Method. This is the orchestrator voice." | \
+                                    "$PROJECT_ROOT/.piper/piper" \
+                                    --model "$PROJECT_ROOT/.piper/models/en_US-ryan-medium.onnx" \
+                                    --output-raw 2>/dev/null | \
+                                    play -q -t raw -r 22050 -e signed -b 16 -c 1 -
+                                ;;
+                            *)
+                                echo "Welcome to the AP Method. This is the orchestrator voice." | \
+                                    "$PROJECT_ROOT/.piper/piper" \
+                                    --model "$PROJECT_ROOT/.piper/models/en_US-ryan-medium.onnx" \
+                                    --output-raw 2>/dev/null | \
+                                    $WAV_PLAYER $WAV_PLAYER_ARGS
+                                ;;
+                        esac
+                        
+                        if [ $? -eq 0 ]; then
+                            echo "✓ Audio playback successful!"
+                        else
+                            echo -e "${YELLOW}⚠ Audio playback failed.${NC}"
+                            echo "This might be due to:"
+                            echo "- WSL2: PulseAudio not running (try: pulseaudio --start)"
+                            echo "- Missing audio configuration"
+                            echo "- No audio output device"
+                            echo ""
+                            echo "You can test audio later with:"
+                            echo "  $AP_ROOT/scripts/tts-manager.sh test"
+                        fi
+                    fi
+                fi
             else
                 echo "⚠ Piper installation encountered issues."
                 echo "You can manually install it later."
+                
+                # Set TTS provider to none if installation failed
+                if [ -f "$SETTINGS_FILE" ] && command -v jq >/dev/null 2>&1; then
+                    tmp_file=$(mktemp)
+                    jq '.env.TTS_PROVIDER = "none" | .env.TTS_ENABLED = "false"' "$SETTINGS_FILE" > "$tmp_file" && mv "$tmp_file" "$SETTINGS_FILE"
+                fi
             fi
         fi
         ;;
@@ -611,66 +936,17 @@ case "$TTS_PROVIDER" in
         ;;
 esac
 
-# Update settings with TTS provider
-if [ -f "$SETTINGS_FILE" ] && command -v jq >/dev/null 2>&1; then
+# Update settings with TTS provider - but only for non-piper providers
+# (Piper updates its own setting after successful installation)
+if [ "$TTS_PROVIDER" != "piper" ] && [ -f "$SETTINGS_FILE" ] && command -v jq >/dev/null 2>&1; then
     tmp_file=$(mktemp)
     jq ".env.TTS_PROVIDER = \"$TTS_PROVIDER\" | .env.TTS_ENABLED = \"true\"" "$SETTINGS_FILE" > "$tmp_file" && mv "$tmp_file" "$SETTINGS_FILE"
+    echo "✓ TTS provider set to $TTS_PROVIDER"
 fi
 
 echo ""
 echo "Step 8a: Configuring Notification System"
 echo "----------------------------------------"
-
-# Function to detect available audio players
-detect_audio_player() {
-    echo "Detecting available audio players..."
-    
-    # Check for MP3 players
-    if command -v mpg123 >/dev/null 2>&1; then
-        AUDIO_PLAYER="mpg123"
-        AUDIO_PLAYER_ARGS="-q"
-        echo "✓ Found mpg123 for MP3 playback"
-    elif command -v play >/dev/null 2>&1; then
-        AUDIO_PLAYER="play"
-        AUDIO_PLAYER_ARGS="-q"
-        echo "✓ Found sox/play for audio playback"
-    elif command -v afplay >/dev/null 2>&1; then
-        AUDIO_PLAYER="afplay"
-        AUDIO_PLAYER_ARGS=""
-        echo "✓ Found afplay (macOS) for audio playback"
-    elif command -v ffplay >/dev/null 2>&1; then
-        AUDIO_PLAYER="ffplay"
-        AUDIO_PLAYER_ARGS="-nodisp -autoexit -loglevel quiet"
-        echo "✓ Found ffplay for audio playback"
-    else
-        AUDIO_PLAYER="none"
-        AUDIO_PLAYER_ARGS=""
-        echo -e "${YELLOW}⚠ No MP3 player found. Audio notifications will not work.${NC}"
-        echo ""
-        echo "To enable audio notifications, install one of:"
-        echo "  - Linux: sudo apt-get install mpg123"
-        echo "  - macOS: brew install mpg123"
-        echo "  - Alternative: sudo apt-get install sox"
-    fi
-    
-    # Check for WAV players (fallback)
-    if [ "$AUDIO_PLAYER" = "none" ] && command -v aplay >/dev/null 2>&1; then
-        WAV_PLAYER="aplay"
-        WAV_PLAYER_ARGS="-q"
-        echo "✓ Found aplay for WAV playback (limited support)"
-    else
-        WAV_PLAYER="none"
-        WAV_PLAYER_ARGS=""
-    fi
-    
-    # Check for ffmpeg (for conversion)
-    if command -v ffmpeg >/dev/null 2>&1; then
-        FFMPEG_AVAILABLE="true"
-        echo "✓ Found ffmpeg for audio conversion"
-    else
-        FFMPEG_AVAILABLE="false"
-    fi
-}
 
 # Function to configure individual hook
 configure_hook() {
@@ -681,76 +957,21 @@ configure_hook() {
     echo ""
     echo "Configuring $hook_display hook:"
     echo "1) No notification"
-    echo "2) Audible notification sound only"
-    if [ "$TTS_PROVIDER" != "none" ]; then
-        echo "3) TTS only"
-        echo "4) Both audible notification sound and TTS"
-        printf "${YELLOW}Select option (1-4) [1]: ${NC}"
-    else
-        printf "${YELLOW}Select option (1-2) [1]: ${NC}"
-    fi
+    echo "2) Audible notification sound"
+    printf "${YELLOW}Select option (1-2) [1]: ${NC}"
     
     read hook_option
     hook_option="${hook_option:-1}"
     
     # Set variables based on selection
     eval "${hook_var_prefix}_ENABLED=false"
-    eval "${hook_var_prefix}_SOUND=none"
-    eval "${hook_var_prefix}_TTS=false"
     
     case "$hook_option" in
         2)
             eval "${hook_var_prefix}_ENABLED=true"
-            select_notification_sound "$hook_var_prefix"
-            ;;
-        3)
-            if [ "$TTS_PROVIDER" != "none" ]; then
-                eval "${hook_var_prefix}_ENABLED=true"
-                eval "${hook_var_prefix}_TTS=true"
-            fi
-            ;;
-        4)
-            if [ "$TTS_PROVIDER" != "none" ]; then
-                eval "${hook_var_prefix}_ENABLED=true"
-                eval "${hook_var_prefix}_TTS=true"
-                select_notification_sound "$hook_var_prefix"
-            fi
             ;;
     esac
 }
-
-# Function to select notification sound
-select_notification_sound() {
-    local var_prefix="$1"
-    
-    echo ""
-    echo "Select notification sound:"
-    echo "1) Chime - Pleasant bell chime"
-    echo "2) Ping - Modern digital ping"
-    echo "3) Bell - Traditional notification bell"
-    echo "4) Whoosh - Smooth transition sound"
-    echo "5) Success - Positive completion sound"
-    printf "${YELLOW}Select sound (1-5) [1]: ${NC}"
-    
-    read sound_choice
-    sound_choice="${sound_choice:-1}"
-    
-    case "$sound_choice" in
-        1) eval "${var_prefix}_SOUND=chime" ;;
-        2) eval "${var_prefix}_SOUND=ping" ;;
-        3) eval "${var_prefix}_SOUND=bell" ;;
-        4) eval "${var_prefix}_SOUND=whoosh" ;;
-        5) eval "${var_prefix}_SOUND=success" ;;
-        *) eval "${var_prefix}_SOUND=chime" ;;
-    esac
-}
-
-# Initialize audio player variables
-AUDIO_PLAYER="none"
-AUDIO_PLAYER_ARGS=""
-WAV_PLAYER="none"
-WAV_PLAYER_ARGS=""
-FFMPEG_AVAILABLE="false"
 
 # Check if user wants to configure notifications
 if [ "$USE_DEFAULTS" = true ]; then
@@ -884,7 +1105,9 @@ if [ "$SETUP_NOTIFICATIONS" = true ]; then
     echo "✓ Notification system configured"
 else
     # Even if notifications are disabled, detect and save audio player info
-    detect_audio_player >/dev/null 2>&1
+    echo ""
+    echo "Detecting audio players for TTS support..."
+    detect_audio_player
     
     # Save audio player configuration for future use
     if [ -f "$SETTINGS_FILE" ] && command -v jq >/dev/null 2>&1; then
@@ -989,6 +1212,115 @@ fi
 
 # Read VERSION file
 VERSION=$(cat "$DIST_DIR/VERSION" 2>/dev/null || echo "unknown")
+
+echo ""
+echo "Step 12: Validating Installation"
+echo "--------------------------------"
+
+# Validate Obsidian MCP if configured
+if [ "$NOTES_TYPE" = "obsidian" ]; then
+    echo ""
+    echo -e "${YELLOW}⚠ Obsidian MCP Reminder:${NC}"
+    echo "To complete Obsidian integration:"
+    echo "1. Install MCP server: npm install -g @modelcontextprotocol/server-obsidian"
+    echo "2. Configure Claude Desktop (see documentation)"
+    echo "3. Restart Claude with MCP support"
+    echo "4. Verify with: claude api list (should show Obsidian tools)"
+    echo ""
+fi
+
+# Test TTS if Piper was installed
+if [ "$TTS_PROVIDER" = "piper" ] && [ -f "$PROJECT_ROOT/.piper/piper" ]; then
+    echo ""
+    echo "Testing Piper TTS audio..."
+    
+    # Test audio playback
+    if [ "$WAV_PLAYER" != "none" ]; then
+        # Use proper parameters for each audio player
+        case "$WAV_PLAYER" in
+            paplay)
+                echo "Testing orchestrator voice" | "$PROJECT_ROOT/.piper/piper" \
+                    --model "$PROJECT_ROOT/.piper/models/en_US-ryan-medium.onnx" \
+                    --output-raw 2>/dev/null | \
+                    paplay --raw --rate=22050 --format=s16le --channels=1 2>/dev/null
+                ;;
+            aplay)
+                echo "Testing orchestrator voice" | "$PROJECT_ROOT/.piper/piper" \
+                    --model "$PROJECT_ROOT/.piper/models/en_US-ryan-medium.onnx" \
+                    --output-raw 2>/dev/null | \
+                    aplay -q -r 22050 -f S16_LE -t raw -c 1 - 2>/dev/null
+                ;;
+            play)
+                echo "Testing orchestrator voice" | "$PROJECT_ROOT/.piper/piper" \
+                    --model "$PROJECT_ROOT/.piper/models/en_US-ryan-medium.onnx" \
+                    --output-raw 2>/dev/null | \
+                    play -q -t raw -r 22050 -e signed -b 16 -c 1 - 2>/dev/null
+                ;;
+            *)
+                echo "Testing orchestrator voice" | "$PROJECT_ROOT/.piper/piper" \
+                    --model "$PROJECT_ROOT/.piper/models/en_US-ryan-medium.onnx" \
+                    --output-raw 2>/dev/null | \
+                    $WAV_PLAYER $WAV_PLAYER_ARGS 2>/dev/null
+                ;;
+        esac
+        
+        if [ $? -eq 0 ]; then
+            echo "✓ Audio test successful!"
+        else
+            echo -e "${YELLOW}⚠ Audio test failed. Please check:${NC}"
+            echo "  - WSL2: Is PulseAudio running? (pulseaudio --start)"
+            echo "  - Are audio devices configured correctly?"
+            echo "  - Try: pactl info"
+        fi
+    else
+        echo -e "${YELLOW}⚠ No audio player found for testing${NC}"
+    fi
+fi
+
+# Verify settings
+echo ""
+echo "Verifying configuration..."
+if [ -f "$SETTINGS_FILE" ] && command -v jq >/dev/null 2>&1; then
+    TTS_CHECK=$(jq -r '.env.TTS_PROVIDER // "none"' "$SETTINGS_FILE")
+    AUDIO_CHECK=$(jq -r '.env.AUDIO_PLAYER // "none"' "$SETTINGS_FILE")
+    WAV_CHECK=$(jq -r '.env.WAV_PLAYER // "none"' "$SETTINGS_FILE")
+    NOTES_CHECK=$(jq -r '.env.NOTES_TYPE // "unknown"' "$SETTINGS_FILE")
+    
+    echo "- Session notes: $NOTES_CHECK"
+    echo "- TTS provider: $TTS_CHECK"
+    echo "- Audio player: $AUDIO_CHECK"
+    echo "- WAV player: $WAV_CHECK"
+    
+    # Check for configuration mismatches
+    NEEDS_FIX=false
+    
+    if [ "$TTS_PROVIDER" = "piper" ] && [ "$TTS_CHECK" != "piper" ]; then
+        echo -e "${RED}⚠ WARNING: TTS provider mismatch! Expected 'piper', found '$TTS_CHECK'${NC}"
+        NEEDS_FIX=true
+    fi
+    
+    if [ "$AUDIO_PLAYER" != "none" ] && [ "$AUDIO_CHECK" = "none" ]; then
+        echo -e "${RED}⚠ WARNING: Audio player not saved! Expected '$AUDIO_PLAYER', found 'none'${NC}"
+        NEEDS_FIX=true
+    fi
+    
+    if [ "$WAV_PLAYER" != "none" ] && [ "$WAV_CHECK" = "none" ]; then
+        echo -e "${RED}⚠ WARNING: WAV player not saved! Expected '$WAV_PLAYER', found 'none'${NC}"
+        NEEDS_FIX=true
+    fi
+    
+    # Fix all issues if needed
+    if [ "$NEEDS_FIX" = true ]; then
+        echo "Fixing configuration..."
+        tmp_file=$(mktemp)
+        jq ".env.TTS_PROVIDER = \"$TTS_PROVIDER\" |
+            .env.AUDIO_PLAYER = \"$AUDIO_PLAYER\" |
+            .env.AUDIO_PLAYER_ARGS = \"$AUDIO_PLAYER_ARGS\" |
+            .env.WAV_PLAYER = \"$WAV_PLAYER\" |
+            .env.WAV_PLAYER_ARGS = \"$WAV_PLAYER_ARGS\"" "$SETTINGS_FILE" > "$tmp_file" && mv "$tmp_file" "$SETTINGS_FILE"
+        echo "✓ Configuration fixed"
+    fi
+fi
 
 echo ""
 echo "=========================================="

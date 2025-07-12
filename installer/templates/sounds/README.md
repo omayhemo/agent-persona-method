@@ -4,11 +4,11 @@ This directory contains notification sound files for the AP Method notification 
 
 ## Sound Files
 
-- **chime.mp3** - Pleasant bell chime (1-2 seconds)
-- **ping.mp3** - Modern digital ping sound
-- **bell.mp3** - Traditional notification bell
-- **whoosh.mp3** - Smooth transition sound
-- **success.mp3** - Positive completion sound
+- **notification.mp3** - General notification and alert sound
+- **pre_tool.mp3** - Sound played before Claude uses a tool
+- **post_tool.mp3** - Sound played after Claude completes a tool
+- **stop.mp3** - Sound played when Claude stops/exits
+- **subagent_stop.mp3** - Sound played when a subagent completes
 
 ## Placeholder Files
 

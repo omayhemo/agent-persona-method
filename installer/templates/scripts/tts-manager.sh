@@ -265,6 +265,67 @@ clear_cache() {
     echo "Cache cleared"
 }
 
+# Diagnose audio issues
+diagnose_audio() {
+    echo "=== Audio System Diagnostics ==="
+    echo ""
+    
+    # Check OS
+    echo "Operating System:"
+    if grep -qi microsoft /proc/version 2>/dev/null; then
+        echo "- WSL2 detected"
+        echo "- WSLg PulseServer: ${PULSE_SERVER:-not set}"
+    else
+        echo "- Native Linux/macOS"
+    fi
+    echo ""
+    
+    # Check audio players
+    echo "Audio Players:"
+    for player in paplay aplay play afplay mpg123 ffplay; do
+        if command -v $player >/dev/null 2>&1; then
+            echo "- $player: ✓ installed"
+        else
+            echo "- $player: ✗ not found"
+        fi
+    done
+    echo ""
+    
+    # Check PulseAudio
+    if command -v pactl >/dev/null 2>&1; then
+        echo "PulseAudio Status:"
+        pactl info 2>/dev/null | grep -E "Server Name|Default Sink" || echo "- Unable to connect to PulseAudio"
+        echo ""
+    fi
+    
+    # Test audio playback
+    echo "Audio Playback Test:"
+    if [ -f /usr/share/sounds/alsa/Front_Center.wav ]; then
+        echo "- Testing system sound..."
+        paplay /usr/share/sounds/alsa/Front_Center.wav 2>/dev/null && echo "  ✓ paplay works" || echo "  ✗ paplay failed"
+        aplay /usr/share/sounds/alsa/Front_Center.wav 2>/dev/null && echo "  ✓ aplay works" || echo "  ✗ aplay failed"
+    else
+        echo "- No system test sound available"
+    fi
+    echo ""
+    
+    # Check TTS configuration
+    echo "TTS Configuration:"
+    echo "- TTS enabled: $(get_tts_setting "enabled" "true")"
+    echo "- TTS provider: $(get_tts_setting "provider" "none")"
+    echo "- Fallback provider: $(get_tts_setting "fallback_provider" "none")"
+    echo ""
+    
+    # WSL2 specific checks
+    if grep -qi microsoft /proc/version 2>/dev/null; then
+        echo "WSL2 Audio Tips:"
+        echo "- Ensure Windows audio is not muted"
+        echo "- Try: pulseaudio --start --log-target=syslog"
+        echo "- Check: ps aux | grep -E 'wslg|pulse'"
+        echo "- Test: speaker-test -t wav -c 2"
+    fi
+}
+
 # Show help
 show_help() {
     echo "TTS Manager - Text-to-Speech Management Tool"
@@ -277,6 +338,7 @@ show_help() {
     echo "  configure [provider]      - Configure a TTS provider"
     echo "  list                      - List available providers"
     echo "  clear-cache              - Clear audio cache"
+    echo "  diagnose                 - Diagnose audio system issues"
     echo "  help                     - Show this help"
     echo ""
     echo "Examples:"
@@ -301,6 +363,9 @@ case "${1:-help}" in
         ;;
     clear-cache)
         clear_cache
+        ;;
+    diagnose)
+        diagnose_audio
         ;;
     help|--help|-h)
         show_help
