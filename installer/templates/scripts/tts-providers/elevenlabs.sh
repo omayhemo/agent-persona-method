@@ -45,7 +45,7 @@ info() {
 # Get API key from various sources
 get_api_key() {
     if [ -f "$SETTINGS_FILE" ] && command -v jq >/dev/null 2>&1; then
-        local stored_value=$(jq -r '.ap.tts.providers.elevenlabs.api_key // ""' "$SETTINGS_FILE" 2>/dev/null)
+        local stored_value=$(jq -r '.env.TTS_ELEVENLABS_API_KEY // ""' "$SETTINGS_FILE" 2>/dev/null)
         
         case "$stored_value" in
             '${ELEVENLABS_API_KEY}')
@@ -176,7 +176,7 @@ speak() {
     # Get model from settings or use default
     local model="eleven_monolingual_v1"
     if [ -f "$SETTINGS_FILE" ] && command -v jq >/dev/null 2>&1; then
-        local custom_model=$(jq -r '.ap.tts.providers.elevenlabs.model // ""' "$SETTINGS_FILE" 2>/dev/null)
+        local custom_model=$(jq -r '.env.TTS_ELEVENLABS_MODEL // ""' "$SETTINGS_FILE" 2>/dev/null)
         if [ -n "$custom_model" ] && [ "$custom_model" != "null" ]; then
             model="$custom_model"
         fi
@@ -312,17 +312,17 @@ update_settings() {
     
     # Create minimal settings if doesn't exist
     if [ ! -f "$SETTINGS_FILE" ]; then
-        echo '{"ap": {"tts": {}}}' > "$SETTINGS_FILE"
+        echo '{"env": {}}' > "$SETTINGS_FILE"
     fi
     
     # Update settings using jq if available
     if command -v jq >/dev/null 2>&1; then
         # Update API key
         local tmp_file=$(mktemp)
-        jq ".ap.tts.providers.elevenlabs.api_key = \"$api_key_ref\"" "$SETTINGS_FILE" > "$tmp_file" && mv "$tmp_file" "$SETTINGS_FILE"
+        jq ".env.TTS_ELEVENLABS_API_KEY = \"$api_key_ref\"" "$SETTINGS_FILE" > "$tmp_file" && mv "$tmp_file" "$SETTINGS_FILE"
         
         # Set provider to elevenlabs
-        jq '.ap.tts.provider = "elevenlabs"' "$SETTINGS_FILE" > "$tmp_file" && mv "$tmp_file" "$SETTINGS_FILE"
+        jq '.env.TTS_PROVIDER = "elevenlabs"' "$SETTINGS_FILE" > "$tmp_file" && mv "$tmp_file" "$SETTINGS_FILE"
         
         # Pretty print
         jq '.' "$SETTINGS_FILE" > "$tmp_file" && mv "$tmp_file" "$SETTINGS_FILE"

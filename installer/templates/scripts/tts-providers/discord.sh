@@ -27,7 +27,7 @@ info() {
 # Get webhook URL
 get_webhook_url() {
     if [ -f "$SETTINGS_FILE" ] && command -v jq >/dev/null 2>&1; then
-        local url=$(jq -r '.ap.tts.providers.discord.webhook_url // ""' "$SETTINGS_FILE" 2>/dev/null)
+        local url=$(jq -r '.env.TTS_DISCORD_WEBHOOK_URL // ""' "$SETTINGS_FILE" 2>/dev/null)
         if [ -n "$url" ] && [ "$url" != "null" ]; then
             # Expand environment variables
             eval echo "$url"
@@ -99,7 +99,7 @@ speak() {
     # Get TTS setting
     local tts_enabled="true"
     if [ -f "$SETTINGS_FILE" ] && command -v jq >/dev/null 2>&1; then
-        tts_enabled=$(jq -r '.ap.tts.providers.discord.tts_enabled // "true"' "$SETTINGS_FILE" 2>/dev/null)
+        tts_enabled=$(jq -r '.env.TTS_DISCORD_TTS_ENABLED // "true"' "$SETTINGS_FILE" 2>/dev/null)
     fi
     
     # Get persona info
@@ -254,12 +254,12 @@ configure() {
     # Update settings
     mkdir -p "$(dirname "$SETTINGS_FILE")"
     if [ ! -f "$SETTINGS_FILE" ]; then
-        echo '{"ap": {"tts": {}}}' > "$SETTINGS_FILE"
+        echo '{"env": {}}' > "$SETTINGS_FILE"
     fi
     
     if command -v jq >/dev/null 2>&1; then
         local tmp_file=$(mktemp)
-        jq ".ap.tts.providers.discord.webhook_url = \"$webhook_ref\" | .ap.tts.providers.discord.tts_enabled = $tts_enabled" "$SETTINGS_FILE" > "$tmp_file" && mv "$tmp_file" "$SETTINGS_FILE"
+        jq ".env.TTS_DISCORD_WEBHOOK_URL = \"$webhook_ref\" | .env.TTS_DISCORD_TTS_ENABLED = \"$tts_enabled\"" "$SETTINGS_FILE" > "$tmp_file" && mv "$tmp_file" "$SETTINGS_FILE"
         
         # Pretty print
         jq '.' "$SETTINGS_FILE" > "$tmp_file" && mv "$tmp_file" "$SETTINGS_FILE"

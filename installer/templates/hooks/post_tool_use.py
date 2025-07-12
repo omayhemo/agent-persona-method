@@ -56,6 +56,23 @@ def main():
         else:
             logger.warning(f"Tool {tool_name} failed")
         
+        # Call notification manager for audio/TTS notifications
+        import subprocess
+        import os
+        
+        # Get notification manager path
+        ap_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        notification_manager = os.path.join(ap_root, 'agents', 'scripts', 'notification-manager.sh')
+        
+        if os.path.exists(notification_manager):
+            # Call notification manager
+            status = "completed" if success else "failed"
+            subprocess.run([
+                notification_manager, 'notify', 'post_tool',
+                context.get('persona', 'orchestrator'),
+                f"Tool {tool_name} {status}"
+            ], capture_output=True)
+        
         # Return success
         sys.exit(0)
         

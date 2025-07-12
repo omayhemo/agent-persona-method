@@ -15,7 +15,7 @@ SETTINGS_FILE="$PROJECT_ROOT/.claude/settings.json"
 # Get Piper directory from settings or default
 get_piper_dir() {
     if [ -f "$SETTINGS_FILE" ] && command -v jq >/dev/null 2>&1; then
-        local dir=$(jq -r '.ap.tts.providers.piper.install_path // ""' "$SETTINGS_FILE" 2>/dev/null)
+        local dir=$(jq -r '.env.TTS_PIPER_INSTALL_PATH // ""' "$SETTINGS_FILE" 2>/dev/null)
         if [ -n "$dir" ] && [ "$dir" != "null" ]; then
             # Expand variables
             dir="${dir//\${PROJECT_ROOT}/$PROJECT_ROOT}"

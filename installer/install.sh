@@ -618,6 +618,286 @@ if [ -f "$SETTINGS_FILE" ] && command -v jq >/dev/null 2>&1; then
 fi
 
 echo ""
+echo "Step 8a: Configuring Notification System"
+echo "----------------------------------------"
+
+# Function to detect available audio players
+detect_audio_player() {
+    echo "Detecting available audio players..."
+    
+    # Check for MP3 players
+    if command -v mpg123 >/dev/null 2>&1; then
+        AUDIO_PLAYER="mpg123"
+        AUDIO_PLAYER_ARGS="-q"
+        echo "✓ Found mpg123 for MP3 playback"
+    elif command -v play >/dev/null 2>&1; then
+        AUDIO_PLAYER="play"
+        AUDIO_PLAYER_ARGS="-q"
+        echo "✓ Found sox/play for audio playback"
+    elif command -v afplay >/dev/null 2>&1; then
+        AUDIO_PLAYER="afplay"
+        AUDIO_PLAYER_ARGS=""
+        echo "✓ Found afplay (macOS) for audio playback"
+    elif command -v ffplay >/dev/null 2>&1; then
+        AUDIO_PLAYER="ffplay"
+        AUDIO_PLAYER_ARGS="-nodisp -autoexit -loglevel quiet"
+        echo "✓ Found ffplay for audio playback"
+    else
+        AUDIO_PLAYER="none"
+        AUDIO_PLAYER_ARGS=""
+        echo -e "${YELLOW}⚠ No MP3 player found. Audio notifications will not work.${NC}"
+        echo ""
+        echo "To enable audio notifications, install one of:"
+        echo "  - Linux: sudo apt-get install mpg123"
+        echo "  - macOS: brew install mpg123"
+        echo "  - Alternative: sudo apt-get install sox"
+    fi
+    
+    # Check for WAV players (fallback)
+    if [ "$AUDIO_PLAYER" = "none" ] && command -v aplay >/dev/null 2>&1; then
+        WAV_PLAYER="aplay"
+        WAV_PLAYER_ARGS="-q"
+        echo "✓ Found aplay for WAV playback (limited support)"
+    else
+        WAV_PLAYER="none"
+        WAV_PLAYER_ARGS=""
+    fi
+    
+    # Check for ffmpeg (for conversion)
+    if command -v ffmpeg >/dev/null 2>&1; then
+        FFMPEG_AVAILABLE="true"
+        echo "✓ Found ffmpeg for audio conversion"
+    else
+        FFMPEG_AVAILABLE="false"
+    fi
+}
+
+# Function to configure individual hook
+configure_hook() {
+    local hook_name="$1"
+    local hook_display="$2"
+    local hook_var_prefix="$3"
+    
+    echo ""
+    echo "Configuring $hook_display hook:"
+    echo "1) No notification"
+    echo "2) Audible notification sound only"
+    if [ "$TTS_PROVIDER" != "none" ]; then
+        echo "3) TTS only"
+        echo "4) Both audible notification sound and TTS"
+        printf "${YELLOW}Select option (1-4) [1]: ${NC}"
+    else
+        printf "${YELLOW}Select option (1-2) [1]: ${NC}"
+    fi
+    
+    read hook_option
+    hook_option="${hook_option:-1}"
+    
+    # Set variables based on selection
+    eval "${hook_var_prefix}_ENABLED=false"
+    eval "${hook_var_prefix}_SOUND=none"
+    eval "${hook_var_prefix}_TTS=false"
+    
+    case "$hook_option" in
+        2)
+            eval "${hook_var_prefix}_ENABLED=true"
+            select_notification_sound "$hook_var_prefix"
+            ;;
+        3)
+            if [ "$TTS_PROVIDER" != "none" ]; then
+                eval "${hook_var_prefix}_ENABLED=true"
+                eval "${hook_var_prefix}_TTS=true"
+            fi
+            ;;
+        4)
+            if [ "$TTS_PROVIDER" != "none" ]; then
+                eval "${hook_var_prefix}_ENABLED=true"
+                eval "${hook_var_prefix}_TTS=true"
+                select_notification_sound "$hook_var_prefix"
+            fi
+            ;;
+    esac
+}
+
+# Function to select notification sound
+select_notification_sound() {
+    local var_prefix="$1"
+    
+    echo ""
+    echo "Select notification sound:"
+    echo "1) Chime - Pleasant bell chime"
+    echo "2) Ping - Modern digital ping"
+    echo "3) Bell - Traditional notification bell"
+    echo "4) Whoosh - Smooth transition sound"
+    echo "5) Success - Positive completion sound"
+    printf "${YELLOW}Select sound (1-5) [1]: ${NC}"
+    
+    read sound_choice
+    sound_choice="${sound_choice:-1}"
+    
+    case "$sound_choice" in
+        1) eval "${var_prefix}_SOUND=chime" ;;
+        2) eval "${var_prefix}_SOUND=ping" ;;
+        3) eval "${var_prefix}_SOUND=bell" ;;
+        4) eval "${var_prefix}_SOUND=whoosh" ;;
+        5) eval "${var_prefix}_SOUND=success" ;;
+        *) eval "${var_prefix}_SOUND=chime" ;;
+    esac
+}
+
+# Initialize audio player variables
+AUDIO_PLAYER="none"
+AUDIO_PLAYER_ARGS=""
+WAV_PLAYER="none"
+WAV_PLAYER_ARGS=""
+FFMPEG_AVAILABLE="false"
+
+# Check if user wants to configure notifications
+if [ "$USE_DEFAULTS" = true ]; then
+    SETUP_NOTIFICATIONS=false
+else
+    printf "${YELLOW}Would you like to setup audible notifications? (Y/n): ${NC}"
+    read -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Nn]$ ]]; then
+        SETUP_NOTIFICATIONS=false
+    else
+        SETUP_NOTIFICATIONS=true
+    fi
+fi
+
+if [ "$SETUP_NOTIFICATIONS" = true ]; then
+    # Detect audio players first
+    echo ""
+    detect_audio_player
+    
+    # Warn if no audio player available
+    if [ "$AUDIO_PLAYER" = "none" ] && [ "$WAV_PLAYER" = "none" ]; then
+        echo ""
+        echo -e "${YELLOW}WARNING: No audio player detected!${NC}"
+        echo "Audio notifications will not work without an audio player."
+        echo ""
+        echo "Would you like to:"
+        echo "1) Install mpg123 now (recommended)"
+        echo "2) Continue without audio support"
+        echo "3) Cancel notification setup"
+        printf "${YELLOW}Select option (1-3) [2]: ${NC}"
+        read install_choice
+        install_choice="${install_choice:-2}"
+        
+        case "$install_choice" in
+            1)
+                echo ""
+                echo "Installing mpg123..."
+                if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+                    if command -v apt-get >/dev/null 2>&1; then
+                        sudo apt-get update && sudo apt-get install -y mpg123
+                    elif command -v yum >/dev/null 2>&1; then
+                        sudo yum install -y mpg123
+                    elif command -v pacman >/dev/null 2>&1; then
+                        sudo pacman -S mpg123
+                    else
+                        echo -e "${RED}Unable to install mpg123 automatically${NC}"
+                        echo "Please install manually: sudo apt-get install mpg123"
+                    fi
+                elif [[ "$OSTYPE" == "darwin"* ]]; then
+                    if command -v brew >/dev/null 2>&1; then
+                        brew install mpg123
+                    else
+                        echo -e "${RED}Unable to install mpg123 automatically${NC}"
+                        echo "Please install Homebrew first: https://brew.sh"
+                    fi
+                fi
+                # Re-detect after installation
+                detect_audio_player
+                ;;
+            3)
+                SETUP_NOTIFICATIONS=false
+                ;;
+        esac
+    fi
+fi
+
+if [ "$SETUP_NOTIFICATIONS" = true ]; then
+    # Copy notification sounds
+    echo ""
+    echo "Installing notification sounds..."
+    mkdir -p "$AP_ROOT/sounds"
+    if [ -d "$INSTALLER_DIR/templates/sounds" ]; then
+        cp "$INSTALLER_DIR/templates/sounds"/*.mp3 "$AP_ROOT/sounds/" 2>/dev/null || true
+        chmod 644 "$AP_ROOT/sounds"/*.mp3 2>/dev/null || true
+    fi
+    
+    # Copy notification manager
+    if [ -f "$INSTALLER_DIR/templates/scripts/notification-manager.sh" ]; then
+        cp "$INSTALLER_DIR/templates/scripts/notification-manager.sh" "$AP_ROOT/scripts/"
+        chmod +x "$AP_ROOT/scripts/notification-manager.sh"
+    fi
+    
+    # Explain hooks
+    echo ""
+    echo "Audible notifications are available on 5 hooks:"
+    echo "- Notification: General notifications and alerts"
+    echo "- Pre-tool: Before Claude uses a tool"
+    echo "- Post-tool: After Claude completes a tool"
+    echo "- Stop: When Claude stops/exits"
+    echo "- Subagent Stop: When a subagent completes"
+    echo ""
+    echo "Each hook can be configured independently."
+    
+    # Configure each hook
+    configure_hook "notification" "Notification" "HOOK_NOTIFICATION"
+    configure_hook "pre_tool" "Pre-tool" "HOOK_PRE_TOOL"
+    configure_hook "post_tool" "Post-tool" "HOOK_POST_TOOL"
+    configure_hook "stop" "Stop" "HOOK_STOP"
+    configure_hook "subagent_stop" "Subagent Stop" "HOOK_SUBAGENT_STOP"
+    
+    # Save notification configuration to settings
+    echo ""
+    echo "Saving notification configuration..."
+    
+    # Update settings.json with notification config
+    if [ -f "$SETTINGS_FILE" ] && command -v jq >/dev/null 2>&1; then
+        tmp_file=$(mktemp)
+        jq ".env.AUDIO_PLAYER = \"$AUDIO_PLAYER\" |
+            .env.AUDIO_PLAYER_ARGS = \"$AUDIO_PLAYER_ARGS\" |
+            .env.WAV_PLAYER = \"$WAV_PLAYER\" |
+            .env.WAV_PLAYER_ARGS = \"$WAV_PLAYER_ARGS\" |
+            .env.FFMPEG_AVAILABLE = \"$FFMPEG_AVAILABLE\" |
+            .env.HOOK_NOTIFICATION_ENABLED = \"$HOOK_NOTIFICATION_ENABLED\" |
+            .env.HOOK_NOTIFICATION_SOUND = \"$HOOK_NOTIFICATION_SOUND\" |
+            .env.HOOK_NOTIFICATION_TTS = \"$HOOK_NOTIFICATION_TTS\" |
+            .env.HOOK_PRE_TOOL_ENABLED = \"$HOOK_PRE_TOOL_ENABLED\" |
+            .env.HOOK_PRE_TOOL_SOUND = \"$HOOK_PRE_TOOL_SOUND\" |
+            .env.HOOK_PRE_TOOL_TTS = \"$HOOK_PRE_TOOL_TTS\" |
+            .env.HOOK_POST_TOOL_ENABLED = \"$HOOK_POST_TOOL_ENABLED\" |
+            .env.HOOK_POST_TOOL_SOUND = \"$HOOK_POST_TOOL_SOUND\" |
+            .env.HOOK_POST_TOOL_TTS = \"$HOOK_POST_TOOL_TTS\" |
+            .env.HOOK_STOP_ENABLED = \"$HOOK_STOP_ENABLED\" |
+            .env.HOOK_STOP_SOUND = \"$HOOK_STOP_SOUND\" |
+            .env.HOOK_STOP_TTS = \"$HOOK_STOP_TTS\" |
+            .env.HOOK_SUBAGENT_STOP_ENABLED = \"$HOOK_SUBAGENT_STOP_ENABLED\" |
+            .env.HOOK_SUBAGENT_STOP_SOUND = \"$HOOK_SUBAGENT_STOP_SOUND\" |
+            .env.HOOK_SUBAGENT_STOP_TTS = \"$HOOK_SUBAGENT_STOP_TTS\"" "$SETTINGS_FILE" > "$tmp_file" && mv "$tmp_file" "$SETTINGS_FILE"
+    fi
+    
+    echo "✓ Notification system configured"
+else
+    # Even if notifications are disabled, detect and save audio player info
+    detect_audio_player >/dev/null 2>&1
+    
+    # Save audio player configuration for future use
+    if [ -f "$SETTINGS_FILE" ] && command -v jq >/dev/null 2>&1; then
+        tmp_file=$(mktemp)
+        jq ".env.AUDIO_PLAYER = \"$AUDIO_PLAYER\" |
+            .env.AUDIO_PLAYER_ARGS = \"$AUDIO_PLAYER_ARGS\" |
+            .env.WAV_PLAYER = \"$WAV_PLAYER\" |
+            .env.WAV_PLAYER_ARGS = \"$WAV_PLAYER_ARGS\" |
+            .env.FFMPEG_AVAILABLE = \"$FFMPEG_AVAILABLE\"" "$SETTINGS_FILE" > "$tmp_file" && mv "$tmp_file" "$SETTINGS_FILE"
+    fi
+fi
+
+echo ""
 echo "Step 9: Setting Up Python Support (Optional)"
 echo "-------------------------------------------"
 

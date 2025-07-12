@@ -25,10 +25,18 @@ get_tts_setting() {
     local key="$1"
     local default="$2"
     
+    # Map old keys to new env variable names
+    case "$key" in
+        "enabled") env_key="TTS_ENABLED" ;;
+        "provider") env_key="TTS_PROVIDER" ;;
+        "fallback_provider") env_key="TTS_FALLBACK_PROVIDER" ;;
+        *) env_key="TTS_$(echo "$key" | tr '[:lower:]' '[:upper:]')" ;;
+    esac
+    
     if [ -f "$SETTINGS_FILE" ]; then
         # First try jq, fall back to grep
         if command -v jq >/dev/null 2>&1; then
-            local value=$(jq -r ".ap.tts.$key // \"$default\"" "$SETTINGS_FILE" 2>/dev/null)
+            local value=$(jq -r ".env.$env_key // \"$default\"" "$SETTINGS_FILE" 2>/dev/null)
             if [ "$value" != "null" ] && [ -n "$value" ]; then
                 echo "$value"
             else
@@ -48,8 +56,11 @@ get_provider_setting() {
     local key="$2"
     local default="$3"
     
+    # Map provider and key to env variable name
+    local env_key="TTS_$(echo "$provider" | tr '[:lower:]' '[:upper:]')_$(echo "$key" | tr '[:lower:]' '[:upper:]')"
+    
     if [ -f "$SETTINGS_FILE" ] && command -v jq >/dev/null 2>&1; then
-        local value=$(jq -r ".ap.tts.providers.$provider.$key // \"$default\"" "$SETTINGS_FILE" 2>/dev/null)
+        local value=$(jq -r ".env.$env_key // \"$default\"" "$SETTINGS_FILE" 2>/dev/null)
         if [ "$value" != "null" ] && [ -n "$value" ]; then
             echo "$value"
         else
@@ -66,8 +77,11 @@ get_voice_mapping() {
     local provider="$2"
     local default="$3"
     
+    # Map to env variable name: TTS_VOICE_<PERSONA>_<PROVIDER>
+    local env_key="TTS_VOICE_$(echo "$persona" | tr '[:lower:]' '[:upper:]')_$(echo "$provider" | tr '[:lower:]' '[:upper:]')"
+    
     if [ -f "$SETTINGS_FILE" ] && command -v jq >/dev/null 2>&1; then
-        local value=$(jq -r ".ap.tts.voices.$persona.$provider // \"$default\"" "$SETTINGS_FILE" 2>/dev/null)
+        local value=$(jq -r ".env.$env_key // \"$default\"" "$SETTINGS_FILE" 2>/dev/null)
         if [ "$value" != "null" ] && [ -n "$value" ]; then
             echo "$value"
         else

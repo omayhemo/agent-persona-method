@@ -49,6 +49,22 @@ def main():
         # For now, just log and allow all tools
         logger.info(f"Allowing tool: {tool_name}")
         
+        # Call notification manager for audio/TTS notifications
+        import subprocess
+        import os
+        
+        # Get notification manager path
+        ap_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        notification_manager = os.path.join(ap_root, 'agents', 'scripts', 'notification-manager.sh')
+        
+        if os.path.exists(notification_manager):
+            # Call notification manager
+            subprocess.run([
+                notification_manager, 'notify', 'pre_tool',
+                context.get('persona', 'orchestrator'),
+                f"Using tool: {tool_name}"
+            ], capture_output=True)
+        
         # Return success (allow tool execution)
         sys.exit(0)
         

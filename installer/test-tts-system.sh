@@ -37,14 +37,10 @@ chmod +x "$AP_ROOT/voice"/*.sh
 echo "Creating test settings..."
 cat > "$PROJECT_ROOT/.claude/settings.json" << EOF
 {
-  "ap": {
-    "tts": {
-      "enabled": true,
-      "provider": "none",
-      "fallback_provider": "none",
-      "providers": {},
-      "voices": {}
-    }
+  "env": {
+    "TTS_ENABLED": "true",
+    "TTS_PROVIDER": "none",
+    "TTS_FALLBACK_PROVIDER": "none"
   }
 }
 EOF
@@ -107,11 +103,11 @@ echo -e "${BLUE}Test 7: Settings Update${NC}"
 if command -v jq >/dev/null 2>&1; then
     # Update provider in settings
     tmp_file=$(mktemp)
-    jq '.ap.tts.provider = "system"' "$PROJECT_ROOT/.claude/settings.json" > "$tmp_file" && \
+    jq '.env.TTS_PROVIDER = "system"' "$PROJECT_ROOT/.claude/settings.json" > "$tmp_file" && \
         mv "$tmp_file" "$PROJECT_ROOT/.claude/settings.json"
     
     # Check if update worked
-    provider=$(jq -r '.ap.tts.provider' "$PROJECT_ROOT/.claude/settings.json")
+    provider=$(jq -r '.env.TTS_PROVIDER' "$PROJECT_ROOT/.claude/settings.json")
     if [ "$provider" = "system" ]; then
         echo -e "${GREEN}✓ Settings update working${NC}"
     else

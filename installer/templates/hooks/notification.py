@@ -59,6 +59,22 @@ def main():
         # elif sys.platform == "linux":
         #     os.system(f'notify-send "Claude Code" "{message}"')
         
+        # Call notification manager for audio/TTS notifications
+        import subprocess
+        import os
+        
+        # Get notification manager path
+        ap_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        notification_manager = os.path.join(ap_root, 'agents', 'scripts', 'notification-manager.sh')
+        
+        if os.path.exists(notification_manager):
+            # Call notification manager
+            subprocess.run([
+                notification_manager, 'notify', 'notification',
+                context.get('persona', 'orchestrator'),
+                f"{level}: {message}. {context.get('details', '')}"
+            ], capture_output=True)
+        
         # Return success
         sys.exit(0)
         

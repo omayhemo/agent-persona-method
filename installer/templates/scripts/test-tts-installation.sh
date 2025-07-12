@@ -25,15 +25,15 @@ if [ -f "$SETTINGS_FILE" ]; then
         echo "   ✓ jq is available"
         
         # Extract TTS settings
-        TTS_ENABLED=$(jq -r '.ap.tts.enabled // "false"' "$SETTINGS_FILE")
-        TTS_PROVIDER=$(jq -r '.ap.tts.provider // "none"' "$SETTINGS_FILE")
+        TTS_ENABLED=$(jq -r '.env.TTS_ENABLED // "false"' "$SETTINGS_FILE")
+        TTS_PROVIDER=$(jq -r '.env.TTS_PROVIDER // "none"' "$SETTINGS_FILE")
         
         echo "   - TTS enabled: $TTS_ENABLED"
         echo "   - TTS provider: $TTS_PROVIDER"
         
         # Check provider-specific settings
         if [ "$TTS_PROVIDER" = "elevenlabs" ]; then
-            API_KEY_REF=$(jq -r '.ap.tts.providers.elevenlabs.api_key // ""' "$SETTINGS_FILE")
+            API_KEY_REF=$(jq -r '.env.TTS_ELEVENLABS_API_KEY // ""' "$SETTINGS_FILE")
             if [ -n "$API_KEY_REF" ]; then
                 echo "   - ElevenLabs API key: configured (${API_KEY_REF:0:20}...)"
                 

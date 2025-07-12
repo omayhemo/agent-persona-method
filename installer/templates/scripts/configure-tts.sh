@@ -30,9 +30,9 @@ show_current_config() {
         echo ""
         echo "Current settings:"
         if [ -f "$PROJECT_ROOT/.claude/settings.json" ] && command -v jq >/dev/null 2>&1; then
-            echo "- TTS Enabled: $(jq -r '.ap.tts.enabled // "true"' "$PROJECT_ROOT/.claude/settings.json")"
-            echo "- Provider: $(jq -r '.ap.tts.provider // "auto"' "$PROJECT_ROOT/.claude/settings.json")"
-            echo "- Fallback: $(jq -r '.ap.tts.fallback_provider // "none"' "$PROJECT_ROOT/.claude/settings.json")"
+            echo "- TTS Enabled: $(jq -r '.env.TTS_ENABLED // "true"' "$PROJECT_ROOT/.claude/settings.json")"
+            echo "- Provider: $(jq -r '.env.TTS_PROVIDER // "auto"' "$PROJECT_ROOT/.claude/settings.json")"
+            echo "- Fallback: $(jq -r '.env.TTS_FALLBACK_PROVIDER // "none"' "$PROJECT_ROOT/.claude/settings.json")"
         fi
     else
         echo -e "${RED}TTS Manager not found!${NC}"
@@ -139,7 +139,7 @@ update_provider_setting() {
         
         if [[ $REPLY =~ ^[Yy]$ ]]; then
             local tmp_file=$(mktemp)
-            jq ".ap.tts.provider = \"$provider\"" "$PROJECT_ROOT/.claude/settings.json" > "$tmp_file" && \
+            jq ".env.TTS_PROVIDER = \"$provider\"" "$PROJECT_ROOT/.claude/settings.json" > "$tmp_file" && \
                 mv "$tmp_file" "$PROJECT_ROOT/.claude/settings.json"
             echo -e "${GREEN}✓ Default provider set to: $provider${NC}"
         fi
@@ -204,7 +204,7 @@ test_tts_menu() {
 # Toggle TTS on/off
 toggle_tts() {
     if [ -f "$PROJECT_ROOT/.claude/settings.json" ] && command -v jq >/dev/null 2>&1; then
-        local current=$(jq -r '.ap.tts.enabled // "true"' "$PROJECT_ROOT/.claude/settings.json")
+        local current=$(jq -r '.env.TTS_ENABLED // "true"' "$PROJECT_ROOT/.claude/settings.json")
         local new_value="false"
         
         if [ "$current" = "false" ]; then
@@ -212,7 +212,7 @@ toggle_tts() {
         fi
         
         local tmp_file=$(mktemp)
-        jq ".ap.tts.enabled = $new_value" "$PROJECT_ROOT/.claude/settings.json" > "$tmp_file" && \
+        jq ".env.TTS_ENABLED = \"$new_value\"" "$PROJECT_ROOT/.claude/settings.json" > "$tmp_file" && \
             mv "$tmp_file" "$PROJECT_ROOT/.claude/settings.json"
         
         if [ "$new_value" = "true" ]; then

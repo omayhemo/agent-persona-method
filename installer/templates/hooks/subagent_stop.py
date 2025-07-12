@@ -76,6 +76,23 @@ def main():
         # with open(results_file, 'w') as f:
         #     json.dump(existing_results, f, indent=2)
         
+        # Call notification manager for audio/TTS notifications
+        import subprocess
+        import os
+        
+        # Get notification manager path
+        ap_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        notification_manager = os.path.join(ap_root, 'agents', 'scripts', 'notification-manager.sh')
+        
+        if os.path.exists(notification_manager):
+            # Call notification manager
+            status_text = "completed successfully" if success else "failed"
+            subprocess.run([
+                notification_manager, 'notify', 'subagent_stop',
+                context.get('persona', 'orchestrator'),
+                f"Subagent {status_text}: {task_description}"
+            ], capture_output=True)
+        
         # Return success
         sys.exit(0)
         

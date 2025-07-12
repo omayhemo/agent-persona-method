@@ -30,7 +30,7 @@ echo "Provider dir exists: $([ -d "$PROVIDER_DIR" ] && echo "yes" || echo "no")"
 
 # Get provider from settings
 if [ -f "$SETTINGS_FILE" ] && command -v jq >/dev/null 2>&1; then
-    PROVIDER=$(jq -r '.ap.tts.provider // "none"' "$SETTINGS_FILE" 2>/dev/null)
+    PROVIDER=$(jq -r '.env.TTS_PROVIDER // "none"' "$SETTINGS_FILE" 2>/dev/null)
     echo "Provider from settings: $PROVIDER" >> "$DEBUG_LOG"
 else
     PROVIDER="none"
@@ -39,7 +39,7 @@ fi
 
 # Check if enabled
 if [ -f "$SETTINGS_FILE" ] && command -v jq >/dev/null 2>&1; then
-    TTS_ENABLED=$(jq -r '.ap.tts.enabled // "true"' "$SETTINGS_FILE" 2>/dev/null)
+    TTS_ENABLED=$(jq -r '.env.TTS_ENABLED // "true"' "$SETTINGS_FILE" 2>/dev/null)
     echo "TTS enabled: $TTS_ENABLED" >> "$DEBUG_LOG"
 else
     TTS_ENABLED="true"

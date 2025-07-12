@@ -37,14 +37,15 @@ AP Method Manager v1.0.0
 Usage: $(basename "$0") <command> [options]
 
 Commands:
-    update          Check for and install updates
-    uninstall       Remove AP Method from project
-    verify          Verify installation integrity
-    repair          Repair corrupted installation
-    rollback        Rollback to previous version
-    version         Show current version
-    configure-tts   Configure Text-to-Speech settings
-    help            Show this help message
+    update                    Check for and install updates
+    uninstall                 Remove AP Method from project
+    verify                    Verify installation integrity
+    repair                    Repair corrupted installation
+    rollback                  Rollback to previous version
+    version                   Show current version
+    configure-tts             Configure Text-to-Speech settings
+    configure-notifications   Configure notification sounds and alerts
+    help                      Show this help message
 
 Examples:
     $(basename "$0") update
@@ -345,6 +346,25 @@ case "${1:-help}" in
             bash "$SCRIPT_DIR/configure-tts.sh" "$2"
         else
             echo -e "${RED}TTS configuration utility not found${NC}"
+            exit 1
+        fi
+        ;;
+    configure-notifications)
+        echo -e "${BLUE}Configuring notification settings...${NC}"
+        # Run notification configuration wizard
+        if [ -f "$SCRIPT_DIR/notification-manager.sh" ]; then
+            # First check if audio player is available
+            bash "$SCRIPT_DIR/notification-manager.sh" install-audio-player
+            echo ""
+            echo "You can test notifications with:"
+            echo "  $SCRIPT_DIR/notification-manager.sh test [hook_name]"
+            echo ""
+            echo "To manually update notification settings, edit:"
+            echo "  $PROJECT_ROOT/.claude/settings.json"
+            echo ""
+            echo "Available hooks: notification, pre_tool, post_tool, stop, subagent_stop"
+        else
+            echo -e "${RED}Notification manager not found${NC}"
             exit 1
         fi
         ;;
