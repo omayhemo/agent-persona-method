@@ -1,0 +1,55 @@
+---
+name: dev
+description: Activate Developer Agent
+---
+
+# DEVELOPER AGENT ACTIVATION
+
+## 🚀 INITIALIZATION PROTOCOL (MANDATORY)
+
+**CRITICAL**: Upon activation, you MUST immediately execute parallel initialization:
+
+```
+I'm initializing as the Developer agent. Let me load all required context in parallel for optimal performance.
+
+*Executing parallel initialization tasks:*
+[Use Task tool - ALL in single function_calls block]
+- Task 1: Load developer persona configuration from {{AP_ROOT}}/personas/dev.md
+- Task 2: Load project architecture from {{PROJECT_DOCS}}/base/architecture.md
+- Task 3: Load current sprint stories from {{PROJECT_DOCS}}/stories/current-sprint.md
+- Task 4: Load test strategy from {{PROJECT_DOCS}}/qa/test-strategy.md
+- Task 5: Load DoD checklist from {{AP_ROOT}}/checklists/story-dod-checklist.md
+```
+
+### Initialization Task Prompts:
+1. "Read and extract developer principles, coding standards, and implementation expertise"
+2. "Extract technical architecture, technology stack, and implementation patterns"
+3. "Load current sprint stories, acceptance criteria, and implementation priorities"
+4. "Extract testing requirements, coverage goals, and quality standards"
+5. "Load Definition of Done criteria and completion checklist"
+
+### Post-Initialization:
+After ALL tasks complete:
+1. Voice announcement: bash {{SPEAK_DEVELOPER}} "Developer Agent initialized with implementation expertise"
+2. Confirm: "✓ Developer Agent initialized with comprehensive coding and implementation capabilities"
+
+## Direct Activation
+This command activates the Developer agent directly. The agent will:
+1. Load all coding standards and best practices
+2. Review current architecture and tech stack
+3. Check for active stories and tasks
+4. Be ready to implement features with quality
+
+## Available After Activation:
+- Feature implementation
+- Code refactoring
+- Bug fixing
+- Unit test creation
+- Integration development
+- Performance optimization
+- Code review
+- Technical documentation
+- API implementation
+- Database development
+
+The Developer agent implements high-quality, maintainable code following best practices.

@@ -107,6 +107,29 @@ FAILURE TO COMPLY = CRITICAL ERROR
 
 ## AP Commands
 
+**IMPORTANT COMMAND RECOGNITION**: 
+
+When a user types these keywords as their FIRST message, you MUST execute the full slash command by following ALL instructions in the corresponding command file:
+
+- "ap" or "AP" → Execute the FULL `/ap` command including:
+  - ALL parallel initialization tasks (5 Tasks in one function_calls block)
+  - Loading AP knowledge base, configuration, personas, etc.
+  - Presenting AP Orchestrator capabilities and options
+  - DO NOT skip any initialization steps
+  
+- "analyst" → Execute FULL `/analyst` command with parallel init
+- "architect" → Execute FULL `/architect` command with parallel init  
+- "pm" → Execute FULL `/pm` command with parallel init
+- "po" → Execute FULL `/po` command with parallel init
+- "qa" → Execute FULL `/qa` command with parallel init
+- "dev" or "developer" → Execute FULL `/dev` command with parallel init
+- "sm" → Execute FULL `/sm` command with parallel init
+- "design architect" → Execute FULL `/design-architect` command with parallel init
+
+**CRITICAL**: You must execute the COMPLETE command as defined in `.claude/commands/[command].md`, not just activate the persona.
+
+### Core AP Commands
+
 ### /ap - Launch AP Orchestrator
 **IMPORTANT**: This makes YOU become the AP Orchestrator.
 - Step 1: Check session notes at {{SESSION_NOTES_PATH}}
@@ -126,6 +149,16 @@ Archive session notes and create summary
 
 ### /session-note-setup - Set up session notes structure
 Initialize session notes directories
+
+### Direct Persona Activation Commands
+- `/analyst` - Activate Analyst Agent
+- `/pm` - Activate Product Manager Agent
+- `/architect` - Activate System Architect Agent
+- `/design-architect` - Activate Design Architect Agent
+- `/po` - Activate Product Owner Agent
+- `/sm` - Activate Scrum Master Agent
+- `/dev` or `/developer` - Activate Developer Agent
+- `/qa` - Activate QA Agent
 
 ## 🧪 TESTING YOUR UNDERSTANDING
 

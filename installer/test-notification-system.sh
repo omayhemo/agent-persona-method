@@ -21,7 +21,7 @@ TEMPLATE_DIR="$SCRIPT_DIR/templates"
 echo ""
 echo "Test 1: Checking sound files..."
 if [ -d "$TEMPLATE_DIR/sounds" ]; then
-    for sound in chime.mp3 ping.mp3 bell.mp3 whoosh.mp3 success.mp3; do
+    for sound in notification.mp3 pre_tool.mp3 post_tool.mp3 stop.mp3 subagent_stop.mp3; do
         if [ -f "$TEMPLATE_DIR/sounds/$sound" ]; then
             echo -e "${GREEN}✓ Found: $sound${NC}"
         else

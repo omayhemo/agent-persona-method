@@ -50,13 +50,13 @@ if [ "$#" -eq 0 ] && [ -f "$INSTALLER_DIR/install.sh" ] && [ -d "$DIST_DIR/agent
         echo ""
         echo "You're running the installer from the extracted distribution."
         echo ""
-        echo "Where would you like to install AP Method?"
-        echo ""
+        echo -e "${GREEN}Where would you like to install AP Method?${NC}"
+        echo -e "${BLUE}"
         echo "1) Use this directory as the project (quick start)"
         echo "2) Create new project in parent directory"
         echo "3) Install to existing project (specify path)"
         echo "4) Show manual installation options"
-        echo ""
+        echo -e "${NC}"
         printf "${YELLOW}Enter choice (1-4) [1]: ${NC}"
         read CHOICE
         CHOICE="${CHOICE:-1}"
@@ -377,9 +377,11 @@ if [ "$USE_DEFAULTS" = true ]; then
     NOTES_SYSTEM="2"
     echo "Using default: Markdown files"
 else
-    echo "Choose your session notes system:"
+    echo -e "${GREEN}Choose your session notes system:${NC}"
+    echo -e "${BLUE}"
     echo "1) Obsidian MCP (recommended if you use Obsidian)"
     echo "2) Markdown files (standalone markdown files)"
+    echo -e "${NC}"
     printf "${YELLOW}Enter choice (1-2) [2]: ${NC}"
     read NOTES_SYSTEM
     NOTES_SYSTEM="${NOTES_SYSTEM:-2}"
@@ -558,6 +560,20 @@ fi
 # Create switch.md command
 replace_variables "$INSTALLER_DIR/templates/claude/commands/switch.md.template" "$CLAUDE_COMMANDS_DIR/switch.md"
 
+# Create direct persona activation commands
+echo "Creating persona activation commands..."
+replace_variables "$INSTALLER_DIR/templates/claude/commands/analyst.md.template" "$CLAUDE_COMMANDS_DIR/analyst.md"
+replace_variables "$INSTALLER_DIR/templates/claude/commands/architect.md.template" "$CLAUDE_COMMANDS_DIR/architect.md"
+replace_variables "$INSTALLER_DIR/templates/claude/commands/design-architect.md.template" "$CLAUDE_COMMANDS_DIR/design-architect.md"
+replace_variables "$INSTALLER_DIR/templates/claude/commands/dev.md.template" "$CLAUDE_COMMANDS_DIR/dev.md"
+replace_variables "$INSTALLER_DIR/templates/claude/commands/developer.md.template" "$CLAUDE_COMMANDS_DIR/developer.md"
+replace_variables "$INSTALLER_DIR/templates/claude/commands/personas.md.template" "$CLAUDE_COMMANDS_DIR/personas.md"
+replace_variables "$INSTALLER_DIR/templates/claude/commands/pm.md.template" "$CLAUDE_COMMANDS_DIR/pm.md"
+replace_variables "$INSTALLER_DIR/templates/claude/commands/po.md.template" "$CLAUDE_COMMANDS_DIR/po.md"
+replace_variables "$INSTALLER_DIR/templates/claude/commands/qa.md.template" "$CLAUDE_COMMANDS_DIR/qa.md"
+replace_variables "$INSTALLER_DIR/templates/claude/commands/sm.md.template" "$CLAUDE_COMMANDS_DIR/sm.md"
+replace_variables "$INSTALLER_DIR/templates/claude/commands/subtask.md.template" "$CLAUDE_COMMANDS_DIR/subtask.md"
+
 echo "Created .claude commands in: $CLAUDE_COMMANDS_DIR"
 
 echo ""
@@ -601,15 +617,15 @@ if [ "$USE_DEFAULTS" = true ]; then
     fi
 else
     echo ""
-    echo "Select a Text-to-Speech (TTS) provider:"
-    echo ""
+    echo -e "${GREEN}Select a Text-to-Speech (TTS) provider:${NC}"
+    echo -e "${BLUE}"
     if [[ "$OSTYPE" == "darwin"* ]]; then
-        echo "1) Piper (local, offline - ${YELLOW}Note: Requires building from source on macOS${NC})"
+        echo "1) Piper (local, offline - Note: Requires building from source on macOS)"
         echo "2) ElevenLabs (cloud, high quality, requires API key)"
-        echo "3) System TTS (${GREEN}Recommended for macOS${NC} - uses built-in 'say' command)"
+        echo "3) System TTS (Recommended for macOS - uses built-in 'say' command)"
         echo "4) Discord (send notifications to Discord channel)"
         echo "5) None (silent mode, no audio)"
-        echo ""
+        echo -e "${NC}"
         printf "${YELLOW}Select TTS provider (1-5) [3]: ${NC}"
     else
         echo "1) Piper (local, offline, ~100MB download)"
@@ -617,7 +633,7 @@ else
         echo "3) System TTS (uses OS built-in TTS)"
         echo "4) Discord (send notifications to Discord channel)"
         echo "5) None (silent mode, no audio)"
-        echo ""
+        echo -e "${NC}"
         printf "${YELLOW}Select TTS provider (1-5) [1]: ${NC}"
     fi
     read tts_choice
@@ -955,9 +971,11 @@ configure_hook() {
     local hook_var_prefix="$3"
     
     echo ""
-    echo "Configuring $hook_display hook:"
+    echo -e "${GREEN}Configuring $hook_display hook:${NC}"
+    echo -e "${BLUE}"
     echo "1) No notification"
     echo "2) Audible notification sound"
+    echo -e "${NC}"
     printf "${YELLOW}Select option (1-2) [1]: ${NC}"
     
     read hook_option
@@ -998,10 +1016,12 @@ if [ "$SETUP_NOTIFICATIONS" = true ]; then
         echo -e "${YELLOW}WARNING: No audio player detected!${NC}"
         echo "Audio notifications will not work without an audio player."
         echo ""
-        echo "Would you like to:"
+        echo -e "${GREEN}Would you like to:${NC}"
+        echo -e "${BLUE}"
         echo "1) Install mpg123 now (recommended)"
         echo "2) Continue without audio support"
         echo "3) Cancel notification setup"
+        echo -e "${NC}"
         printf "${YELLOW}Select option (1-3) [2]: ${NC}"
         read install_choice
         install_choice="${install_choice:-2}"
@@ -1086,20 +1106,10 @@ if [ "$SETUP_NOTIFICATIONS" = true ]; then
             .env.WAV_PLAYER_ARGS = \"$WAV_PLAYER_ARGS\" |
             .env.FFMPEG_AVAILABLE = \"$FFMPEG_AVAILABLE\" |
             .env.HOOK_NOTIFICATION_ENABLED = \"$HOOK_NOTIFICATION_ENABLED\" |
-            .env.HOOK_NOTIFICATION_SOUND = \"$HOOK_NOTIFICATION_SOUND\" |
-            .env.HOOK_NOTIFICATION_TTS = \"$HOOK_NOTIFICATION_TTS\" |
             .env.HOOK_PRE_TOOL_ENABLED = \"$HOOK_PRE_TOOL_ENABLED\" |
-            .env.HOOK_PRE_TOOL_SOUND = \"$HOOK_PRE_TOOL_SOUND\" |
-            .env.HOOK_PRE_TOOL_TTS = \"$HOOK_PRE_TOOL_TTS\" |
             .env.HOOK_POST_TOOL_ENABLED = \"$HOOK_POST_TOOL_ENABLED\" |
-            .env.HOOK_POST_TOOL_SOUND = \"$HOOK_POST_TOOL_SOUND\" |
-            .env.HOOK_POST_TOOL_TTS = \"$HOOK_POST_TOOL_TTS\" |
             .env.HOOK_STOP_ENABLED = \"$HOOK_STOP_ENABLED\" |
-            .env.HOOK_STOP_SOUND = \"$HOOK_STOP_SOUND\" |
-            .env.HOOK_STOP_TTS = \"$HOOK_STOP_TTS\" |
-            .env.HOOK_SUBAGENT_STOP_ENABLED = \"$HOOK_SUBAGENT_STOP_ENABLED\" |
-            .env.HOOK_SUBAGENT_STOP_SOUND = \"$HOOK_SUBAGENT_STOP_SOUND\" |
-            .env.HOOK_SUBAGENT_STOP_TTS = \"$HOOK_SUBAGENT_STOP_TTS\"" "$SETTINGS_FILE" > "$tmp_file" && mv "$tmp_file" "$SETTINGS_FILE"
+            .env.HOOK_SUBAGENT_STOP_ENABLED = \"$HOOK_SUBAGENT_STOP_ENABLED\"" "$SETTINGS_FILE" > "$tmp_file" && mv "$tmp_file" "$SETTINGS_FILE"
     fi
     
     echo "✓ Notification system configured"

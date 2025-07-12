@@ -63,20 +63,10 @@
     "WAV_PLAYER_ARGS": "",
     "FFMPEG_AVAILABLE": "false",
     "HOOK_NOTIFICATION_ENABLED": "false",
-    "HOOK_NOTIFICATION_SOUND": "none",
-    "HOOK_NOTIFICATION_TTS": "false",
     "HOOK_PRE_TOOL_ENABLED": "false",
-    "HOOK_PRE_TOOL_SOUND": "none",
-    "HOOK_PRE_TOOL_TTS": "false",
     "HOOK_POST_TOOL_ENABLED": "false",
-    "HOOK_POST_TOOL_SOUND": "none",
-    "HOOK_POST_TOOL_TTS": "false",
     "HOOK_STOP_ENABLED": "false",
-    "HOOK_STOP_SOUND": "none",
-    "HOOK_STOP_TTS": "false",
-    "HOOK_SUBAGENT_STOP_ENABLED": "false",
-    "HOOK_SUBAGENT_STOP_SOUND": "none",
-    "HOOK_SUBAGENT_STOP_TTS": "false"
+    "HOOK_SUBAGENT_STOP_ENABLED": "false"
   },
   "hooks": {
     "PreToolUse": [

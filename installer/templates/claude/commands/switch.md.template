@@ -3,53 +3,156 @@ name: switch
 description: Compact session and switch to another Agent Persona
 ---
 
-Compact the current session and switch to a specific AP agent persona with optional instructions or story/epic designation.
+# SESSION COMPACTION & AGENT SWITCH PROTOCOL
+
+## 🚀 PARALLEL CONTEXT COMPACTION & TRANSFER (MANDATORY)
+
+**CRITICAL**: When switching agents, you MUST execute parallel session compaction and context transfer:
+
+```
+I'm preparing to compact this session and switch to the [Target Agent]. Let me preserve context and initialize the new agent in parallel.
+
+*Executing parallel switch tasks:*
+[Use Task tool - ALL in single function_calls block]
+- Task 1: Create comprehensive session summary and key insights
+- Task 2: Archive current work artifacts and decisions
+- Task 3: Load target persona configuration from {{AP_ROOT}}/personas/{persona}.md
+- Task 4: Generate transition brief for the incoming agent
+- Task 5: Load target persona's templates and workspace setup
+```
+
+### Switch Task Prompts:
+1. "Create a comprehensive summary of all work done in this session, including achievements, decisions, and learnings"
+2. "Identify and archive all important work artifacts, code, documents, and deliverables from this session"
+3. "Load the full target persona configuration including their initialization protocol and capabilities"
+4. "Generate a focused transition brief highlighting what the incoming agent needs to know to continue effectively"
+5. "Load the target persona's primary templates, checklists, and workspace requirements"
+
+### Post-Switch Protocol:
+After ALL tasks complete:
+1. Present session compaction summary to user
+2. Archive session notes (if configured)
+3. Activate target persona with their initialization protocol
+4. Target persona executes their own parallel initialization
+5. Confirm: "✓ Session compacted and switched to [Target Agent] with full context"
 
 ## Usage:
 `/switch <persona> [instructions/story]`
 
-## Process:
-1. First, compact the current session by summarizing:
-   - What has been accomplished
-   - Key decisions made
-   - Current state of work
-   - Any blockers or issues
-2. Then hand off to the specified persona
+## Session Compaction Benefits:
+- **Clean Context**: Reduces token usage by summarizing rather than carrying full history
+- **Clear Transitions**: Provides explicit handoff points between work phases
+- **Better Organization**: Archives work by session for future reference
+- **Focused Work**: New agent starts fresh but informed
 
 ## Available Personas:
-* ap or orchestrator - AP Orchestrator (default)
-* dev or developer - Developer agent
-* architect - System architect
-* design or design-architect - Design/UI architect
-* analyst - Business/Requirements analyst
-* qa - Quality assurance
-* pm - Product manager
-* po - Product owner
-* sm - Scrum master
+- `ap` or `orchestrator` - AP Orchestrator (default)
+- `dev` or `developer` - Developer agent
+- `architect` - System architect
+- `design` or `design-architect` - Design/UI architect
+- `analyst` - Business/Requirements analyst
+- `qa` - Quality assurance
+- `pm` - Product manager
+- `po` - Product owner
+- `sm` - Scrum master
+
+## Direct Activation Alternative:
+Each persona now has its own activation command with full initialization:
+- `/ap` - AP Orchestrator
+- `/analyst` - Analyst
+- `/pm` - Product Manager
+- `/architect` - System Architect
+- `/design-architect` - Design Architect
+- `/po` - Product Owner
+- `/sm` - Scrum Master
+- `/dev` - Developer
+- `/qa` - Quality Assurance
+
+Use direct commands for fresh activation with full initialization protocol.
+
+## Switch Process:
+
+### Phase 1: Session Compaction
+Parallel execution of:
+1. Comprehensive work summary
+2. Decision documentation
+3. Artifact archival
+4. Insight extraction
+5. Transition preparation
+
+### Phase 2: Context Transfer
+Simultaneous:
+1. Load target persona
+2. Prepare workspace
+3. Transfer relevant context
+4. Set up templates
+
+### Phase 3: Agent Activation
+The target agent will:
+1. Acknowledge the switch with compacted context
+2. Execute their initialization protocol
+3. Begin work with focused direction
 
 ## Examples:
 
-**Switch to developer with compaction:**
+**Switch to developer after planning:**
 `/switch dev`
+→ Compacts planning work, switches to dev with summary
 
-**Switch to developer with story:**
+**Switch to developer with specific story:**
 `/switch dev "Work on story 1.2"`
+→ Compaction + story focus
 
-**Switch to architect with instructions:**
-`/switch architect "Review the current system architecture and suggest improvements"`
+**Switch to architect for review:**
+`/switch architect "Review the current system architecture"`
+→ Compaction + review directive
 
-**Switch to QA with epic:**
-`/switch qa "Test epic 3"`
+**Switch to QA after development:**
+`/switch qa "Test the completed features"`
+→ Compacts dev work, switches to QA with testing focus
 
-## Instructions:
-1. Create a brief session summary of current work
-2. REQUIRED: Use the Read tool to read the requested persona from {{AP_ROOT}}/personas/{persona}.md
-   - The file will be named after the persona (e.g., dev.md, qa.md, architect.md)
-   - ALL personas are .md files in the personas/ directory
-   - You MUST actually read this file, do not skip this step
-3. Embody the persona based on what you read
-4. If instructions/story provided, begin work immediately
-5. Follow all persona-specific protocols and voice scripts
-6. Maintain persona until explicitly switched or handed off
+## Session Compaction Format:
 
-Remember: This command compacts the session before switching, ensuring clean context transitions.
+```markdown
+## Session Compaction Summary
+
+### Session Overview:
+- Agent: [Current Agent]  
+- Duration: [Time active]
+- Primary Focus: [Main work area]
+
+### Achievements:
+- [Major accomplishments]
+- [Deliverables created]
+- [Problems solved]
+
+### Key Decisions:
+- [Important choices made]
+- [Rationale provided]
+
+### Artifacts Created:
+- [Files/documents]
+- [Code/designs]
+- [Plans/strategies]
+
+### Insights & Learnings:
+- [Important discoveries]
+- [Patterns identified]
+- [Recommendations]
+
+### For Next Agent ([Target]):
+- Priority: [What to focus on]
+- Context: [Essential background]
+- Resources: [Key artifacts to review]
+- Warnings: [Things to watch out for]
+```
+
+## Best Practices:
+
+1. **Natural Breakpoints**: Switch at logical work boundaries
+2. **Complete Thoughts**: Finish current analysis or implementation
+3. **Document Rationale**: Ensure decisions are explained
+4. **Highlight Blockers**: Make issues visible to next agent
+5. **Focus Instructions**: Be specific about next steps
+
+Remember: The switch command provides the cleanest transition between agents, reducing context overhead while preserving essential information. Use it when changing work phases or when token usage needs optimization.

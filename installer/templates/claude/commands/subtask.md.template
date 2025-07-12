@@ -1,0 +1,104 @@
+---
+name: subtask
+description: Activate Parallel Subtask Analysis Mode
+---
+
+# PARALLEL SUBTASK ANALYSIS ACTIVATION
+
+## 🚀 INITIALIZATION PROTOCOL (MANDATORY)
+
+**CRITICAL**: Upon activation, you MUST immediately execute parallel initialization:
+
+```
+I'm initializing Parallel Subtask Analysis Mode. Let me load all required context in parallel for optimal performance.
+
+*Executing parallel initialization tasks:*
+[Use Task tool - ALL in single function_calls block]
+- Task 1: Load parallel subtask implementation guide from {{AP_ROOT}}/tasks/subtasks/IMPLEMENTATION-GUIDE.md
+- Task 2: Load parallel subtask usage guide from {{AP_ROOT}}/docs/PARALLEL-SUBTASK-USAGE-GUIDE.md
+- Task 3: Check for available subtask templates in {{AP_ROOT}}/tasks/subtasks/
+- Task 4: Load synthesis patterns from {{AP_ROOT}}/tasks/subtasks/synthesis/patterns/
+- Task 5: Check current persona context and available capabilities
+```
+
+### Initialization Task Prompts:
+1. "Read and extract parallel execution patterns, synthesis strategies, and best practices"
+2. "Extract usage examples, command patterns, and troubleshooting guidance"
+3. "List all available subtask templates organized by category (development, qa, analysis, validation)"
+4. "Load available synthesis patterns for result aggregation"
+5. "Identify current persona and their parallel analysis capabilities"
+
+### Post-Initialization:
+After ALL tasks complete:
+1. Voice announcement: bash {{SPEAK_BASE}} "Parallel Subtask Analysis Mode initialized with synthesis capabilities"
+2. Confirm: "✓ Parallel Subtask Analysis Mode initialized with [X] templates across [Y] categories"
+
+## Direct Activation
+This command activates the Parallel Subtask Analysis system. The system will:
+1. Load all subtask templates and synthesis patterns
+2. Present available parallel analysis options
+3. Guide proper parallel execution patterns
+4. Ensure optimal synthesis of results
+
+## Available After Activation:
+
+### Development Subtasks:
+- Security vulnerability scanning
+- Performance profiling
+- Test coverage analysis
+- Code complexity checking
+- Dependency auditing
+- Architecture compliance review
+
+### QA Subtasks:
+- Cross-browser testing
+- Accessibility auditing
+- API contract testing
+- Load/performance testing
+- Mobile responsive testing
+- E2E journey validation
+
+### Analysis Subtasks:
+- Market analysis
+- Competitor research
+- User segment analysis
+- Technology evaluation
+- Risk assessment
+- Impact analysis
+
+### Validation Subtasks:
+- Story completeness checking
+- Acceptance criteria validation
+- Dependency analysis
+- Effort estimation review
+- Business rule validation
+- Compliance checking
+
+### Synthesis Patterns:
+- Code Review Aggregator
+- Risk Matrix
+- Performance Baseline Comparator
+- Test Coverage Aggregator
+- Consensus Builder
+- Multi-Source Validator
+- Priority Ranker
+- Impact Analyzer
+- Technical Debt Prioritizer
+- Confidence Aggregator
+
+## CRITICAL EXECUTION RULES:
+
+### 🚨 The Golden Rule:
+**ALL Task tool invocations MUST be in a SINGLE response for parallel execution**
+
+✅ **CORRECT**: Multiple Tasks in one function_calls block
+❌ **WRONG**: Tasks in separate responses (sequential)
+
+### Best Practices:
+- Limit to 5-7 parallel tasks per analysis
+- Ensure task independence (no inter-dependencies)
+- Use consistent output formats for synthesis
+- Select appropriate synthesis pattern for task type
+- Always provide clear synthesis of findings
+
+The Parallel Subtask system dramatically improves analysis speed and depth through concurrent execution and intelligent result synthesis.

@@ -8,7 +8,52 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is the AP (Agent Persona) Method repository - a project-agnostic approach to orchestrating AI agents for software development. The system provides specialized agent personas, each with specific expertise and responsibilities for planning and executing software projects.
 
+## 🚀 AP Method Startup Protocol
+
+When a user starts Claude with "ap" (e.g., `claude ap`), you MUST:
+
+1. **Execute Parallel Initialization** (ALL in one function_calls block):
+   - Task 1: Load AP Method knowledge base from /mnt/c/code/agentic-persona/agents/data/ap-kb.md
+   - Task 2: Load orchestrator configuration from /mnt/c/code/agentic-persona/agents/ide-ap-orchestrator.cfg.md
+   - Task 3: Load communication standards from /mnt/c/code/agentic-persona/agents/personas/communication_standards.md
+   - Task 4: Check for project documentation at /mnt/c/code/agentic-persona/project_documentation/base/
+   - Task 5: Load available persona list from /mnt/c/code/agentic-persona/agents/personas/
+
+2. **Voice Announcement**: 
+   ```bash
+   bash /mnt/c/code/agentic-persona/agents/voice/speakOrchestrator.sh "AP Orchestrator initialized with full context"
+   ```
+
+3. **Present AP Orchestrator Options**:
+   - Offer to analyze current project state
+   - List available agent personas
+   - Suggest appropriate starting point based on project status
+   - Explain available commands (/handoff, /switch, /wrap)
+
+4. **NEVER** skip initialization or just "become" the persona without loading context
+
 ## Key Commands
+
+**IMPORTANT COMMAND RECOGNITION**: 
+
+When a user types these keywords as their FIRST message, you MUST execute the full slash command by following ALL instructions in the corresponding command file:
+
+- "ap" or "AP" → Execute the FULL `/ap` command including:
+  - ALL parallel initialization tasks (5 Tasks in one function_calls block)
+  - Loading AP knowledge base, configuration, personas, etc.
+  - Presenting AP Orchestrator capabilities and options
+  - DO NOT skip any initialization steps
+  
+- "analyst" → Execute FULL `/analyst` command with parallel init
+- "architect" → Execute FULL `/architect` command with parallel init  
+- "pm" → Execute FULL `/pm` command with parallel init
+- "po" → Execute FULL `/po` command with parallel init
+- "qa" → Execute FULL `/qa` command with parallel init
+- "dev" or "developer" → Execute FULL `/dev` command with parallel init
+- "sm" → Execute FULL `/sm` command with parallel init
+- "design architect" → Execute FULL `/design-architect` command with parallel init
+
+**CRITICAL**: You must execute the COMPLETE command as defined in `.claude/commands/[command].md`, not just activate the persona.
 
 ### Core AP Commands
 - `/ap` - Launch AP Orchestrator
@@ -16,6 +61,17 @@ This is the AP (Agent Persona) Method repository - a project-agnostic approach t
 - `/switch` - Compact session and switch to another agent persona
 - `/wrap` - Wrap up current session
 - `/session-note-setup` - Set up session notes structure
+- `/personas` - List all available personas and activation methods
+
+### Direct Persona Activation Commands
+- `/analyst` - Activate Analyst Agent
+- `/pm` - Activate Product Manager Agent
+- `/architect` - Activate System Architect Agent
+- `/design-architect` - Activate Design Architect Agent
+- `/po` - Activate Product Owner Agent
+- `/sm` - Activate Scrum Master Agent
+- `/dev` or `/developer` - Activate Developer Agent
+- `/qa` - Activate QA Agent
 
 
 ### Management Commands

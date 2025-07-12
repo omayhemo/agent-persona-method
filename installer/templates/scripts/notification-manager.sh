@@ -99,22 +99,13 @@ handle_notification() {
     # Get configuration for this hook
     if [ -f "$SETTINGS_FILE" ] && command -v jq >/dev/null 2>&1; then
         local enabled=$(jq -r ".env.HOOK_${hook_name^^}_ENABLED // false" "$SETTINGS_FILE")
-        local sound=$(jq -r ".env.HOOK_${hook_name^^}_SOUND // \"none\"" "$SETTINGS_FILE")
-        local use_tts=$(jq -r ".env.HOOK_${hook_name^^}_TTS // false" "$SETTINGS_FILE")
         
         if [ "$enabled" != "true" ]; then
             return 0
         fi
         
-        # Play sound if configured
-        if [ "$sound" != "none" ] && [ "$sound" != "null" ]; then
-            play_sound "$sound"
-        fi
-        
-        # Speak via TTS if configured and message provided
-        if [ "$use_tts" = "true" ] && [ -n "$message" ] && [ -f "$TTS_MANAGER" ]; then
-            "$TTS_MANAGER" speak "$persona" "$message" 2>/dev/null || true
-        fi
+        # Play the sound file that matches the hook name
+        play_sound "$hook_name"
     fi
 }
 
