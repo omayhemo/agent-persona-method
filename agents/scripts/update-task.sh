@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# AP Method Task Update Script
+# AP Mapping Task Update Script
 # Updates task fields in tasks.md
 #
 # Usage: update-task.sh <task-id> <field> <value>

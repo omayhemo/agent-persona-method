@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# AP Method Documentation Generator
+# AP Mapping Documentation Generator
 # Automatically generates comprehensive documentation for installations
 
 set -e
@@ -26,7 +26,7 @@ INSTALLER_VERSION=""
 # Templates for documentation sections
 README_TEMPLATE='# {{PROJECT_NAME}}
 
-This project was set up using the AP Method installer.
+This project was set up using the AP Mapping installer.
 
 ## Installation Information
 
@@ -65,7 +65,7 @@ For common issues and solutions, see [TROUBLESHOOTING.md](./TROUBLESHOOTING.md).
 - [Change Log](./CHANGELOG.md)
 
 ---
-*Documentation generated on {{GENERATION_DATE}} by AP Method Documentation Generator v{{DOC_VERSION}}*'
+*Documentation generated on {{GENERATION_DATE}} by AP Mapping Documentation Generator v{{DOC_VERSION}}*'
 
 CONFIG_REFERENCE_TEMPLATE='# Configuration Reference
 
@@ -100,7 +100,7 @@ The main settings file is located at `.claude/settings.json`.
 
 TROUBLESHOOTING_TEMPLATE='# Troubleshooting Guide
 
-This guide helps resolve common issues with the AP Method installation.
+This guide helps resolve common issues with the AP Mapping installation.
 
 ## Common Issues
 
@@ -356,7 +356,7 @@ generate_settings_structure() {
 {
   "PROJECT_NAME": "Your project name",
   "PROJECT_ROOT": "Project root directory",
-  "AP_ROOT": "AP Method root directory",
+  "AP_ROOT": "AP Mapping root directory",
   "CLAUDE_DIR": "Claude configuration directory",
   "PROJECT_DOCS": "Project documentation directory",
   "NOTES_TYPE": "Notes storage type (obsidian or local)"
@@ -698,7 +698,7 @@ All notable changes to this installation will be documented in this file.
 ## [Current] - $(date -u +%Y-%m-%d)
 
 ### Added
-- Initial installation using AP Method installer v$INSTALLER_VERSION
+- Initial installation using AP Mapping installer v$INSTALLER_VERSION
 - Project configuration in \`.claude/settings.json\`
 - Documentation generated automatically
 
@@ -728,7 +728,7 @@ All notable changes to this installation will be documented in this file.
     
     changelog+="
 ---
-*This changelog is automatically maintained by the AP Method installer*"
+*This changelog is automatically maintained by the AP Mapping installer*"
     
     echo "$changelog" > "$output_file"
     

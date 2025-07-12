@@ -184,7 +184,7 @@ configure() {
     
     # Test webhook
     echo "Testing webhook..."
-    local test_payload='{"content": "🔧 AP Method TTS Test", "username": "AP Method Setup"}'
+    local test_payload='{"content": "🔧 AP Mapping TTS Test", "username": "AP Mapping Setup"}'
     local response=$(curl -s -o /dev/null -w "%{http_code}" \
         -H "Content-Type: application/json" \
         -X POST \
@@ -241,7 +241,7 @@ configure() {
         
         if ! grep -q "export DISCORD_WEBHOOK_URL=" "$shell_profile" 2>/dev/null; then
             echo "" >> "$shell_profile"
-            echo "# Discord webhook for AP Method notifications" >> "$shell_profile"
+            echo "# Discord webhook for AP Mapping notifications" >> "$shell_profile"
             echo "export DISCORD_WEBHOOK_URL='$webhook_url'" >> "$shell_profile"
         else
             sed -i.bak "s|export DISCORD_WEBHOOK_URL=.*|export DISCORD_WEBHOOK_URL='$webhook_url'|" "$shell_profile"

@@ -1,5 +1,5 @@
 #!/bin/bash
-# AP Method Installer - Python Environment Setup
+# AP Mapping Installer - Python Environment Setup
 # Sets up Python virtual environment for installer scripts
 
 set -e
@@ -14,7 +14,7 @@ NC='\033[0m'
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 VENV_DIR="$SCRIPT_DIR/venv"
 
-echo -e "${GREEN}AP Method Installer - Python Setup${NC}"
+echo -e "${GREEN}AP Mapping Installer - Python Setup${NC}"
 echo "================================================"
 
 # Check Python installation

@@ -1,6 +1,6 @@
-# Release AP Method
+# Release AP Mapping
 
-Create a new release of the AP Method following the documented release process.
+Create a new release of the AP Mapping following the documented release process.
 
 ## Usage
 ```

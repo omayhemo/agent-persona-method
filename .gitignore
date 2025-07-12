@@ -1,10 +1,10 @@
-# AP Method - Git Ignore File
+# AP Mapping - Git Ignore File
 
 # Session notes (both Obsidian fallback and markdown)
 project_documentation/session_notes/
 session_notes/
 
-# AP Method generated files
+# AP Mapping generated files
 CLAUDE.md.ap-setup
 harmonization.log
 

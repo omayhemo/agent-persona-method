@@ -1,6 +1,6 @@
 # Release Automation Guide
 
-This document explains how to use the `/release` command to automate the AP Method release process.
+This document explains how to use the `/release` command to automate the AP Mapping release process.
 
 ## Command Usage
 
@@ -86,7 +86,7 @@ I'll provide you with:
 ```
 You: /release 1.1.0
 
-Claude: Starting AP Method release process for version 1.1.0...
+Claude: Starting AP Mapping release process for version 1.1.0...
 
 ✓ Git status is clean
 ✓ Version format is valid
@@ -125,7 +125,7 @@ Ready to push! Here are your next steps:
 
 2. Create release:
    gh release create v1.1.0 \
-     --title "AP Method v1.1.0" \
+     --title "AP Mapping v1.1.0" \
      --notes-file RELEASE_NOTES.md \
      dist/ap-method-v1.1.0.tar.gz
 

@@ -53,7 +53,7 @@ class Priority(Enum):
 
 
 class AgentType(Enum):
-    """AP Method agent types."""
+    """AP Mapping agent types."""
     ORCHESTRATOR = "orchestrator"
     DEVELOPER = "developer"
     ARCHITECT = "architect"

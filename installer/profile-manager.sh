@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# AP Method Profile Manager
+# AP Mapping Profile Manager
 # Installation profile management for different scenarios
 
 # Profile manager version
@@ -552,7 +552,7 @@ _init_default_profiles() {
     if [ ! -f "$SYSTEM_PROFILES_DIR/minimal${PROFILE_EXTENSION}" ]; then
         cat > "$SYSTEM_PROFILES_DIR/minimal${PROFILE_EXTENSION}" << 'EOF'
 #!/bin/bash
-# AP Method Minimal Profile
+# AP Mapping Minimal Profile
 # TYPE: minimal
 # DESCRIPTION: Minimal installation with core features only
 
@@ -585,7 +585,7 @@ EOF
     if [ ! -f "$SYSTEM_PROFILES_DIR/standard${PROFILE_EXTENSION}" ]; then
         cat > "$SYSTEM_PROFILES_DIR/standard${PROFILE_EXTENSION}" << 'EOF'
 #!/bin/bash
-# AP Method Standard Profile
+# AP Mapping Standard Profile
 # TYPE: standard
 # DESCRIPTION: Standard installation with recommended features
 
@@ -619,7 +619,7 @@ EOF
     if [ ! -f "$SYSTEM_PROFILES_DIR/developer${PROFILE_EXTENSION}" ]; then
         cat > "$SYSTEM_PROFILES_DIR/developer${PROFILE_EXTENSION}" << 'EOF'
 #!/bin/bash
-# AP Method Developer Profile
+# AP Mapping Developer Profile
 # TYPE: developer
 # DESCRIPTION: Developer setup with debugging tools
 
@@ -711,7 +711,7 @@ _save_profile() {
     
     {
         echo "#!/bin/bash"
-        echo "# AP Method Profile: $profile_name"
+        echo "# AP Mapping Profile: $profile_name"
         echo "# TYPE: $profile_type"
         echo "# DESCRIPTION: ${PROFILE_METADATA[description]:-User-created profile}"
         echo "# Created: $(date)"

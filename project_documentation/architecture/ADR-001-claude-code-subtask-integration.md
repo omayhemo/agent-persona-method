@@ -6,11 +6,11 @@
 
 ## Summary
 
-We will implement Claude Code's native Task tool capabilities directly into the AP Method agents, allowing them to spawn parallel subtasks for complex analyses and operations.
+We will implement Claude Code's native Task tool capabilities directly into the AP Mapping agents, allowing them to spawn parallel subtasks for complex analyses and operations.
 
 ## Context
 
-The AP Method currently operates with sequential agent handoffs and manual task execution. Claude Code offers a powerful Task tool that enables:
+The AP Mapping currently operates with sequential agent handoffs and manual task execution. Claude Code offers a powerful Task tool that enables:
 - Parallel execution of up to 10 concurrent subagents
 - Independent context windows for each subagent
 - Full tool access for subtasks (except spawning more tasks)
@@ -59,7 +59,7 @@ We explicitly chose NOT to implement:
 ### Positive
 - Immediate parallel processing capability for all agents
 - No infrastructure overhead
-- Maintains simplicity of AP Method
+- Maintains simplicity of AP Mapping
 - Easy to understand and implement
 
 ### Negative
@@ -87,7 +87,7 @@ The current approach does not preclude this evolution.
 
 - [Claude Code Task Tool Research](../research/claude-code-subtask-analysis.md)
 - [Original Brainstorming Session](../session_notes/2025-01-11-subtask-integration.md)
-- AP Method Task System: `/agents/tasks/`
+- AP Mapping Task System: `/agents/tasks/`
 - Python Task Manager: `/agents/python/ap_task_manager/`
 
 ---

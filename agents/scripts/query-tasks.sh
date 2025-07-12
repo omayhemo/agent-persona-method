@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# AP Method Task Query Functions
+# AP Mapping Task Query Functions
 # Provides grep-based queries for filtering tasks in tasks.md
 #
 # Usage: query-tasks.sh <command> [options]

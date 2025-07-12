@@ -1,6 +1,6 @@
 # Claude Commands Directory
 
-This directory contains command definitions for Claude Code that enable the AP Method's agent persona system.
+This directory contains command definitions for Claude Code that enable the AP Mapping's agent persona system.
 
 ## Command Structure
 

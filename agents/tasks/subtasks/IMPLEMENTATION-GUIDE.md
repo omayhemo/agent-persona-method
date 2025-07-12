@@ -1,7 +1,7 @@
 # Parallel Subtask Implementation Guide
 
 ## Overview
-This guide details how to implement parallel subtask capabilities for AP Method personas using Claude Code's Task tool.
+This guide details how to implement parallel subtask capabilities for AP Mapping personas using Claude Code's Task tool.
 
 ## Core Architecture
 

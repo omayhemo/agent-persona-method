@@ -1,6 +1,6 @@
 # Notification Sound Files
 
-This directory contains notification sound files for the AP Method notification system.
+This directory contains notification sound files for the AP Mapping notification system.
 
 ## Sound Files
 

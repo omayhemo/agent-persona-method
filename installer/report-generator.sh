@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# AP Method Report Generator
+# AP Mapping Report Generator
 # Generates comprehensive installation reports and summaries
 
 # Source logging framework
@@ -91,7 +91,7 @@ generate_text_report() {
     
     {
         echo "========================================"
-        echo "AP Method Installation Report"
+        echo "AP Mapping Installation Report"
         echo "========================================"
         echo ""
         
@@ -268,7 +268,7 @@ generate_html_report() {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>AP Method Installation Report</title>
+    <title>AP Mapping Installation Report</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
         .container { max-width: 1200px; margin: 0 auto; background: white; padding: 20px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
@@ -293,7 +293,7 @@ generate_html_report() {
 </head>
 <body>
     <div class="container">
-        <h1>AP Method Installation Report</h1>
+        <h1>AP Mapping Installation Report</h1>
 EOF
         
         # Summary section

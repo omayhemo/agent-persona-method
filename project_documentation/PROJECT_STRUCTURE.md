@@ -1,4 +1,4 @@
-# AP Method Project Structure
+# AP Mapping Project Structure
 
 This document provides a comprehensive overview of the entire project structure including all files, directories, and hidden elements.
 
@@ -38,7 +38,7 @@ This document provides a comprehensive overview of the entire project structure 
 ├── .piper/                              # Piper configuration
 ├── .gitignore                           # Git ignore file
 │
-├── agents/                              # AP Method core directory
+├── agents/                              # AP Mapping core directory
 │   ├── README.md                        # Agents documentation
 │   ├── agentic-setup                    # Setup script (executable)
 │   ├── ide-ap-orchestrator.cfg.md      # IDE orchestrator config

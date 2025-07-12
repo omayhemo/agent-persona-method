@@ -1,6 +1,6 @@
 # AP Task Manager - Python Implementation
 
-A modern, Python-based task management system for the AP Method with built-in APM (Application Performance Monitoring) integration.
+A modern, Python-based task management system for the AP Mapping with built-in APM (Application Performance Monitoring) integration.
 
 ## Features
 
@@ -101,7 +101,7 @@ service = TaskService(apm_provider=apm)
 - `Task`: Core task entity with status lifecycle
 - `TaskStatus`: Enum for task states (pending, in_progress, completed, etc.)
 - `Priority`: Task priority levels
-- `AgentType`: AP Method agent types
+- `AgentType`: AP Mapping agent types
 
 ### Core Layer
 - `TaskService`: Main business logic and operations
@@ -230,4 +230,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines.
 
 ## License
 
-Same as AP Method project.
+Same as AP Mapping project.

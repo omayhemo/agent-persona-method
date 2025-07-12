@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# AP Method UI Utilities
+# AP Mapping UI Utilities
 # Interactive user interface components for enhanced user experience
 
 # UI utilities version

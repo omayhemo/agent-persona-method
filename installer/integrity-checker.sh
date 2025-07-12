@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# AP Method Integrity Checker
+# AP Mapping Integrity Checker
 # Verifies installation integrity, file checksums, and dependencies
 
 set -e
@@ -647,7 +647,7 @@ perform_complete_check() {
     ERRORS_FOUND=0
     WARNINGS_FOUND=0
     
-    echo "AP Method Integrity Check v$CHECKER_VERSION" > "$VERIFICATION_REPORT"
+    echo "AP Mapping Integrity Check v$CHECKER_VERSION" > "$VERIFICATION_REPORT"
     echo "=========================================" >> "$VERIFICATION_REPORT"
     
     # Run all checks

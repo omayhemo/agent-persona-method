@@ -24,7 +24,7 @@ echo ""
 
 # Create test tasks.md with various completed tasks
 cat > "$TEST_DIR/session-notes/tasks/tasks.md" << 'EOF'
-# AP Method Tasks
+# AP Mapping Tasks
 
 ## Metadata
 last-updated: 2025-07-11T02:00:00Z

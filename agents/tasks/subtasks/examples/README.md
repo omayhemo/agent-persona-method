@@ -6,7 +6,7 @@ This directory contains real-world examples of parallel subtask execution and th
 
 ### 1. Python Task Manager Review
 **File**: `python-task-manager-review.yaml`
-**Description**: Comprehensive code review of the AP Method's Python task manager using 5 parallel subtasks.
+**Description**: Comprehensive code review of the AP Mapping's Python task manager using 5 parallel subtasks.
 
 **Tasks Executed**:
 - Security vulnerability scan

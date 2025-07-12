@@ -12,7 +12,7 @@ This task benefits from automated:
 
 ## Context
 
-The AP Method uses various checklists to ensure quality and completeness of different artifacts. Checklist validation now runs automatically when documents are created or modified. The automated system:
+The AP Mapping uses various checklists to ensure quality and completeness of different artifacts. Checklist validation now runs automatically when documents are created or modified. The automated system:
 - Detects document type
 - Selects appropriate checklist
 - Validates all checklist items

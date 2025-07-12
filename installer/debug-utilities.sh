@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# AP Method Debug Utilities
+# AP Mapping Debug Utilities
 # Enhanced debugging capabilities for troubleshooting installations
 
 # Source logging framework
@@ -292,8 +292,8 @@ dump_variables() {
         echo "Function: ${FUNCNAME[1]}"
         echo ""
         
-        # AP Method specific variables
-        echo "=== AP Method Variables ==="
+        # AP Mapping specific variables
+        echo "=== AP Mapping Variables ==="
         set | grep -E '^(AP_|PROJECT_|CLAUDE_|SESSION_|NOTES_)' | while IFS='=' read -r name value; do
             # Mask sensitive values
             if [[ "$name" =~ (PASSWORD|TOKEN|SECRET|KEY) ]]; then
@@ -344,7 +344,7 @@ generate_debug_report() {
     
     {
         echo "==================================="
-        echo "AP Method Installation Debug Report"
+        echo "AP Mapping Installation Debug Report"
         echo "==================================="
         echo ""
         echo "Generated: $(date)"

@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# AP Method Task Archive Script
+# AP Mapping Task Archive Script
 # Archives completed tasks to monthly archive files
 #
 # Usage: archive-tasks.sh [--month YYYY-MM]

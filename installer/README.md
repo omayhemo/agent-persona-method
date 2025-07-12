@@ -1,10 +1,10 @@
-# AP Method - Agent Persona Framework
+# AP Mapping - Agentic Persona Mapping Framework
 
 Version: 1.1.0-alpha.2
 
-## What is AP Method?
+## What is AP Mapping?
 
-The AP (Agent Persona) Method is a project-agnostic approach to orchestrating AI agents for software development. It provides specialized agent personas, each with specific expertise and responsibilities for planning and executing software projects.
+The AP (Agentic Persona) Mapping is a project-agnostic approach to orchestrating AI agents for software development. It provides specialized agent personas, each with specific expertise and responsibilities for planning and executing software projects.
 
 ## Quick Installation
 
@@ -12,12 +12,12 @@ The AP (Agent Persona) Method is a project-agnostic approach to orchestrating AI
 
 **For Linux/WSL:**
 ```bash
-wget https://github.com/omayhemo/APM/releases/download/v1.1.0-alpha.2/ap-method-v1.1.0-alpha.2.tar.gz && tar -xzf ap-method-v1.1.0-alpha.2.tar.gz && installer/install.sh
+wget https://github.com/omayhemo/agentic-persona-mapping/releases/download/v1.1.0-alpha.2/ap-method-v1.1.0-alpha.2.tar.gz && tar -xzf ap-method-v1.1.0-alpha.2.tar.gz && installer/install.sh
 ```
 
 **For macOS:**
 ```bash
-curl -L https://github.com/omayhemo/APM/releases/download/v1.1.0-alpha.2/ap-method-v1.1.0-alpha.2.tar.gz -o ap-method-v1.1.0-alpha.2.tar.gz && tar -xzf ap-method-v1.1.0-alpha.2.tar.gz && installer/install.sh
+curl -L https://github.com/omayhemo/agentic-persona-mapping/releases/download/v1.1.0-alpha.2/ap-method-v1.1.0-alpha.2.tar.gz -o ap-method-v1.1.0-alpha.2.tar.gz && tar -xzf ap-method-v1.1.0-alpha.2.tar.gz && installer/install.sh
 ```
 
 ### Installation Options
@@ -28,28 +28,28 @@ Add nothing - the installer will prompt for all configuration options
 **Option 2: Install with Defaults (Skip prompts)**
 ```bash
 # Linux/WSL
-wget https://github.com/omayhemo/APM/releases/download/v1.1.0-alpha.2/ap-method-v1.1.0-alpha.2.tar.gz && tar -xzf ap-method-v1.1.0-alpha.2.tar.gz && installer/install.sh --defaults
+wget https://github.com/omayhemo/agentic-persona-mapping/releases/download/v1.1.0-alpha.2/ap-method-v1.1.0-alpha.2.tar.gz && tar -xzf ap-method-v1.1.0-alpha.2.tar.gz && installer/install.sh --defaults
 
 # macOS
-curl -L https://github.com/omayhemo/APM/releases/download/v1.1.0-alpha.2/ap-method-v1.1.0-alpha.2.tar.gz -o ap-method-v1.1.0-alpha.2.tar.gz && tar -xzf ap-method-v1.1.0-alpha.2.tar.gz && installer/install.sh --defaults
+curl -L https://github.com/omayhemo/agentic-persona-mapping/releases/download/v1.1.0-alpha.2/ap-method-v1.1.0-alpha.2.tar.gz -o ap-method-v1.1.0-alpha.2.tar.gz && tar -xzf ap-method-v1.1.0-alpha.2.tar.gz && installer/install.sh --defaults
 ```
 
 **Option 3: Install to Specific Directory**
 ```bash
 # Linux/WSL
-wget https://github.com/omayhemo/APM/releases/download/v1.1.0-alpha.2/ap-method-v1.1.0-alpha.2.tar.gz && tar -xzf ap-method-v1.1.0-alpha.2.tar.gz && installer/install.sh /path/to/your/project
+wget https://github.com/omayhemo/agentic-persona-mapping/releases/download/v1.1.0-alpha.2/ap-method-v1.1.0-alpha.2.tar.gz && tar -xzf ap-method-v1.1.0-alpha.2.tar.gz && installer/install.sh /path/to/your/project
 
 # macOS
-curl -L https://github.com/omayhemo/APM/releases/download/v1.1.0-alpha.2/ap-method-v1.1.0-alpha.2.tar.gz -o ap-method-v1.1.0-alpha.2.tar.gz && tar -xzf ap-method-v1.1.0-alpha.2.tar.gz && installer/install.sh /path/to/your/project
+curl -L https://github.com/omayhemo/agentic-persona-mapping/releases/download/v1.1.0-alpha.2/ap-method-v1.1.0-alpha.2.tar.gz -o ap-method-v1.1.0-alpha.2.tar.gz && tar -xzf ap-method-v1.1.0-alpha.2.tar.gz && installer/install.sh /path/to/your/project
 ```
 
 **Option 4: Install with Piper TTS Voice Support**
 ```bash
 # Linux/WSL
-wget https://github.com/omayhemo/APM/releases/download/v1.1.0-alpha.2/ap-method-v1.1.0-alpha.2.tar.gz && tar -xzf ap-method-v1.1.0-alpha.2.tar.gz && installer/install.sh --with-tts
+wget https://github.com/omayhemo/agentic-persona-mapping/releases/download/v1.1.0-alpha.2/ap-method-v1.1.0-alpha.2.tar.gz && tar -xzf ap-method-v1.1.0-alpha.2.tar.gz && installer/install.sh --with-tts
 
 # macOS
-curl -L https://github.com/omayhemo/APM/releases/download/v1.1.0-alpha.2/ap-method-v1.1.0-alpha.2.tar.gz -o ap-method-v1.1.0-alpha.2.tar.gz && tar -xzf ap-method-v1.1.0-alpha.2.tar.gz && installer/install.sh --with-tts
+curl -L https://github.com/omayhemo/agentic-persona-mapping/releases/download/v1.1.0-alpha.2/ap-method-v1.1.0-alpha.2.tar.gz -o ap-method-v1.1.0-alpha.2.tar.gz && tar -xzf ap-method-v1.1.0-alpha.2.tar.gz && installer/install.sh --with-tts
 ```
 
 ## Key Features
@@ -71,7 +71,7 @@ The installation creates the following structure in your project:
 
 ```
 your-project/
-├── agents/                    # AP Method framework
+├── agents/                    # AP Mapping framework
 │   ├── personas/             # 10 agent persona definitions
 │   ├── tasks/                # 28 reusable task definitions
 │   │   └── subtasks/         # Parallel execution templates
@@ -111,7 +111,7 @@ your-project/
 The installer will:
 
 1. **Check for existing installations** - Offers to backup if found
-2. **Copy AP Method files** - Installs the complete framework
+2. **Copy AP Mapping files** - Installs the complete framework
 3. **Configure your project** - Interactive prompts for:
    - Project name
    - Documentation paths
@@ -170,7 +170,7 @@ See the [AP Manager Documentation](../agents/docs/ap-manager.md) for detailed in
 
 ### Parallel Subtask System
 
-The AP Method includes a powerful parallel execution system for Developer and QA agents:
+The AP Mapping includes a powerful parallel execution system for Developer and QA agents:
 
 #### Developer Parallel Reviews (`/parallel-review`)
 Execute multiple code analysis tasks simultaneously:
@@ -200,7 +200,7 @@ Run comprehensive test suites in parallel:
 
 ### Text-to-Speech (TTS) System
 
-The AP Method includes a modular TTS system that supports multiple providers:
+The AP Mapping includes a modular TTS system that supports multiple providers:
 
 #### Available TTS Providers:
 
@@ -313,14 +313,14 @@ To create your own distribution:
 ## What's Next?
 
 After installation:
-1. Review `/agents/README.md` for AP Method overview
+1. Review `/agents/README.md` for AP Mapping overview
 2. Use `/ap` command to start the AP Orchestrator
 3. Begin with the Analyst agent to create a project brief
 4. Follow the AP workflow through each phase
 
 ## Managing Your Installation
 
-The AP Method includes `ap-manager.sh` for ongoing management:
+The AP Mapping includes `ap-manager.sh` for ongoing management:
 
 ```bash
 # Check for updates
@@ -332,7 +332,7 @@ agents/scripts/ap-manager.sh verify
 # Show current version
 agents/scripts/ap-manager.sh version
 
-# Uninstall AP Method
+# Uninstall AP Mapping
 agents/scripts/ap-manager.sh uninstall
 ```
 
@@ -344,7 +344,7 @@ After installation, see:
 - `CLAUDE.md` - Main instructions for Claude Code
 - `project_documentation/` - Your project-specific documentation
 - `agents/README.md` - Detailed agent information
-- `agents/docs/` - AP Method guides and references
+- `agents/docs/` - AP Mapping guides and references
 
 ## Troubleshooting
 

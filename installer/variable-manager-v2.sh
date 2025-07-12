@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# AP Method Variable Manager v2
+# AP Mapping Variable Manager v2
 # Centralized variable management with validation, type checking, and logging
 
 set -e
@@ -387,7 +387,7 @@ export_variables() {
     log_info "Exporting variables to: $output_file" "EXPORT"
     
     cat > "$output_file" << EOF
-# AP Method Variable Export
+# AP Mapping Variable Export
 # Generated: $(date)
 # Version: $(cat "$VARIABLES_FILE" | python3 -c "import json,sys; print(json.load(sys.stdin)['version'])")
 
@@ -604,10 +604,10 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Main execution
-log_info "AP Method Variable Manager v2 starting" "MAIN"
+log_info "AP Mapping Variable Manager v2 starting" "MAIN"
 log_info "Log level: $LOG_LEVEL" "MAIN"
 
-print_color "$BLUE" "AP Method Variable Manager"
+print_color "$BLUE" "AP Mapping Variable Manager"
 print_color "$BLUE" "========================="
 
 # Clean up any previous cache

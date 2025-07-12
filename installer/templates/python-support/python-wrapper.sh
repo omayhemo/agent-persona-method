@@ -1,5 +1,5 @@
 #!/bin/bash
-# Python wrapper script for AP Method installer
+# Python wrapper script for AP Mapping installer
 # Ensures Python scripts run in the virtual environment if available
 
 # Get the directory of this script

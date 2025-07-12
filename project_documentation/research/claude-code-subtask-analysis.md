@@ -5,7 +5,7 @@
 
 ## Executive Summary
 
-Claude Code's Task tool provides powerful parallel execution capabilities that can significantly enhance the AP Method's agent effectiveness. Subagents operate as independent Claude instances with their own context windows, enabling sophisticated multi-agent workflows.
+Claude Code's Task tool provides powerful parallel execution capabilities that can significantly enhance the AP Mapping's agent effectiveness. Subagents operate as independent Claude instances with their own context windows, enabling sophisticated multi-agent workflows.
 
 ## Key Findings
 
@@ -52,7 +52,7 @@ Task("Check API endpoints for consistency")
 3. **Limited Error Handling**: Failures reported only at completion
 4. **Batch Processing**: Tasks execute in batches rather than true streaming
 
-### Integration Opportunities for AP Method
+### Integration Opportunities for AP Mapping
 
 1. **Architect Agent**
    - Parallel component analysis

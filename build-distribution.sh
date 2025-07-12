@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Build script for creating AP Method distribution package
+# Build script for creating AP Mapping distribution package
 # This creates a versioned tar.gz file with all necessary components
 
 set -e
@@ -12,11 +12,11 @@ if [ -f "VERSION" ]; then
 else
     VERSION="1.0.0"
 fi
-DIST_NAME="ap-method-v$VERSION"
+DIST_NAME="ap-mapping-v$VERSION"
 DIST_DIR="dist/$DIST_NAME"
 
 echo "=========================================="
-echo "Building AP Method Distribution v$VERSION"
+echo "Building AP Mapping Distribution v$VERSION"
 echo "=========================================="
 echo ""
 
@@ -78,7 +78,7 @@ echo "Creating LICENSE file..."
 cat > "$DIST_DIR/LICENSE" << 'EOF'
 MIT License
 
-Copyright (c) 2024 AP Method Contributors
+Copyright (c) 2024 AP Mapping Contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

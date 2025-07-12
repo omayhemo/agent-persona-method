@@ -1,8 +1,8 @@
-# Parallel Initialization Pattern for AP Method Agents
+# Parallel Initialization Pattern for AP Mapping Agents
 
 ## Overview
 
-This document describes the parallel initialization pattern for AP Method agent personas, enabling 5x faster context loading through explicit Task tool usage.
+This document describes the parallel initialization pattern for AP Mapping agent personas, enabling 5x faster context loading through explicit Task tool usage.
 
 ## Problem Statement
 

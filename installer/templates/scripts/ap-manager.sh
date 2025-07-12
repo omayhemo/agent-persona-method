@@ -1,5 +1,5 @@
 #!/bin/bash
-# AP Method Manager - Update, uninstall, and manage AP Method installation
+# AP Mapping Manager - Update, uninstall, and manage AP Mapping installation
 
 set -e
 
@@ -24,7 +24,7 @@ fi
 
 # Configuration
 REPO_OWNER="omayhemo"
-REPO_NAME="agent-persona-method"
+REPO_NAME="agentic-persona-mapping"
 VERSION_FILE="$AP_ROOT/version.txt"
 INSTALLER_DIR="$AP_ROOT/.installer"
 BACKUP_DIR="$AP_ROOT/.backups"
@@ -32,13 +32,13 @@ BACKUP_DIR="$AP_ROOT/.backups"
 # Show usage
 usage() {
     cat << EOF
-AP Method Manager v1.0.0
+AP Mapping Manager v1.0.0
 
 Usage: $(basename "$0") <command> [options]
 
 Commands:
     update                    Check for and install updates
-    uninstall                 Remove AP Method from project
+    uninstall                 Remove AP Mapping from project
     verify                    Verify installation integrity
     repair                    Repair corrupted installation
     rollback                  Rollback to previous version
@@ -190,7 +190,7 @@ create_backup() {
 
 # Verify installation
 verify_installation() {
-    echo -e "${BLUE}Verifying AP Method installation...${NC}"
+    echo -e "${BLUE}Verifying AP Mapping installation...${NC}"
     
     if [ -f "$INSTALLER_DIR/integrity-checker.sh" ]; then
         "$INSTALLER_DIR/integrity-checker.sh"
@@ -223,9 +223,9 @@ verify_installation() {
     fi
 }
 
-# Uninstall AP Method
+# Uninstall AP Mapping
 uninstall_ap_method() {
-    echo -e "${YELLOW}Warning: This will remove AP Method from your project${NC}"
+    echo -e "${YELLOW}Warning: This will remove AP Mapping from your project${NC}"
     
     # Check for --keep-settings flag
     local keep_settings=false
@@ -234,7 +234,7 @@ uninstall_ap_method() {
         echo "Settings and session notes will be preserved"
     fi
     
-    read -p "Are you sure you want to uninstall AP Method? (y/N): " -n 1 -r
+    read -p "Are you sure you want to uninstall AP Mapping? (y/N): " -n 1 -r
     echo
     
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then
@@ -249,7 +249,7 @@ uninstall_ap_method() {
     # Get project root
     local project_root="$(dirname "$AP_ROOT")"
     
-    echo -e "${BLUE}Removing AP Method files...${NC}"
+    echo -e "${BLUE}Removing AP Mapping files...${NC}"
     
     # Remove agents directory
     if [ -d "$AP_ROOT" ]; then
@@ -289,14 +289,14 @@ uninstall_ap_method() {
     
     # Update .gitignore
     if [ -f "$project_root/.gitignore" ]; then
-        # Remove AP Method entries
-        sed -i '/# AP Method/,/^$/d' "$project_root/.gitignore" 2>/dev/null || \
-        sed -i '' '/# AP Method/,/^$/d' "$project_root/.gitignore" 2>/dev/null || true
+        # Remove AP Mapping entries
+        sed -i '/# AP Mapping/,/^$/d' "$project_root/.gitignore" 2>/dev/null || \
+        sed -i '' '/# AP Mapping/,/^$/d' "$project_root/.gitignore" 2>/dev/null || true
         echo "- Updated .gitignore"
     fi
     
     echo ""
-    echo -e "${GREEN}AP Method has been uninstalled${NC}"
+    echo -e "${GREEN}AP Mapping has been uninstalled${NC}"
     if [ "$keep_settings" == "true" ]; then
         echo "Settings have been preserved in .claude/settings.json"
     fi
@@ -306,7 +306,7 @@ uninstall_ap_method() {
 # Show version
 show_version() {
     local version=$(get_current_version)
-    echo "AP Method version: $version"
+    echo "AP Mapping version: $version"
     
     if [ -f "$AP_ROOT/.installer/manifest.txt" ]; then
         local install_date=$(stat -c %y "$AP_ROOT/.installer/manifest.txt" 2>/dev/null | cut -d' ' -f1)

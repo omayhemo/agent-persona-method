@@ -176,7 +176,7 @@ I'll perform a parallel analysis of the system architecture.
 ### Step 6: Create README (10 minutes)
 Create `agents/tasks/subtasks/README.md`:
 ```markdown
-# AP Method Subtask System
+# AP Mapping Subtask System
 
 This directory contains templates for Claude Code Task tool integration.
 

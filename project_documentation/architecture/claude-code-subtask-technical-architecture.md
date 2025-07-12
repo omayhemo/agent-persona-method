@@ -7,7 +7,7 @@
 
 ## Executive Summary
 
-This document defines the technical architecture for integrating Claude Code's native Task tool capabilities into the AP Method. The architecture prioritizes simplicity, maintainability, and immediate value delivery while preserving future extensibility.
+This document defines the technical architecture for integrating Claude Code's native Task tool capabilities into the AP Mapping. The architecture prioritizes simplicity, maintainability, and immediate value delivery while preserving future extensibility.
 
 ## Architecture Overview
 
@@ -23,7 +23,7 @@ This document defines the technical architecture for integrating Claude Code's n
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                        AP Method Agent                           │
+│                        AP Mapping Agent                           │
 │  ┌─────────────┐  ┌──────────────┐  ┌───────────────────────┐ │
 │  │   Persona   │  │    Tasks     │  │   Result Synthesis    │ │
 │  │  Definition │  │  Templates   │  │     Patterns          │ │
@@ -344,4 +344,4 @@ If tracking becomes necessary:
 
 ## Conclusion
 
-This architecture provides a robust foundation for integrating Claude Code's subtask capabilities while maintaining the simplicity and elegance of the AP Method. The design allows immediate value delivery while preserving options for future enhancement based on real-world usage patterns.
+This architecture provides a robust foundation for integrating Claude Code's subtask capabilities while maintaining the simplicity and elegance of the AP Mapping. The design allows immediate value delivery while preserving options for future enhancement based on real-world usage patterns.

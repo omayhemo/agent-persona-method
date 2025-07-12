@@ -1,6 +1,6 @@
-# AP Method - Agent Persona Methodology
+# AP Mapping - Agentic Persona Mapping
 
-The AP (Agent Persona) Method is a project-agnostic approach to orchestrating AI agents for software development. This system provides specialized agent personas, each with specific expertise and responsibilities, working together in a structured workflow to deliver high-quality software projects.
+The AP (Agentic Persona) Mapping is a project-agnostic approach to orchestrating AI agents for software development. This system provides specialized agent personas, each with specific expertise and responsibilities, working together in a structured workflow to deliver high-quality software projects.
 
 ## Quick Start
 
@@ -14,11 +14,11 @@ Check for updates:
 scripts/ap-manager.sh update
 ```
 
-## How the AP Method Works
+## How the AP Mapping Works
 
 ### Core Philosophy
 
-The AP Method treats software development as a collaborative effort between specialized AI agents, each embodying the expertise and perspective of a specific role. Unlike a single AI trying to handle all aspects, each agent:
+The AP Mapping treats software development as a collaborative effort between specialized AI agents, each embodying the expertise and perspective of a specific role. Unlike a single AI trying to handle all aspects, each agent:
 
 - **Maintains Deep Focus**: Each agent specializes in their domain (architecture, development, QA, etc.)
 - **Follows Role-Specific Protocols**: Agents operate according to their persona's best practices and methodologies
@@ -293,9 +293,9 @@ All voice scripts are located in `agents/voice/`:
 
 ## Design Philosophy
 
-The AP Method is designed to be completely project-agnostic and portable across different codebases. All configuration is stored in `.claude/settings.json` for easy management.
+The AP Mapping is designed to be completely project-agnostic and portable across different codebases. All configuration is stored in `.claude/settings.json` for easy management.
 
-### Why AP Method Works
+### Why AP Mapping Works
 
 1. **Cognitive Load Distribution**: Each agent maintains deep focus on their domain
 2. **Natural Workflow**: Mirrors real software team dynamics

@@ -1,10 +1,10 @@
-# AP Method Release Process
+# AP Mapping Release Process
 
-This document outlines the complete release process for the AP Method, including version management, build procedures, and GitHub release creation.
+This document outlines the complete release process for the AP Mapping, including version management, build procedures, and GitHub release creation.
 
 ## Overview
 
-The AP Method uses GitHub Releases for distribution, with semantic versioning and automated update checking via `ap-manager.sh`.
+The AP Mapping uses GitHub Releases for distribution, with semantic versioning and automated update checking via `ap-manager.sh`.
 
 ## Version Management
 
@@ -113,10 +113,10 @@ git push origin v1.1.0
 
 ##### Option A: GitHub Web Interface
 
-1. Navigate to https://github.com/omayhemo/agent-persona-method/releases
+1. Navigate to https://github.com/omayhemo/agentic-persona-mapping/releases
 2. Click "Draft a new release"
 3. Select tag: `v1.1.0`
-4. Release title: `AP Method v1.1.0`
+4. Release title: `AP Mapping v1.1.0`
 5. Upload `dist/ap-method-v1.1.0.tar.gz`
 6. Paste release notes (see template below)
 7. Check "Set as the latest release"
@@ -127,7 +127,7 @@ git push origin v1.1.0
 ```bash
 # Create release with GitHub CLI
 gh release create v1.1.0 \
-  --title "AP Method v1.1.0" \
+  --title "AP Mapping v1.1.0" \
   --notes-file RELEASE_NOTES.md \
   dist/ap-method-v1.1.0.tar.gz
 ```
@@ -135,7 +135,7 @@ gh release create v1.1.0 \
 ## Release Notes Template
 
 ```markdown
-# AP Method v1.1.0
+# AP Mapping v1.1.0
 
 Released: YYYY-MM-DD
 
@@ -176,7 +176,7 @@ OR
 ### New Installation
 
 ```bash
-curl -L https://github.com/omayhemo/agent-persona-method/releases/download/v1.1.0/ap-method-v1.1.0.tar.gz | tar -xz
+curl -L https://github.com/omayhemo/agentic-persona-mapping/releases/download/v1.1.0/ap-method-v1.1.0.tar.gz | tar -xz
 ./installer/install.sh
 ```
 
@@ -200,7 +200,7 @@ Thanks to contributors...
 
 ## 📋 Full Changelog
 
-See [CHANGELOG.md](https://github.com/omayhemo/agent-persona-method/blob/main/CHANGELOG.md) for complete history.
+See [CHANGELOG.md](https://github.com/omayhemo/agentic-persona-mapping/blob/main/CHANGELOG.md) for complete history.
 ```
 
 ## Post-Release Tasks

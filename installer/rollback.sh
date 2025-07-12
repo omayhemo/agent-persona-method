@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# AP Method Rollback Utility
-# Standalone script to rollback AP Method installations
+# AP Mapping Rollback Utility
+# Standalone script to rollback AP Mapping installations
 
 set -e
 
@@ -366,7 +366,7 @@ clean_old_backups() {
 }
 
 # Main script logic
-print_section "AP Method Rollback Utility"
+print_section "AP Mapping Rollback Utility"
 
 # Parse command line arguments
 COMMAND=""

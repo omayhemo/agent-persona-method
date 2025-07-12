@@ -1,9 +1,9 @@
 ---
 name: personas
-description: List all available AP Method personas
+description: List all available AP Mapping personas
 ---
 
-# Available AP Method Personas
+# Available AP Mapping Personas
 
 ## Direct Activation Commands
 

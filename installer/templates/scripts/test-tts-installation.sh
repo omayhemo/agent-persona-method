@@ -142,7 +142,7 @@ echo ""
 echo "7. Testing voice script directly..."
 if [ -f "$TEST_SCRIPT" ] && [ -x "$TEST_SCRIPT" ]; then
     echo "   Running: $TEST_SCRIPT \"Test message\""
-    "$TEST_SCRIPT" "This is a test of the AP Method text-to-speech system"
+    "$TEST_SCRIPT" "This is a test of the AP Mapping text-to-speech system"
     echo "   If you didn't hear anything, check the logs above for issues"
 else
     echo "   ✗ Cannot test - voice script not available"

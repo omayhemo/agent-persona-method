@@ -1,8 +1,8 @@
-# Parallel Subtask Usage Guide for AP Method Teams
+# Parallel Subtask Usage Guide for AP Mapping Teams
 
 ## Overview
 
-This guide provides practical examples of how to use the new parallel subtask capabilities in the AP Method. Each persona can now execute multiple analysis tasks simultaneously, dramatically improving efficiency and insight quality.
+This guide provides practical examples of how to use the new parallel subtask capabilities in the AP Mapping. Each persona can now execute multiple analysis tasks simultaneously, dramatically improving efficiency and insight quality.
 
 ## Table of Contents
 

@@ -1,8 +1,8 @@
-# AP Method Integration API Contracts
+# AP Mapping Integration API Contracts
 
 ## Overview
 
-This document defines the API contracts for all integration points within the AP Method system. These contracts establish clear interfaces between components, ensuring reliable communication and data exchange.
+This document defines the API contracts for all integration points within the AP Mapping system. These contracts establish clear interfaces between components, ensuring reliable communication and data exchange.
 
 ## API Design Principles
 

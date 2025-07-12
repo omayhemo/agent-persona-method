@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# AP Method Task Extraction Script
+# AP Mapping Task Extraction Script
 # Extracts tasks from story files and adds them to tasks.md
 #
 # Usage: extract-tasks.sh <story-file>

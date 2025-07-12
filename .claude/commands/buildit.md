@@ -1,9 +1,9 @@
 ---
 name: buildit
-description: Build AP Method distribution package
+description: Build AP Mapping distribution package
 ---
 
-Build the AP Method distribution package by running the build script.
+Build the AP Mapping distribution package by running the build script.
 
 This command will:
 1. Clean any previous builds

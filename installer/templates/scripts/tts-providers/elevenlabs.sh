@@ -258,7 +258,7 @@ store_api_key() {
             # Check if already exists
             if ! grep -q "export ELEVENLABS_API_KEY=" "$shell_profile" 2>/dev/null; then
                 echo "" >> "$shell_profile"
-                echo "# ElevenLabs API key for AP Method TTS" >> "$shell_profile"
+                echo "# ElevenLabs API key for AP Mapping TTS" >> "$shell_profile"
                 echo "export ELEVENLABS_API_KEY='$api_key'" >> "$shell_profile"
             else
                 # Update existing
@@ -282,7 +282,7 @@ store_api_key() {
                 echo "keychain:ap-method-elevenlabs"
             elif command -v secret-tool >/dev/null 2>&1; then
                 # Linux secret storage
-                echo -n "$api_key" | secret-tool store --label="AP Method ElevenLabs" \
+                echo -n "$api_key" | secret-tool store --label="AP Mapping ElevenLabs" \
                     application ap-method service elevenlabs 2>/dev/null
                 echo "secret-tool:ap-method-elevenlabs"
             else

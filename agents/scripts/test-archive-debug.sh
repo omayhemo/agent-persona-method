@@ -15,7 +15,7 @@ echo ""
 
 # Create test tasks.md
 cat > "$TEST_DIR/session-notes/tasks/tasks.md" << 'EOF'
-# AP Method Tasks
+# AP Mapping Tasks
 
 ## Metadata
 last-updated: 2025-01-01T00:00:00Z

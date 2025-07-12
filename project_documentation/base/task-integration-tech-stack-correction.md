@@ -8,7 +8,7 @@
 
 ## Context
 
-During the implementation of STORY-003 (Map Integration Points), we discovered that all technical implementation examples were written in TypeScript/JavaScript. This is fundamentally misaligned with the AP Method's native bash-based architecture.
+During the implementation of STORY-003 (Map Integration Points), we discovered that all technical implementation examples were written in TypeScript/JavaScript. This is fundamentally misaligned with the AP Mapping's native bash-based architecture.
 
 ## Decision
 
@@ -16,7 +16,7 @@ All task integration implementations MUST use the following technology stack:
 
 ### 1. Primary Technology: Bash Scripts
 
-**Rationale**: The AP Method is a bash-based system that:
+**Rationale**: The AP Mapping is a bash-based system that:
 - Uses bash scripts for all core functionality (`agentic-setup`, voice scripts)
 - Operates on markdown files as the primary data format
 - Integrates with Claude Code through bash hooks
@@ -45,7 +45,7 @@ All task integration implementations MUST use the following technology stack:
 
 ### 3. Prohibited Technologies
 
-The following are explicitly NOT part of the AP Method tech stack:
+The following are explicitly NOT part of the AP Mapping tech stack:
 - TypeScript/JavaScript
 - Node.js/npm ecosystem
 - React or any frontend frameworks
@@ -57,7 +57,7 @@ The following are explicitly NOT part of the AP Method tech stack:
 
 ```bash
 #!/bin/bash
-# All AP Method scripts should follow this pattern
+# All AP Mapping scripts should follow this pattern
 
 # Set strict error handling
 set -euo pipefail
@@ -83,7 +83,7 @@ function log_error() {
 ```python
 #!/usr/bin/env python3
 """
-AP Method integration analysis tool
+AP Mapping integration analysis tool
 Uses standard library only - no external dependencies
 """
 
@@ -133,7 +133,7 @@ def analyze_integration_points(persona_config_path):
 
 ## Approval
 
-This architectural decision is effective immediately and applies to all AP Method development.
+This architectural decision is effective immediately and applies to all AP Mapping development.
 
 **Approved by**: Architect Agent  
 **Date**: 2025-01-11  

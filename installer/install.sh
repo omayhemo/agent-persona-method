@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# AP Method Installation Script
+# AP Mapping Installation Script
 # Template-based installer
 
 set -e
@@ -20,7 +20,7 @@ if [ "$1" = "--defaults" ] || [ "$1" = "-d" ]; then
 fi
 
 echo "=========================================="
-echo "   Agentic Persona Method Installation"
+echo "   Agentic Persona Mapping Installation"
 echo "=========================================="
 echo ""
 
@@ -45,12 +45,12 @@ if [ "$#" -eq 0 ] && [ -f "$INSTALLER_DIR/install.sh" ] && [ -d "$DIST_DIR/agent
         SKIP_COPY="true"
     else
         echo "=========================================="
-        echo "AP Method Quick Setup"
+        echo "AP Mapping Quick Setup"
         echo "=========================================="
         echo ""
         echo "You're running the installer from the extracted distribution."
         echo ""
-        echo -e "${GREEN}Where would you like to install AP Method?${NC}"
+        echo -e "${GREEN}Where would you like to install AP Mapping?${NC}"
         echo -e "${BLUE}"
         echo "1) Use this directory as the project (quick start)"
         echo "2) Create new project in parent directory"
@@ -65,7 +65,7 @@ if [ "$#" -eq 0 ] && [ -f "$INSTALLER_DIR/install.sh" ] && [ -d "$DIST_DIR/agent
             1)
                 echo ""
                 echo "Using current directory as project directory."
-                echo "This will configure AP Method in-place without copying files."
+                echo "This will configure AP Mapping in-place without copying files."
                 TARGET_DIR="$DIST_DIR"
                 SKIP_COPY="true"
                 echo ""
@@ -344,7 +344,7 @@ cp "$INSTALLER_DIR/templates/voice"/*.sh "$AP_ROOT/voice/"
 chmod +x "$AP_ROOT/voice"/*.sh
 
 # Install ap-manager.sh
-echo "Installing AP Method Manager..."
+echo "Installing AP Mapping Manager..."
 if [ -f "$INSTALLER_DIR/templates/scripts/ap-manager.sh" ]; then
     cp "$INSTALLER_DIR/templates/scripts/ap-manager.sh" "$AP_ROOT/scripts/"
     chmod +x "$AP_ROOT/scripts/ap-manager.sh"
@@ -873,28 +873,28 @@ case "$TTS_PROVIDER" in
                         # Different players need different parameters for raw audio
                         case "$WAV_PLAYER" in
                             paplay)
-                                echo "Welcome to the AP Method. This is the orchestrator voice." | \
+                                echo "Welcome to the AP Mapping. This is the orchestrator voice." | \
                                     "$PROJECT_ROOT/.piper/piper" \
                                     --model "$PROJECT_ROOT/.piper/models/en_US-ryan-medium.onnx" \
                                     --output-raw 2>/dev/null | \
                                     paplay --raw --rate=22050 --format=s16le --channels=1
                                 ;;
                             aplay)
-                                echo "Welcome to the AP Method. This is the orchestrator voice." | \
+                                echo "Welcome to the AP Mapping. This is the orchestrator voice." | \
                                     "$PROJECT_ROOT/.piper/piper" \
                                     --model "$PROJECT_ROOT/.piper/models/en_US-ryan-medium.onnx" \
                                     --output-raw 2>/dev/null | \
                                     aplay -q -r 22050 -f S16_LE -t raw -c 1 -
                                 ;;
                             play)
-                                echo "Welcome to the AP Method. This is the orchestrator voice." | \
+                                echo "Welcome to the AP Mapping. This is the orchestrator voice." | \
                                     "$PROJECT_ROOT/.piper/piper" \
                                     --model "$PROJECT_ROOT/.piper/models/en_US-ryan-medium.onnx" \
                                     --output-raw 2>/dev/null | \
                                     play -q -t raw -r 22050 -e signed -b 16 -c 1 -
                                 ;;
                             *)
-                                echo "Welcome to the AP Method. This is the orchestrator voice." | \
+                                echo "Welcome to the AP Mapping. This is the orchestrator voice." | \
                                     "$PROJECT_ROOT/.piper/piper" \
                                     --model "$PROJECT_ROOT/.piper/models/en_US-ryan-medium.onnx" \
                                     --output-raw 2>/dev/null | \
@@ -1203,7 +1203,7 @@ if [ -f "$GITIGNORE_FILE" ]; then
         echo "project_documentation/session_notes/" >> "$GITIGNORE_FILE"
         echo "session_notes/" >> "$GITIGNORE_FILE"
         echo "" >> "$GITIGNORE_FILE"
-        echo "# AP Method generated files" >> "$GITIGNORE_FILE"
+        echo "# AP Mapping generated files" >> "$GITIGNORE_FILE"
         echo "CLAUDE.md.ap-setup" >> "$GITIGNORE_FILE"
         echo "harmonization.log" >> "$GITIGNORE_FILE"
         echo "" >> "$GITIGNORE_FILE"
@@ -1334,7 +1334,7 @@ fi
 
 echo ""
 echo "=========================================="
-echo "AP Method installation completed!"
+echo "AP Mapping installation completed!"
 echo "=========================================="
 echo ""
 echo "Installation Summary:"
@@ -1379,7 +1379,7 @@ if [ -f "$PROJECT_ROOT/VERSION" ]; then
 fi
 
 # Remove the distribution README if it exists (not the installer README)
-if [ -f "$PROJECT_ROOT/README.md" ] && grep -q "AP Method - Agent Persona Framework" "$PROJECT_ROOT/README.md" 2>/dev/null; then
+if [ -f "$PROJECT_ROOT/README.md" ] && grep -q "AP Mapping - Agentic Persona Mapping Framework" "$PROJECT_ROOT/README.md" 2>/dev/null; then
     rm -f "$PROJECT_ROOT/README.md"
     echo "- Removed distribution README"
 fi
@@ -1406,4 +1406,4 @@ echo "For more information, see:"
 echo "- Main instructions: $CLAUDE_MD"
 echo "- Agents directory: $AP_ROOT"
 echo ""
-echo "Enjoy using the AP Method!"
+echo "Enjoy using the AP Mapping!"

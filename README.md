@@ -1,6 +1,6 @@
-# AP Method - Agent Persona Methodology
+# AP Mapping - Agentic Persona Mapping
 
-The AP (Agent Persona) method is a project-agnostic approach to orchestrating AI agents for software development. This system provides specialized agent personas, each with specific expertise and responsibilities.
+The AP (Agentic Persona) mapping is a project-agnostic approach to orchestrating AI agents for software development. This system provides specialized agent personas, each with specific expertise and responsibilities.
 
 ## Quick Start
 
@@ -8,7 +8,7 @@ The AP (Agent Persona) method is a project-agnostic approach to orchestrating AI
 
 ```bash
 # Download and extract in one command
-curl -L https://github.com/omayhemo/agent-persona-method/raw/main/dist/ap-method-v1.0.0.tar.gz | tar -xz
+curl -L https://github.com/omayhemo/agentic-persona-mapping/raw/main/dist/ap-mapping-v1.0.0.tar.gz | tar -xz
 
 # Run the installer
 ./installer/install.sh
@@ -18,7 +18,7 @@ curl -L https://github.com/omayhemo/agent-persona-method/raw/main/dist/ap-method
 
 ```bash
 # Download, extract, and install with defaults in one command
-curl -L https://github.com/omayhemo/agent-persona-method/raw/main/dist/ap-method-v1.0.0.tar.gz | tar -xz && ./installer/install.sh -d
+curl -L https://github.com/omayhemo/agentic-persona-mapping/raw/main/dist/ap-mapping-v1.0.0.tar.gz | tar -xz && ./installer/install.sh -d
 ```
 
 ### Update Management
@@ -40,11 +40,11 @@ agents/scripts/ap-manager.sh version
 
 1. **Clone and build:**
    ```bash
-   git clone https://github.com/omayhemo/agent-persona-method.git
-   cd agent-persona-method
+   git clone https://github.com/omayhemo/agentic-persona-mapping.git
+   cd agentic-persona-mapping
    ./build-distribution.sh
    cd dist
-   tar -xzf ap-method-v*.tar.gz
+   tar -xzf ap-mapping-v*.tar.gz
    ./installer/install.sh
    ```
 
@@ -55,7 +55,7 @@ agents/scripts/ap-manager.sh version
 
 ## Overview
 
-The AP Method leverages specialized AI agents to handle different aspects of software development:
+The AP Mapping leverages specialized AI agents to handle different aspects of software development:
 
 - **AP Orchestrator** - Central coordinator and method expert
 - **Analyst** - Research, requirements gathering, project briefs
@@ -91,12 +91,12 @@ The AP Method leverages specialized AI agents to handle different aspects of sof
 ```bash
 # Download and install in your project directory
 cd /path/to/your/project
-curl -L https://github.com/omayhemo/agent-persona-method/raw/main/dist/ap-method-v1.0.0.tar.gz | tar -xz
+curl -L https://github.com/omayhemo/agentic-persona-mapping/raw/main/dist/ap-mapping-v1.0.0.tar.gz | tar -xz
 ./installer/install.sh
 
 # Or download first, then extract
-curl -LO https://github.com/omayhemo/agent-persona-method/raw/main/dist/ap-method-v1.0.0.tar.gz
-tar -xzf ap-method-v1.0.0.tar.gz
+curl -LO https://github.com/omayhemo/agentic-persona-mapping/raw/main/dist/ap-mapping-v1.0.0.tar.gz
+tar -xzf ap-mapping-v1.0.0.tar.gz
 ./installer/install.sh
 ```
 
@@ -106,15 +106,15 @@ tar -xzf ap-method-v1.0.0.tar.gz
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/omayhemo/agent-persona-method.git
-   cd agent-persona-method
+   git clone https://github.com/omayhemo/agentic-persona-mapping.git
+   cd agentic-persona-mapping
    ```
 
 2. Build and run installer:
    ```bash
    ./build-distribution.sh
    cd dist
-   tar -xzf ap-method-v*.tar.gz
+   tar -xzf ap-mapping-v*.tar.gz
    ./installer/install.sh
    ```
 
@@ -230,7 +230,7 @@ agentic-persona/
 
 ## Contributing
 
-The AP Method is designed to be extended and customized:
+The AP Mapping is designed to be extended and customized:
 
 1. Add new agent personas in `agents/personas/`
 2. Create new task definitions in `agents/tasks/`
@@ -249,4 +249,4 @@ MIT License - See [ap-kb.md](agents/data/ap-kb.md) for details
 
 ---
 
-The AP Method - Elevating AI-assisted development through specialized agent orchestration.
+The AP Mapping - Elevating AI-assisted development through specialized agent orchestration.

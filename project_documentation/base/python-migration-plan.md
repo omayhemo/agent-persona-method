@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-This document outlines the strategic migration from Bash to Python for the AP Method's task management system, with a focus on enabling robust APM (Application Performance Monitoring) integration while maintaining system reliability and backward compatibility.
+This document outlines the strategic migration from Bash to Python for the AP Mapping's task management system, with a focus on enabling robust APM (Application Performance Monitoring) integration while maintaining system reliability and backward compatibility.
 
 ## Current State Analysis
 

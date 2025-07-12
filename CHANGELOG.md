@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to the AP Method will be documented in this file.
+All notable changes to the AP Mapping will be documented in this file.
 
 ## [1.1.0-alpha.2] - 2025-01-10
 
@@ -66,7 +66,7 @@ All notable changes to the AP Method will be documented in this file.
 ## [1.0.0] - 2025-01-09
 
 ### Added
-- Initial release of AP Method
+- Initial release of AP Mapping
 - Agent Persona orchestration system
 - Specialized agent roles (Orchestrator, Developer, Architect, etc.)
 - Project-agnostic methodology framework

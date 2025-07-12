@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Python Task Management API provides a robust, extensible foundation for managing tasks within the AP Method framework, with built-in APM integration capabilities.
+The Python Task Management API provides a robust, extensible foundation for managing tasks within the AP Mapping framework, with built-in APM integration capabilities.
 
 ## Core Architecture
 

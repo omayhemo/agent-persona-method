@@ -1,8 +1,8 @@
-# AP Method Persona Task Management Integration Architecture
+# AP Mapping Persona Task Management Integration Architecture
 
 ## Introduction / Preamble
 
-This document outlines the technical architecture for integrating task management capabilities into the AP Method persona system. The architecture enables each of the 9 specialized AI personas to leverage task management for their specific workflows while maintaining coordination across the entire system.
+This document outlines the technical architecture for integrating task management capabilities into the AP Mapping persona system. The architecture enables each of the 9 specialized AI personas to leverage task management for their specific workflows while maintaining coordination across the entire system.
 
 The primary goal is to create a unified yet flexible task management framework that enhances persona effectiveness, improves cross-persona collaboration, and provides comprehensive visibility into project progress - all while maintaining the simplicity and performance of the existing flat-file task system.
 
@@ -30,13 +30,13 @@ This architecture focuses on the backend task management engine and persona inte
 
 ## Technical Summary
 
-The Persona Task Management Integration architecture extends the existing AP Method flat-file task system to provide persona-specific task management capabilities. Built on bash scripts and markdown files, the system uses a layered architecture with persona adapters, a unified task engine, and cross-persona orchestration. The architecture prioritizes performance (<100ms operations), git-friendliness, and maintainability while enabling sophisticated workflows for each persona.
+The Persona Task Management Integration architecture extends the existing AP Mapping flat-file task system to provide persona-specific task management capabilities. Built on bash scripts and markdown files, the system uses a layered architecture with persona adapters, a unified task engine, and cross-persona orchestration. The architecture prioritizes performance (<100ms operations), git-friendliness, and maintainability while enabling sophisticated workflows for each persona.
 
 ## High-Level Overview
 
 The architecture follows a **Modular Monolith** pattern with clear separation between the core task engine, persona-specific adapters, and orchestration layer. The system uses a **flat-file database** (single markdown file) with bash-based operations, enhanced by Python-based hooks for advanced functionality.
 
-Repository structure follows a **Monorepo** approach within the existing AP Method project, with all persona integrations co-located for easier cross-persona coordination.
+Repository structure follows a **Monorepo** approach within the existing AP Mapping project, with all persona integrations co-located for easier cross-persona coordination.
 
 ```mermaid
 graph TB
@@ -658,7 +658,7 @@ graph TD
 - **Infrastructure as Code**: Not applicable (local scripts)
 - **Deployment Strategy**: Git-based distribution with setup scripts
 - **Environments**: 
-  - Development: Local AP Method installation
+  - Development: Local AP Mapping installation
   - Production: Same as development (no separate environments)
 - **Installation**: Via `agentic-setup` script
 - **Updates**: Git pull or AP Manager update command
@@ -669,7 +669,7 @@ graph TD
 ```mermaid
 graph TB
     subgraph "Development Environment"
-        subgraph "AP Method Installation"
+        subgraph "AP Mapping Installation"
             GR[Git Repository]
             AS[agentic-setup]
             CF[Configuration Files]

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# AP Method Error Handler Framework
+# AP Mapping Error Handler Framework
 # Comprehensive error classification, handling, and recovery system
 
 # Error handler version
@@ -484,7 +484,7 @@ prompt_for_value() {
             description="Root directory of your project"
             ;;
         "AP_ROOT")
-            description="AP Method installation directory"
+            description="AP Mapping installation directory"
             ;;
         *)
             description="Value for $var_name"
@@ -635,7 +635,7 @@ generate_error_report() {
     local report_file="${ERROR_REPORT_FILE:-error-report-$(date +%Y%m%d-%H%M%S).txt}"
     
     {
-        echo "AP Method Installation Error Report"
+        echo "AP Mapping Installation Error Report"
         echo "=================================="
         echo ""
         echo "Generated: $(date -u +"%Y-%m-%dT%H:%M:%SZ")"

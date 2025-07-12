@@ -1,8 +1,8 @@
-# AP Method Task Management System User Guide
+# AP Mapping Task Management System User Guide
 
 ## Overview
 
-The AP Method Task Management System is a flat-file based task tracking system designed specifically for managing software development tasks within the AP Method workflow. It provides scripts for extracting tasks from story files, querying task status, updating tasks, and archiving completed work.
+The AP Mapping Task Management System is a flat-file based task tracking system designed specifically for managing software development tasks within the AP Mapping workflow. It provides scripts for extracting tasks from story files, querying task status, updating tasks, and archiving completed work.
 
 ## Table of Contents
 
@@ -377,9 +377,9 @@ Default paths (can be overridden with environment variables):
 5. **Progress Notes**: Add notes for context and handoffs
 6. **Test Changes**: Run test suite after modifying scripts
 
-## Integration with AP Method
+## Integration with AP Mapping
 
-The task management system integrates seamlessly with the AP Method workflow:
+The task management system integrates seamlessly with the AP Mapping workflow:
 
 1. **Product Manager** creates epics
 2. **Product Owner** defines stories with task templates
@@ -387,4 +387,4 @@ The task management system integrates seamlessly with the AP Method workflow:
 4. **QA** tracks testing tasks and dependencies
 5. **All Personas** query status and update progress
 
-For more information on the AP Method, see the main documentation.
+For more information on the AP Mapping, see the main documentation.

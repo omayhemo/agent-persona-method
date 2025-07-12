@@ -1,6 +1,6 @@
 #!/bin/bash
-# AP Method - Python Support Installer
-# This script sets up Python environment for AP Method hooks and scripts
+# AP Mapping - Python Support Installer
+# This script sets up Python environment for AP Mapping hooks and scripts
 
 set -e
 
@@ -10,10 +10,10 @@ YELLOW='\033[1;33m'
 RED='\033[0;31m'
 NC='\033[0m'
 
-# Get the target directory (where AP Method is installed)
+# Get the target directory (where AP Mapping is installed)
 TARGET_DIR="${1:-$(pwd)}"
 
-echo -e "${GREEN}AP Method - Python Support Setup${NC}"
+echo -e "${GREEN}AP Mapping - Python Support Setup${NC}"
 echo "================================================"
 echo "Target directory: $TARGET_DIR"
 echo
@@ -23,7 +23,7 @@ echo -n "Checking Python installation... "
 if ! command -v python3 &>/dev/null; then
     echo -e "${RED}Not found${NC}"
     echo
-    echo "Python 3 is required for AP Method hooks and scripts."
+    echo "Python 3 is required for AP Mapping hooks and scripts."
     echo "Please install Python 3.8 or later, then run this script again."
     exit 1
 fi
@@ -72,5 +72,5 @@ echo "  - $SUPPORT_DIR/setup-python.sh      # Set up virtual environment"
 echo "  - $SUPPORT_DIR/activate-python.sh   # Activate virtual environment"
 echo "  - $SUPPORT_DIR/python-wrapper.sh    # Run Python scripts in venv"
 echo
-echo "AP Method hooks will work with system Python by default."
+echo "AP Mapping hooks will work with system Python by default."
 echo "Use the virtual environment for any additional Python packages."

@@ -1,7 +1,7 @@
 # Persona Update Template - Static Markdown Pattern
 
 ## Overview
-This template provides the standardized structure for updating all AP Method personas to use reliable static markdown configuration. Copy this template and fill in the persona-specific details.
+This template provides the standardized structure for updating all AP Mapping personas to use reliable static markdown configuration. Copy this template and fill in the persona-specific details.
 
 ---
 

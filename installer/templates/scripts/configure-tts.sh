@@ -36,7 +36,7 @@ show_current_config() {
         fi
     else
         echo -e "${RED}TTS Manager not found!${NC}"
-        echo "Please ensure AP Method is properly installed."
+        echo "Please ensure AP Mapping is properly installed."
         exit 1
     fi
 }
@@ -227,7 +227,7 @@ toggle_tts() {
 
 # Check if running directly
 if [ "$0" = "${BASH_SOURCE[0]}" ]; then
-    echo -e "${BLUE}AP Method TTS Configuration Utility${NC}"
+    echo -e "${BLUE}AP Mapping TTS Configuration Utility${NC}"
     echo "===================================="
     
     # Check for direct command

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# AP Method Recovery System
+# AP Mapping Recovery System
 # Checkpoint-based recovery and state management
 
 # Recovery system version

@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# AP Method Task Management Integration Tests
+# AP Mapping Task Management Integration Tests
 # Tests end-to-end workflows across all task management components
 #
 
@@ -116,7 +116,7 @@ setup_test_env() {
     
     # Create initial tasks.md
     cat > "$test_dir/session-notes/tasks/tasks.md" << 'EOF'
-# AP Method Tasks
+# AP Mapping Tasks
 
 ## Metadata
 last-updated: 2025-01-01T00:00:00Z
@@ -161,7 +161,7 @@ test_development_workflow() {
 # EPIC-001: Task Management System
 
 ## Overview
-Build a comprehensive task management system for the AP Method.
+Build a comprehensive task management system for the AP Mapping.
 
 ## Stories
 - STORY-001: Core task functionality
@@ -753,7 +753,7 @@ EOF
 # Main Test Runner
 #
 
-echo -e "${GREEN}AP Method Task Management Integration Tests${NC}"
+echo -e "${GREEN}AP Mapping Task Management Integration Tests${NC}"
 echo "==========================================="
 echo ""
 

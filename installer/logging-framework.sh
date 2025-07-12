@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# AP Method Logging Framework
+# AP Mapping Logging Framework
 # Provides structured logging, debug capabilities, and performance tracking
 
 # Logging configuration
@@ -69,7 +69,7 @@ init_logging() {
         # Initialize log file with header
         {
             echo "==============================================="
-            echo "AP Method Installer Log"
+            echo "AP Mapping Installer Log"
             echo "Started: $(date)"
             echo "Component: $LOG_COMPONENT"
             echo "Log Level: $LOG_LEVEL"

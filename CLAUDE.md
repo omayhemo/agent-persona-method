@@ -6,14 +6,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is the AP (Agent Persona) Method repository - a project-agnostic approach to orchestrating AI agents for software development. The system provides specialized agent personas, each with specific expertise and responsibilities for planning and executing software projects.
+This is the AP (Agentic Persona) Mapping repository - a project-agnostic approach to orchestrating AI agents for software development. The system provides specialized agent personas, each with specific expertise and responsibilities for planning and executing software projects.
 
-## 🚀 AP Method Startup Protocol
+## 🚀 AP Mapping Startup Protocol
 
 When a user starts Claude with "ap" (e.g., `claude ap`), you MUST:
 
 1. **Execute Parallel Initialization** (ALL in one function_calls block):
-   - Task 1: Load AP Method knowledge base from /mnt/c/code/agentic-persona/agents/data/ap-kb.md
+   - Task 1: Load AP Mapping knowledge base from /mnt/c/code/agentic-persona/agents/data/ap-kb.md
    - Task 2: Load orchestrator configuration from /mnt/c/code/agentic-persona/agents/ide-ap-orchestrator.cfg.md
    - Task 3: Load communication standards from /mnt/c/code/agentic-persona/agents/personas/communication_standards.md
    - Task 4: Check for project documentation at /mnt/c/code/agentic-persona/project_documentation/base/
@@ -85,14 +85,14 @@ $AP_ROOT/scripts/ap-manager.sh verify
 # Show current version
 $AP_ROOT/scripts/ap-manager.sh version
 
-# Uninstall AP Method (with backup)
+# Uninstall AP Mapping (with backup)
 $AP_ROOT/scripts/ap-manager.sh uninstall
 ```
 
 ## High-Level Architecture
 
 ### Agent Persona System
-The AP Method uses specialized AI agents, each embodying specific roles:
+The AP Mapping uses specialized AI agents, each embodying specific roles:
 
 1. **AP Orchestrator** - Central coordinator and method expert
    - Can embody any specialist persona
@@ -138,7 +138,7 @@ The `$PROJECT_DOCS` directory is automatically created with subdirectories for:
 - `qa/` - Quality assurance documentation
 
 ### Workflow Architecture
-The AP Method follows an iterative, non-linear workflow:
+The AP Mapping follows an iterative, non-linear workflow:
 1. **Discovery Phase**: Analyst creates project brief
 2. **Planning Phase**: PM creates PRD with epics/stories
 3. **Design Phase**: Architects create technical/UI specifications

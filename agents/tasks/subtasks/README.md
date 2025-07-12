@@ -1,4 +1,4 @@
-# AP Method Subtask System
+# AP Mapping Subtask System
 
 This directory contains templates for Claude Code Task tool integration, enabling parallel execution of subtasks for enhanced analysis and processing capabilities.
 
@@ -107,7 +107,7 @@ metrics:
    - Specialized opinion matters most
    - Best for domain-specific analysis
 
-## Integration with AP Method
+## Integration with AP Mapping
 
 ### Supported Agents
 - **Architect**: System analysis, code quality, architecture review
@@ -154,4 +154,4 @@ metrics:
 
 ---
 
-For questions or contributions, refer to the main AP Method documentation.
+For questions or contributions, refer to the main AP Mapping documentation.

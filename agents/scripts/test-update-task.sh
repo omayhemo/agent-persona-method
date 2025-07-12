@@ -43,7 +43,7 @@ export PROJECT_DOCS="$TEST_DIR"
 
 # Create test tasks.md with a variety of tasks
 cat > "$TEST_DIR/session-notes/tasks/tasks.md" << 'EOF'
-# AP Method Tasks
+# AP Mapping Tasks
 
 ## Metadata
 last-updated: 2025-01-11T10:00:00Z

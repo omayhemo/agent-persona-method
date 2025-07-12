@@ -2,7 +2,7 @@
 
 ## Overview
 
-`ap-manager.sh` is the lifecycle management tool for AP Method installations. It provides update, verification, backup, and uninstall capabilities for maintaining your AP Method installation over time.
+`ap-manager.sh` is the lifecycle management tool for AP Mapping installations. It provides update, verification, backup, and uninstall capabilities for maintaining your AP Mapping installation over time.
 
 ## Location
 
@@ -33,7 +33,7 @@ Features:
 
 ### `verify` - Verify Installation
 
-Checks the integrity of your AP Method installation:
+Checks the integrity of your AP Mapping installation:
 
 ```bash
 agents/scripts/ap-manager.sh verify
@@ -57,9 +57,9 @@ Output includes:
 - Current version number
 - Installation date (if available)
 
-### `uninstall` - Remove AP Method
+### `uninstall` - Remove AP Mapping
 
-Safely removes AP Method from your project:
+Safely removes AP Mapping from your project:
 
 ```bash
 # Standard uninstall
@@ -103,7 +103,7 @@ When you run `update`, ap-manager:
    - Defaults to "unknown" if not found
 
 2. **Queries GitHub API**
-   - Endpoint: `https://api.github.com/repos/omayhemo/agent-persona-method/releases/latest`
+   - Endpoint: `https://api.github.com/repos/omayhemo/agentic-persona-mapping/releases/latest`
    - Extracts latest version and download URL
 
 3. **Compares Versions**
@@ -173,7 +173,7 @@ This enables:
 ## Environment Variables
 
 - `AP_ROOT` - Path to agents directory (auto-detected or set manually)
-- Standard AP Method variables from `.claude/settings.json`
+- Standard AP Mapping variables from `.claude/settings.json`
 
 ## Security Considerations
 

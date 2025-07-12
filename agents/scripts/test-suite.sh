@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# AP Method Task Management Test Suite
+# AP Mapping Task Management Test Suite
 # Comprehensive unit tests for all task management functions
 #
 
@@ -105,7 +105,7 @@ setup_test_env() {
     
     # Create initial tasks.md
     cat > "$test_dir/session-notes/tasks/tasks.md" << 'EOF'
-# AP Method Tasks
+# AP Mapping Tasks
 
 ## Metadata
 last-updated: 2025-01-01T00:00:00Z
@@ -733,7 +733,7 @@ EOF
 # Main Test Runner
 #
 
-echo -e "${GREEN}AP Method Task Management Test Suite${NC}"
+echo -e "${GREEN}AP Mapping Task Management Test Suite${NC}"
 echo "======================================"
 echo ""
 

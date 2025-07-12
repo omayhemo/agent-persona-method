@@ -4,15 +4,15 @@
 
 - [AP Knowledge Base](#ap-knowledge-base)
   - [INDEX OF TOPICS](#index-of-topics)
-  - [AP METHOD - CORE PHILOSOPHY](#ap-method---core-philosophy)
-  - [AP METHOD - AGILE METHODOLOGIES OVERVIEW](#ap-method---agile-methodologies-overview)
+  - [AP MAPPING - CORE PHILOSOPHY](#ap-mapping---core-philosophy)
+  - [AP MAPPING - AGILE METHODOLOGIES OVERVIEW](#ap-mapping---agile-methodologies-overview)
     - [CORE PRINCIPLES OF AGILE](#core-principles-of-agile)
     - [KEY PRACTICES IN AGILE](#key-practices-in-agile)
     - [BENEFITS OF AGILE](#benefits-of-agile)
-  - [AP METHOD - ANALOGIES WITH AGILE PRINCIPLES](#ap-method---analogies-with-agile-principles)
-  - [AP METHOD - TOOLING AND RESOURCE LOCATIONS](#ap-method---tooling-and-resource-locations)
+  - [AP MAPPING - ANALOGIES WITH AGILE PRINCIPLES](#ap-method---analogies-with-agile-principles)
+  - [AP MAPPING - TOOLING AND RESOURCE LOCATIONS](#ap-method---tooling-and-resource-locations)
     - [Licensing](#licensing)
-  - [AP METHOD - ETHOS \& BEST PRACTICES](#ap-method---ethos--best-practices)
+  - [AP MAPPING - ETHOS \& BEST PRACTICES](#ap-method---ethos--best-practices)
   - [AGENT ROLES AND RESPONSIBILITIES](#agent-roles-and-responsibilities)
   - [NAVIGATING THE AP WORKFLOW - INITIAL GUIDANCE](#navigating-the-ap-workflow---initial-guidance)
     - [STARTING YOUR PROJECT - ANALYST OR PM?](#starting-your-project---analyst-or-pm)
@@ -27,14 +27,14 @@
   - [IDE USAGE - GENERAL RECOMMENDATIONS](#ide-usage---general-recommendations)
     - [PLANNING AND TECHNICAL DESIGN](#planning-and-technical-design)
     - [DOCUMENTATION MANAGEMENT \& IMPLEMENTATION PHASES](#documentation-management--implementation-phases)
-    - [AP METHOD FILES](#ap-method-files)
+    - [AP MAPPING FILES](#ap-method-files)
   - [LEVERAGING IDE TASKS FOR EFFICIENCY](#leveraging-ide-tasks-for-efficiency)
     - [PURPOSE OF IDE TASKS](#purpose-of-ide-tasks)
     - [EXAMPLES OF TASK FUNCTIONALITY](#examples-of-task-functionality)
 
-## AP METHOD - CORE PHILOSOPHY
+## AP MAPPING - CORE PHILOSOPHY
 
-**STATEMENT:** "Context Engineering" is about embracing the chaos, thinking like a CTO with unlimited resources and a singular vision, and leveraging AI as your high-powered team to achieve ambitious goals rapidly. The AP Method (Agent Persona Methodology), with the integrated "AP Agent", elevates "Context Coding" to advanced project planning, providing a structured yet flexible framework to plan, execute, and manage software projects using a team of specialized AI agents.
+**STATEMENT:** "Context Engineering" is about embracing the chaos, thinking like a CTO with unlimited resources and a singular vision, and leveraging AI as your high-powered team to achieve ambitious goals rapidly. The AP Mapping (Agentic Persona Mapping), with the integrated "AP Agent", elevates "Context Coding" to advanced project planning, providing a structured yet flexible framework to plan, execute, and manage software projects using a team of specialized AI agents.
 
 **DETAILS:**
 
@@ -42,7 +42,7 @@
 - Utilize AI as a force multiplier.
 - Adapt and overcome obstacles with a proactive mindset.
 
-## AP METHOD - AGILE METHODOLOGIES OVERVIEW
+## AP MAPPING - AGILE METHODOLOGIES OVERVIEW
 
 ### CORE PRINCIPLES OF AGILE
 
@@ -67,9 +67,9 @@
 - Enhanced Stakeholder Engagement: Close collaboration with users/clients.
 - Higher Team Morale: Empowered and self-organizing teams.
 
-## AP METHOD - ANALOGIES WITH AGILE PRINCIPLES
+## AP MAPPING - ANALOGIES WITH AGILE PRINCIPLES
 
-The AP Method, while distinct in its "Context Engineering" approach with AI, shares foundational parallels with Agile methodologies:
+The AP Mapping, while distinct in its "Context Engineering" approach with AI, shares foundational parallels with Agile methodologies:
 
 - **Individuals and Interactions over Processes and Tools (Agile) vs. Context Engineering & AI Team (AP):**
 
@@ -100,9 +100,9 @@ The AP Method, while distinct in its "Context Engineering" approach with AI, sha
   - **Agile:** Teams regularly reflect and adjust processes.
   - **AP:** The "Context Engineer" continuously reviews outputs ("QUALITY_CONTROL") and directs "ITERATIVE_REFINEMENT," serving a similar function to feedback loops and process improvement.
 
-## AP METHOD - TOOLING AND RESOURCE LOCATIONS
+## AP MAPPING - TOOLING AND RESOURCE LOCATIONS
 
-Effective use of the AP Method relies on understanding where key tools, configurations, and informational resources are located and how they are used. The method is designed to be tool-agnostic in principle, with agent instructions and workflows adaptable to various AI platforms and IDEs.
+Effective use of the AP Mapping relies on understanding where key tools, configurations, and informational resources are located and how they are used. The method is designed to be tool-agnostic in principle, with agent instructions and workflows adaptable to various AI platforms and IDEs.
 
 - **AP Knowledge Base:** This document (`agents/data/ap-kb.md`) serves as the central repository for understanding the AP method, its principles, agent roles, and workflows.
 - **Orchestrator Agents:** A key feature is the Orchestrator agent (AKA "AP"), a master agent capable of embodying any specialized agent role.
@@ -136,9 +136,9 @@ Effective use of the AP Method relies on understanding where key tools, configur
 
 ### Licensing
 
-The AP Method and its associated documentation and software are distributed under the **MIT License**.
+The AP Mapping and its associated documentation and software are distributed under the **MIT License**.
 
-Copyright (c) 2025 Doug Beard AKA AP Methodology AKA AP Code
+Copyright (c) 2025 Doug Beard AKA AP Mappingology AKA AP Code
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -146,7 +146,7 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-## AP METHOD - ETHOS & BEST PRACTICES
+## AP MAPPING - ETHOS & BEST PRACTICES
 
 - **CORE_ETHOS:** You are the "Context Engineer." Think like a CTO with unlimited resources and a singular vision. Your AI agents are your high-powered team. Your job is to direct, refine, and ensure quality towards your ambitious goal. The method elevates "Context Coding" to advanced project planning.
 - **MAXIMIZE_AI_LEVERAGE:** Push the AI. Ask for more. Challenge its outputs. Iterate.
@@ -158,7 +158,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 - **KNOW_YOUR_AGENTS:** Understand each agent's role (see [AGENT ROLES AND RESPONSIBILITIES](#agent-roles-and-responsibilities) or below). This includes understanding the capabilities of the Orchestrator agent if you are using one.
 - **START_SMALL_SCALE_FAST:** Test concepts, then expand.
 - **EMBRACE_THE_CHAOS:** Pioneering new methods is messy. Adapt and overcome.
-- **ADAPT & EXPERIMENT:** The AP Method provides a structure, but feel free to adapt its principles, agent order, or templates to fit your specific project needs and working style. Experiment to find what works best for you. **Define agile the AP way - or your way!** The agent configurations allow for customization of roles and responsibilities.
+- **ADAPT & EXPERIMENT:** The AP Mapping provides a structure, but feel free to adapt its principles, agent order, or templates to fit your specific project needs and working style. Experiment to find what works best for you. **Define agile the AP way - or your way!** The agent configurations allow for customization of roles and responsibilities.
 
 ## AGENT ROLES AND RESPONSIBILITIES
 
@@ -299,7 +299,7 @@ Always consider the trade-offs between the Orchestrator's versatility and the ef
 
 ## HANDLING MAJOR CHANGES
 
-Major changes are an inherent part of ambitious projects. The AP Method embraces this through its iterative nature and specific agent roles:
+Major changes are an inherent part of ambitious projects. The AP Mapping embraces this through its iterative nature and specific agent roles:
 
 - **Iterative by Design:** The entire AP workflow is built on "ITERATIVE_REFINEMENT." Expect to revisit previous steps and agents as new information emerges or requirements evolve. It's "not a linear process."
 - **Embrace and Adapt:** The core ethos includes "EMBRACE_THE_CHAOS" and "ADAPT & EXPERIMENT." Major changes are opportunities to refine the vision and approach.
@@ -330,7 +330,7 @@ The AP method is orchestrated through IDE environments for both planning and dev
   - **Developer Agents:** Code implementation for stories, working directly with the codebase in the IDE.
 - **Activities:** Detailed architecture, front-end/back-end design, code development, testing, leveraging IDE tasks (see "LEVERAGING IDE TASKS FOR EFFICIENCY"), using configurations like `ide-ap-orchestrator.cfg.md`.
 
-### AP METHOD FILES
+### AP MAPPING FILES
 
 Understanding key files helps in navigating and customizing the AP process:
 

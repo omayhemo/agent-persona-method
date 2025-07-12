@@ -1,5 +1,5 @@
 #!/bin/bash
-# AP Method Template Processor - Pure Bash Implementation
+# AP Mapping Template Processor - Pure Bash Implementation
 # Supports variable substitution with {{VAR}} syntax
 
 set -e
@@ -28,7 +28,7 @@ error() {
 # Show usage
 usage() {
     cat << EOF
-AP Method Template Processor (Bash version)
+AP Mapping Template Processor (Bash version)
 
 Usage: $(basename "$0") [OPTIONS] <template-file> [output-file]
 
@@ -93,7 +93,7 @@ load_json_vars() {
 load_env_vars() {
     debug "Loading variables from environment"
     
-    # Load AP Method specific variables
+    # Load AP Mapping specific variables
     for var in PROJECT_NAME PROJECT_ROOT PROJECT_DOCS AP_ROOT \
                CLAUDE_SETTINGS_PATH CLAUDE_HOOKS_PATH CLAUDE_COMMANDS_PATH \
                NOTES_TYPE NOTES_PATH SESSION_NOTE_TITLE RULES_PATH \

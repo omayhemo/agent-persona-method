@@ -1,5 +1,5 @@
 #!/bin/bash
-# AP Method Release Script
+# AP Mapping Release Script
 # This script automates the release process
 
 set -e
@@ -62,7 +62,7 @@ generate_release_notes() {
     local date=$(date +%Y-%m-%d)
     
     cat > RELEASE_NOTES.md << EOF
-# AP Method v$version
+# AP Mapping v$version
 
 Released: $date
 
@@ -176,7 +176,7 @@ show_next_steps() {
     echo ""
     echo "   Using GitHub CLI:"
     echo "   gh release create v$version \\"
-    echo "     --title \"AP Method v$version\" \\"
+    echo "     --title \"AP Mapping v$version\" \\"
     echo "     --notes-file RELEASE_NOTES.md \\"
     echo "     dist/ap-method-v$version.tar.gz"
     echo ""
@@ -195,7 +195,7 @@ show_next_steps() {
 
 # Main execution
 main() {
-    echo -e "${BLUE}AP Method Release Process${NC}"
+    echo -e "${BLUE}AP Mapping Release Process${NC}"
     echo "=========================="
     
     # Validate inputs

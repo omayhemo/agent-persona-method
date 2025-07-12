@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# AP Method Manifest Generator
+# AP Mapping Manifest Generator
 # Creates and manages installation manifests for tracking and verification
 
 set -e
@@ -501,7 +501,7 @@ export_to_text() {
     log_debug "Exporting to text: $output_file" "EXPORT-TEXT"
     
     {
-        echo "AP Method Installation Manifest"
+        echo "AP Mapping Installation Manifest"
         echo "==============================="
         echo ""
         
@@ -545,7 +545,7 @@ export_to_html() {
         echo '.summary { background-color: #e7f3ff; padding: 15px; margin-bottom: 20px; }'
         echo '</style>'
         echo '</head><body>'
-        echo '<h1>AP Method Installation Manifest</h1>'
+        echo '<h1>AP Mapping Installation Manifest</h1>'
         
         if command -v jq >/dev/null 2>&1; then
             echo '<div class="summary">'

@@ -1,8 +1,8 @@
-# AP Method Integration Workflow Impact Assessment
+# AP Mapping Integration Workflow Impact Assessment
 
 ## Executive Summary
 
-This assessment analyzes the impact of implementing the AP Method integration system on existing workflows, identifies migration requirements, and provides risk mitigation strategies. The integration will transform manual processes into automated workflows while maintaining operational continuity.
+This assessment analyzes the impact of implementing the AP Mapping integration system on existing workflows, identifies migration requirements, and provides risk mitigation strategies. The integration will transform manual processes into automated workflows while maintaining operational continuity.
 
 ## Current State Analysis
 
@@ -352,7 +352,7 @@ Week 6:  Full rollout celebration
 
 ## Conclusion
 
-The AP Method integration will fundamentally transform how teams collaborate and track work. While the initial impact requires careful management, the long-term benefits far outweigh the transition costs. With proper planning, training, and support, teams will experience significant productivity gains and quality improvements.
+The AP Mapping integration will fundamentally transform how teams collaborate and track work. While the initial impact requires careful management, the long-term benefits far outweigh the transition costs. With proper planning, training, and support, teams will experience significant productivity gains and quality improvements.
 
 **Key Success Factors**:
 1. Strong leadership support

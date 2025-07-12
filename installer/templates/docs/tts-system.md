@@ -1,8 +1,8 @@
-# AP Method Text-to-Speech (TTS) System
+# AP Mapping Text-to-Speech (TTS) System
 
 ## Overview
 
-The AP Method includes a flexible, modular Text-to-Speech system that allows agents to provide audio feedback. The system supports multiple TTS providers, from local offline solutions to high-quality cloud services.
+The AP Mapping includes a flexible, modular Text-to-Speech system that allows agents to provide audio feedback. The system supports multiple TTS providers, from local offline solutions to high-quality cloud services.
 
 ## Architecture
 
@@ -45,7 +45,7 @@ Features:
 
 Installation:
 ```bash
-# Automatic during AP Method setup, or:
+# Automatic during AP Mapping setup, or:
 agents/scripts/tts-setup/setup-piper-chat.sh
 ```
 

@@ -5,7 +5,7 @@
 cat << 'EOF'
 # Add this to your ~/.bashrc or ~/.zshrc file:
 
-# Claude AP Method launcher
+# Claude AP Mapping launcher
 claude-ap() {
     # Create a temporary prompt file that forces AP execution
     local tmp_prompt=$(mktemp)

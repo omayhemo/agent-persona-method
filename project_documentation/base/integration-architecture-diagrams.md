@@ -1,4 +1,4 @@
-# AP Method Integration Architecture Diagrams
+# AP Mapping Integration Architecture Diagrams
 
 ## Overview
 
@@ -37,14 +37,14 @@ graph TB
         FS[File System]
     end
     
-    subgraph "AP Method Integration System"
+    subgraph "AP Mapping Integration System"
         IM[Integration Manager]
         HE[Hook Engine]
         PE[Persistence Engine]
         VM[Validation Manager]
     end
     
-    subgraph "AP Method Components"
+    subgraph "AP Mapping Components"
         P1[Analyst Persona]
         P2[Architect Persona]
         P3[Developer Persona]
@@ -67,7 +67,7 @@ graph TB
     P5 <--> IM
 ```
 
-**Description**: High-level view showing how the integration system connects AP Method components with external systems.
+**Description**: High-level view showing how the integration system connects AP Mapping components with external systems.
 
 ---
 
@@ -75,7 +75,7 @@ graph TB
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    AP Method Integration Platform                │
+│                    AP Mapping Integration Platform                │
 ├─────────────────────────────────────────────────────────────────┤
 │                         API Gateway Layer                        │
 │  ┌─────────────┐  ┌──────────────┐  ┌───────────────┐         │
@@ -509,13 +509,13 @@ graph TB
 ```mermaid
 graph TB
     subgraph "Development Environment"
-        DEV[Local AP Method]
+        DEV[Local AP Mapping]
         DEVH[Dev Hooks]
         DEVS[Dev Storage]
     end
     
     subgraph "User Environment"
-        USR[User AP Method]
+        USR[User AP Mapping]
         USRH[User Hooks]
         USRS[User Storage]
         USRG[User Git Repo]
@@ -628,7 +628,7 @@ Current State                Migration Process              Target State
 
 ## Architecture Summary
 
-These 18 diagrams provide a comprehensive view of the AP Method Integration Architecture:
+These 18 diagrams provide a comprehensive view of the AP Mapping Integration Architecture:
 
 1. **System Level**: Context, components, and high-level interactions
 2. **Integration Design**: Hook patterns, API contracts, and data flows

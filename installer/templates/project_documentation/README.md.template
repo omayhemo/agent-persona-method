@@ -1,6 +1,6 @@
 # Project Documentation Structure
 
-This directory contains all project-specific documentation generated and used by the AP Method agents.
+This directory contains all project-specific documentation generated and used by the AP Mapping agents.
 
 ## Directory Structure
 

@@ -1,4 +1,4 @@
-# AP Method Installer Python Requirements
+# AP Mapping Installer Python Requirements
 # All current scripts use only standard library modules
 # This file is for future dependencies
 

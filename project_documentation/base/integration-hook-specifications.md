@@ -1,8 +1,8 @@
-# AP Method Integration Hook Specifications
+# AP Mapping Integration Hook Specifications
 
 ## Overview
 
-This document defines the technical specifications for integration hooks across the AP Method system. These hooks enable automated task management, data flow, and workflow orchestration between personas and Claude Code.
+This document defines the technical specifications for integration hooks across the AP Mapping system. These hooks enable automated task management, data flow, and workflow orchestration between personas and Claude Code.
 
 ## Hook Architecture
 
