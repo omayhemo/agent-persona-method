@@ -69,96 +69,9 @@ echo "$VERSION" > "$DIST_DIR/VERSION"
 echo "Copying installer directory..."
 cp -r installer "$DIST_DIR/"
 
-# Create distribution README
-echo "Creating distribution README..."
-cat > "$DIST_DIR/README.md" << 'EOF'
-# AP Method - Agent Persona Framework
-
-Version: 1.0.0
-
-## What is AP Method?
-
-The AP (Agent Persona) Method is a project-agnostic approach to orchestrating AI agents for software development. It provides specialized agent personas, each with specific expertise and responsibilities for planning and executing software projects.
-
-## Quick Installation
-
-### Option 1: Interactive Installation (Recommended)
-```bash
-tar -xzf ap-method-v1.0.0.tar.gz && cd ap-method-v1.0.0 && bash installer/install.sh && cd ..
-```
-
-### Option 2: Install with Defaults
-```bash
-tar -xzf ap-method-v1.0.0.tar.gz && cd ap-method-v1.0.0 && bash installer/install.sh --defaults && cd ..
-```
-
-### Option 3: Install to Specific Directory
-```bash
-tar -xzf ap-method-v1.0.0.tar.gz && cd ap-method-v1.0.0 && bash installer/install.sh /path/to/your/project && cd ..
-```
-
-## What Gets Installed
-
-1. **Agents Directory**: Contains all agent personas, tasks, templates, and configurations
-2. **Claude Integration**: Creates `.claude/` directory with settings and commands
-3. **Project Documentation**: Sets up structured documentation folders
-4. **Session Management**: Configures session notes (Obsidian or markdown)
-5. **Voice System**: Optional Piper TTS for audio notifications
-
-## Key Features
-
-- **9 Specialized Agents**: Each agent has specific expertise (PM, Architect, Developer, QA, etc.)
-- **Structured Workflow**: From project briefs to implementation
-- **Session Management**: Track all work with automatic session notes
-- **Voice Notifications**: Audio feedback for agent activities
-- **Project Agnostic**: Works with any project type or technology stack
-- **Parallel Subtask System**: Developer and QA agents can execute multiple analysis tasks in parallel for 80% time reduction
-
-## First Steps After Installation
-
-1. Open your project in Claude Code
-2. Run `/ap` to activate the AP Orchestrator
-3. Let the Orchestrator guide you through setting up your project
-
-## Agent Personas
-
-- **AP Orchestrator**: Central coordinator and method expert
-- **Analyst**: Research, requirements gathering, project briefs
-- **PM**: Product Requirements Documents, epics, planning
-- **Architect**: System design, technical architecture
-- **Design Architect**: UI/UX, frontend architecture
-- **PO**: Backlog management, story validation
-- **SM**: Story generation, sprint planning
-- **Developer**: Code implementation
-- **QA**: Quality assurance, testing strategies
-
-## Commands
-
-- `/ap` - Launch AP Orchestrator
-- `/handoff <agent>` - Switch to another agent
-- `/switch <agent>` - Compact session and switch
-- `/wrap` - Archive session and create summary
-- `/session-note-setup` - Initialize session structure
-- `/parallel-review` - Developer: Execute parallel code analysis (security, performance, coverage, etc.)
-- `/parallel-test` - QA: Execute parallel test suite (cross-browser, accessibility, load, etc.)
-
-## Documentation
-
-After installation, see:
-- `CLAUDE.md` - Main instructions for Claude
-- `project_documentation/` - Project-specific docs
-- `agents/` - All agent configurations
-
-## Support
-
-For issues or questions:
-- GitHub: https://github.com/chrisgscott/agentic-persona
-- Documentation: See agents/README.md
-
-## License
-
-This project is licensed under the MIT License.
-EOF
+# Copy README from installer directory
+echo "Copying distribution README..."
+cp installer/README.md "$DIST_DIR/README.md"
 
 # Create LICENSE file
 echo "Creating LICENSE file..."

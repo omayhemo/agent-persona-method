@@ -1042,6 +1042,12 @@ if [ -f "$PROJECT_ROOT/README.md" ] && grep -q "AP Method - Agent Persona Framew
     echo "- Removed distribution README"
 fi
 
+# Remove the installer directory after preserving it
+if [ -d "$PROJECT_ROOT/installer" ] && [ -d "$INSTALLER_PRESERVE_DIR" ]; then
+    rm -rf "$PROJECT_ROOT/installer"
+    echo "- Removed installer directory (preserved in agents/.installer)"
+fi
+
 echo ""
 echo "Next steps:"
 echo ""

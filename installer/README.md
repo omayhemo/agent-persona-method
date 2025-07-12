@@ -1,60 +1,69 @@
-# AP Method Installation Guide
+# AP Method - Agent Persona Framework
 
-## Overview
+Version: 1.1.0-alpha.2
 
-The AP (Agent Persona) Method is a project-agnostic approach to orchestrating AI agents for software development. This guide covers how to install the AP Method framework into your project.
+## What is AP Method?
 
-## Installation Methods
+The AP (Agent Persona) Method is a project-agnostic approach to orchestrating AI agents for software development. It provides specialized agent personas, each with specific expertise and responsibilities for planning and executing software projects.
 
-### Method 1: Distribution Package (Recommended)
+## Quick Installation
 
-Download and install the latest release:
+### Download and Install (One Command)
 
+**For Linux/WSL:**
 ```bash
-# Download and extract the distribution
-curl -L https://github.com/omayhemo/agent-persona-method/raw/main/dist/ap-method-v1.0.0.tar.gz | tar -xz
-
-# Run the installer
-./install.sh
+wget https://github.com/omayhemo/APM/releases/download/v1.1.0-alpha.2/ap-method-v1.1.0-alpha.2.tar.gz && tar -xzf ap-method-v1.1.0-alpha.2.tar.gz && installer/install.sh
 ```
 
-#### Installation Options
-
-**Interactive Mode (Default):**
+**For macOS:**
 ```bash
-./install.sh
-```
-- Prompts for all configuration options
-- Allows custom project paths and settings
-- Recommended for first-time users
-
-**Unattended Mode:**
-```bash
-./install.sh --defaults  # or -d
-```
-- Uses all default settings
-- Installs to current directory
-- Skips optional features (Piper TTS)
-
-**Specify Target Directory:**
-```bash
-./install.sh /path/to/your/project
+curl -L https://github.com/omayhemo/APM/releases/download/v1.1.0-alpha.2/ap-method-v1.1.0-alpha.2.tar.gz -o ap-method-v1.1.0-alpha.2.tar.gz && tar -xzf ap-method-v1.1.0-alpha.2.tar.gz && installer/install.sh
 ```
 
-### Method 2: Source Installation
+### Installation Options
 
-For development or customization:
+**Option 1: Interactive Installation (Recommended)**
+Add nothing - the installer will prompt for all configuration options
 
+**Option 2: Install with Defaults (Skip prompts)**
 ```bash
-# Clone the repository
-git clone https://github.com/omayhemo/agent-persona-method.git
-cd agent-persona-method
+# Linux/WSL
+wget https://github.com/omayhemo/APM/releases/download/v1.1.0-alpha.2/ap-method-v1.1.0-alpha.2.tar.gz && tar -xzf ap-method-v1.1.0-alpha.2.tar.gz && installer/install.sh --defaults
 
-# Build and run the installer
-./build-distribution.sh
-cd dist && tar -xzf ap-method-v*.tar.gz
-./installer/install.sh
+# macOS
+curl -L https://github.com/omayhemo/APM/releases/download/v1.1.0-alpha.2/ap-method-v1.1.0-alpha.2.tar.gz -o ap-method-v1.1.0-alpha.2.tar.gz && tar -xzf ap-method-v1.1.0-alpha.2.tar.gz && installer/install.sh --defaults
 ```
+
+**Option 3: Install to Specific Directory**
+```bash
+# Linux/WSL
+wget https://github.com/omayhemo/APM/releases/download/v1.1.0-alpha.2/ap-method-v1.1.0-alpha.2.tar.gz && tar -xzf ap-method-v1.1.0-alpha.2.tar.gz && installer/install.sh /path/to/your/project
+
+# macOS
+curl -L https://github.com/omayhemo/APM/releases/download/v1.1.0-alpha.2/ap-method-v1.1.0-alpha.2.tar.gz -o ap-method-v1.1.0-alpha.2.tar.gz && tar -xzf ap-method-v1.1.0-alpha.2.tar.gz && installer/install.sh /path/to/your/project
+```
+
+**Option 4: Install with Piper TTS Voice Support**
+```bash
+# Linux/WSL
+wget https://github.com/omayhemo/APM/releases/download/v1.1.0-alpha.2/ap-method-v1.1.0-alpha.2.tar.gz && tar -xzf ap-method-v1.1.0-alpha.2.tar.gz && installer/install.sh --with-tts
+
+# macOS
+curl -L https://github.com/omayhemo/APM/releases/download/v1.1.0-alpha.2/ap-method-v1.1.0-alpha.2.tar.gz -o ap-method-v1.1.0-alpha.2.tar.gz && tar -xzf ap-method-v1.1.0-alpha.2.tar.gz && installer/install.sh --with-tts
+```
+
+## Key Features
+
+- **9 Specialized Agents**: Each agent has specific expertise (PM, Architect, Developer, QA, etc.)
+- **Structured Workflow**: From project briefs to implementation
+- **Session Management**: Automatic session notes with archival
+- **Voice Notifications**: Multiple TTS providers for audio feedback
+- **Project Agnostic**: Works with any project type or technology stack
+- **Parallel Execution**: 
+  - Developer: `/parallel-review` for simultaneous code analysis
+  - QA: `/parallel-test` for concurrent test execution
+  - PO: `/groom` for parallel backlog analysis
+  - 80%+ time reduction on complex tasks
 
 ## What Gets Installed
 
@@ -85,6 +94,18 @@ your-project/
     └── qa/                   # Quality assurance docs
 ```
 
+## Agent Personas
+
+- **AP Orchestrator**: Central coordinator and method expert
+- **Analyst**: Research, requirements gathering, project briefs
+- **PM**: Product Requirements Documents, epics, planning
+- **Architect**: System design, technical architecture
+- **Design Architect**: UI/UX, frontend architecture
+- **PO**: Backlog management, story validation
+- **SM**: Story generation, sprint planning
+- **Developer**: Code implementation
+- **QA**: Quality assurance, testing strategies
+
 ## Installation Process
 
 The installer will:
@@ -100,45 +121,38 @@ The installer will:
 5. **Update .gitignore** - Excludes session notes from version control
 6. **Generate CLAUDE.md** - Project instructions for Claude AI
 
-## Post-Installation Setup
+## Commands
 
-### 1. Make Scripts Executable (Unix/Linux/macOS)
+### Core Commands
+- `/ap` - Launch AP Orchestrator
+- `/handoff <agent>` - Direct transition to another agent
+- `/switch <agent>` - Compact session and switch agent
+- `/wrap` - Archive session and create summary
+- `/session-note-setup` - Initialize session structure
 
-```bash
-chmod +x agents/scripts/*.sh agents/voice/*.sh
-```
+### Parallel Execution Commands
+- `/parallel-review` - Developer: Simultaneous code analysis (security, performance, test coverage)
+- `/parallel-test` - QA: Concurrent test execution (cross-browser, accessibility, load tests)
+- `/groom` - PO: Parallel backlog grooming (analyze docs, generate epics/stories, optimize sprints)
 
-### 2. Verify Installation
+### Management Commands
+- `$AP_ROOT/scripts/ap-manager.sh update` - Check for updates
+- `$AP_ROOT/scripts/ap-manager.sh verify` - Verify installation integrity
+- `$AP_ROOT/scripts/ap-manager.sh version` - Show current version
 
-Check that commands are available:
-```bash
-# List Claude commands
-ls .claude/commands/
+## First Steps After Installation
 
-# Check settings
-cat .claude/settings.json
-```
+1. Open your project in Claude Code
+2. Run `/ap` to activate the AP Orchestrator
+3. Let the Orchestrator guide you through setting up your project
 
-### 3. Launch AP Orchestrator
+## Installation Notes
 
-In your IDE with Claude Code:
-- Use `/ap` command to launch the AP Orchestrator
-- Use `/handoff` to switch between agent personas
-- Use `/wrap` to wrap up a session
-- Use `/parallel-review` (Developer) for comprehensive code analysis
-- Use `/parallel-test` (QA) for parallel test execution
-
-## Configuration
-
-The `.claude/settings.json` file contains:
-- `AP_ROOT` - Path to agents directory
-- `PROJECT_DOCS` - Path to project documentation
-- `PROJECT_ROOT` - Your project's root directory
-- `PROJECT_NAME` - Your project name
-- Session notes configuration
-- Voice script paths
-
-Claude automatically reads these settings when working in your project.
+- **Clean Installation**: The installer automatically cleans up distribution files after installation
+- **Preserved Installer**: The installer is preserved in `agents/.installer/` for future updates
+- **Session Notes**: Choose between Obsidian MCP integration or local markdown files
+- **TTS Configuration**: Voice support is optional and can be configured post-installation
+- **Python Support**: Optional Python virtual environment for hooks (recommended)
 
 ## Version Management
 
@@ -324,11 +338,28 @@ agents/scripts/ap-manager.sh uninstall
 
 Updates are checked against the official GitHub releases and can be applied in-place without losing your project work.
 
+## Documentation
+
+After installation, see:
+- `CLAUDE.md` - Main instructions for Claude Code
+- `project_documentation/` - Your project-specific documentation
+- `agents/README.md` - Detailed agent information
+- `agents/docs/` - AP Method guides and references
+
+## Troubleshooting
+
+- **Permission Issues**: Run `chmod +x installer/install.sh` if needed
+- **Missing Dependencies**: The installer will notify you of any missing tools
+- **Voice Not Working**: Check TTS configuration with `$AP_ROOT/scripts/configure-tts.sh`
+- **Session Notes**: Verify Obsidian MCP is installed if using Obsidian integration
+
 ## Support
 
 For issues or questions:
-- Check documentation in `/agents/` subdirectories
-- Review task definitions in `/agents/tasks/`
-- Consult orchestrator config in `/agents/ide-ap-orchestrator.cfg.md`
+- GitHub: https://github.com/chrisgscott/agentic-persona
+- Documentation: See agents/README.md
+- Version: This is an Alpha release - feedback welcome!
 
-The AP Method streamlines AI-assisted software development through specialized agent personas and structured workflows.
+## License
+
+This project is licensed under the MIT License.
