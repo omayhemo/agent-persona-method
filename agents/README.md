@@ -60,11 +60,17 @@ The following variables are configured in `.claude/settings.json`:
 
 These commands are available in Claude:
 
+### Core Commands
 - `/ap` - Launch AP Orchestrator
 - `/handoff` - Hand off to another agent persona (direct transition)
 - `/switch` - Compact session and switch to another agent persona
 - `/wrap` - Wrap up current session
 - `/session-note-setup` - Set up session structure
+
+### Parallel Execution Commands
+- `/groom` (Product Owner) - Comprehensive backlog grooming with 18 parallel subtasks
+- `/parallel-review` (Developer) - Execute parallel code analysis (security, performance, etc.)
+- `/parallel-test` (QA) - Execute parallel test suite (cross-browser, accessibility, etc.)
 
 ## The AP Workflow
 
@@ -93,6 +99,10 @@ These commands are available in Claude:
    - Prioritize backlog items
    - Define acceptance criteria
    - Ensure business value alignment
+   - **NEW**: Use `/groom` for comprehensive parallel backlog analysis:
+     - Analyzes documentation across 5 phases simultaneously
+     - Generates epics, stories, dependencies, and sprint plans
+     - Optimizes for parallel development and maximum ROI
 
 ### Phase 3: Technical Design
 
@@ -183,10 +193,11 @@ These commands are available in Claude:
 - **Outputs**: PRDs, epics, product strategy docs
 
 ### Product Owner
-- **Role**: Business requirements expert
-- **Focus**: Business value, stakeholder needs, acceptance criteria
-- **Key Activities**: Backlog management, requirement validation, priority setting
-- **Outputs**: Refined requirements, acceptance criteria, priority decisions
+- **Role**: Business requirements expert with parallel grooming capabilities
+- **Focus**: Business value, stakeholder needs, acceptance criteria, backlog optimization
+- **Key Activities**: Backlog management, requirement validation, priority setting, parallel grooming
+- **Outputs**: Refined requirements, acceptance criteria, priority decisions, optimized sprint plans
+- **Special Command**: `/groom` - Executes 18 parallel subtasks for comprehensive backlog analysis
 
 ### Scrum Master
 - **Role**: Process and story management

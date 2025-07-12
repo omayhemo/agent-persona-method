@@ -9,10 +9,11 @@ This guide provides practical examples of how to use the new parallel subtask ca
 1. [Quick Start](#quick-start)
 2. [Developer Persona Examples](#developer-persona-examples)
 3. [QA Persona Examples](#qa-persona-examples)
-4. [Common Patterns](#common-patterns)
-5. [Synthesis Pattern Selection](#synthesis-pattern-selection)
-6. [Best Practices](#best-practices)
-7. [Troubleshooting](#troubleshooting)
+4. [Product Owner Persona Examples](#product-owner-persona-examples)
+5. [Common Patterns](#common-patterns)
+6. [Synthesis Pattern Selection](#synthesis-pattern-selection)
+7. [Best Practices](#best-practices)
+8. [Troubleshooting](#troubleshooting)
 
 ## Quick Start
 
@@ -209,6 +210,96 @@ Recommendations:
 2. Implement API request queuing
 3. Add 2 more application instances
 4. Enable auto-scaling at 70% capacity
+```
+
+## Product Owner Persona Examples
+
+### Example 1: Comprehensive Backlog Grooming
+
+**Scenario**: Transform requirements documentation into prioritized sprint backlog
+
+**Command**: `/groom --sprint-length 14 --team-velocity 40`
+
+**Execution**:
+```yaml
+Parallel Tasks Spawned:
+Phase 1 - Documentation Analysis:
+- Domain model extraction
+- Feature requirement mining
+- Technical debt assessment
+- Integration mapping
+- Compliance analysis
+
+Phase 2 - Epic Generation:
+- Feature epics
+- Technical epics
+- Integration epics
+- Compliance epics
+
+Phase 3 - Story Breakdown:
+- Story decomposition
+- Point estimation
+- Dependency mapping
+
+Phase 4 - Optimization:
+- Dependency graph construction
+- Business value calculation
+- Risk assessment
+- Parallel stream identification
+
+Phase 5 - Sprint Planning:
+- Sprint allocation
+- Capacity optimization
+```
+
+**Synthesis**: Business Value Maximizer + Sprint Capacity Optimizer
+
+**Output**:
+```yaml
+Grooming Summary:
+- Epics Generated: 12
+- Stories Created: 67
+- Total Points: 285
+- Sprints Required: 8
+- Parallel Tracks: 4
+
+Top Priority Items:
+1. Authentication System (ROI: 1045%)
+2. Payment Processing (ROI: 890%)
+3. User Dashboard (ROI: 650%)
+
+Sprint 1 Allocation:
+- Frontend: Component library (5 pts)
+- Backend: Database schema (3 pts) + User API (5 pts)
+- DevOps: CI/CD pipeline (8 pts)
+```
+
+### Example 2: Risk-Adjusted Release Planning
+
+**Scenario**: Create realistic timeline with contingencies for stakeholder commitment
+
+**Command**: `/groom --focus-areas "payment,compliance"`
+
+**Execution**: 
+- Focuses analysis on payment and compliance features
+- Applies risk-adjusted planning synthesis
+- Generates P50, P80, P95 timelines
+
+**Output**:
+```yaml
+Release Plan:
+- Baseline: 6 sprints
+- P80 Commitment: 8 sprints (recommended)
+- P95 Conservative: 10 sprints
+
+Key Risks:
+1. Payment gateway integration (+0.5-1 sprint)
+2. Compliance audit requirements (+0.3-0.8 sprint)
+
+Contingency Plans:
+- Plan A: Normal execution (50% probability)
+- Plan B: Common risks materialize (30% probability)
+- Plan C: Major issues recovery (20% probability)
 ```
 
 ## Common Patterns

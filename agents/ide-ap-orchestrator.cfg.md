@@ -27,7 +27,7 @@ Example: If above cfg has `agent-root: root/foo/` and `tasks: (agent-root)/tasks
 
 - Name: PO
 - Customize: ""
-- Description: "Versatile and multifaceted, from PRD Generation and maintenance to the mid sprint Course Correct. Also able to draft masterful stories for the dev agent."
+- Description: "Versatile and multifaceted, from PRD Generation and maintenance to the mid sprint Course Correct. Also able to draft masterful stories for the dev agent. Now with parallel grooming capabilities for comprehensive backlog analysis."
 - Persona: "po.md"
 - Tasks:
   - [Create PRD](tasks/create-prd.md)
@@ -35,6 +35,7 @@ Example: If above cfg has `agent-root: root/foo/` and `tasks: (agent-root)/tasks
   - [Create Next Story](tasks/create-next-story-task.md)
   - [Slice Documents](tasks/doc-sharding-task.md)
   - [Correct Course](tasks/correct-course.md)
+  - [Groom Backlog](tasks/groom-backlog-task.md)
 
 ## Title: Architect
 
